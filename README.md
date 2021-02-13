@@ -58,28 +58,26 @@ output:
 
 ## Operators:
 The following is lis of supported [operators](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/main/java/com/github/mhewedy/expressions/Operator.java):
-```
-$eq(false),          // col = val   (if val is null then => col is null)
-$ne(false),          // col <> val  (if val is null then => col is not null)
-$ieq(false),         // lower(col) = lower(val)
 
-$gt(false),          // col > val
-$gte(false),         // col >= val
-$lt(false),          // col < val
-$lte(false),         // col <= val
-
-$start(false),       // col like 'val%'
-$end(false),         // col like '%val'
-$contains(false),    // col like '%val%'
-$istart(false),      // lower(col) like 'lower(val)%'
-$iend(false),        // lower(col) like '%lower(val)'
-$icontains(false),   // lower(col) like '%lower(val)%'
-
-$in(true),           // col in (val1, val2, ...)
-$nin(true),          // col not in (val1, val2, ...)
-
-$or(false),          // expr1 or expr2
-$and(false);         // expr1 and expr2
+Operator      | Description
+----------- | -----------
+$eq      | col = val   (if val is null then => col is null)
+$ne     |  col <> val  (if val is null then => col is not null)
+$ieq    |  lower(col) = lower(val)
+$gt     |  col > val
+$gte    |  col >= val
+$lt     |  col < val
+$lte    |  col <= val
+$start  |  col like 'val%'
+$end     |  col like '%val'
+$contains|  col like '%val%'
+$istart  |  lower(col) like 'lower(val)%'
+$iend    |  lower(col) like '%lower(val)'
+$icontains|  lower(col) like '%lower(val)%'
+$in      |  col in (val1, val2, ...)
+$nin     |  col not in (val1, val2, ...)
+$or      |  expr1 or expr2
+$and     |  expr1 and expr2
 ```
 
 ## Thanks:
