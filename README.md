@@ -20,3 +20,8 @@ Parses (subset of) mongodb expressions and convert it to Specifications to be us
 
 result:
 `where last_name=? and birth_date>? and birth_date<=?`
+
+
+## Thanks:
+Special thanks for [Rashad Saif](https://github.com/rashadsaif) and Hamada alnoby for helping 
+in the design and doing review for the code.  
