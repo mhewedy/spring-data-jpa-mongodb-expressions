@@ -4,7 +4,10 @@ Parses (subset of) mongodb expressions and convert it to Specifications to be us
 
 ## Examples:
 
-```
+1-
+
+Expression:
+```json
 {
   "lastName": "ibrahim",
   "$and": [
@@ -18,9 +21,40 @@ Parses (subset of) mongodb expressions and convert it to Specifications to be us
 }
 ```
 
-result:
-`where last_name=? and birth_date>? and birth_date<=?`
+output:
+```sql
+... where last_name=? and birth_date>? and birth_date<=?
+```
 
+2-
+
+Expression:
+```json
+{
+  "$or": [
+    {
+      "lastName": "ibrahim"
+    },
+    {
+      "$and": [
+        {
+          "firstName": "mostafa"
+        },
+        {
+          "birthDate": {
+            "$gt": "1990-01-01"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+output:
+```sql
+... where last_name = ? or first_name = ? and birth_date > ?
+```
 
 ## Thanks:
 Special thanks for [Rashad Saif](https://github.com/rashadsaif) and Hamada alnoby for helping 
