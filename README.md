@@ -18,5 +18,5 @@ Parses (subset of) mongodb expressions and convert it to Specifications to be us
 }
 ```
 
-will be converted to:
+result:
 `where last_name=? and birth_date>? and birth_date<=?`
