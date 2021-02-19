@@ -93,7 +93,7 @@ For a list of json queries, see :
 3. [Mongodb docs](https://docs.mongodb.com/manual/tutorial/query-documents/) as a reference for the queries.
 
 ## Operators:
-The following is lis of supported [operators](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/main/java/com/github/mhewedy/expressions/Operator.java):
+The following is a list of supported [operators](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/main/java/com/github/mhewedy/expressions/Operator.java):
 
 Operator      | Description
 ----------- | -----------
