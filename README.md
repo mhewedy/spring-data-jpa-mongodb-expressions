@@ -1,4 +1,4 @@
-# Spring data JPA Mongodb expressions
+# Spring data JPA MongoDB expressions
 
 Parses (a subset of) MongoDB expressions and convert them to Specifications to be used to Spring-data-jpa project.
 
