@@ -2,7 +2,10 @@
 
 Parses (a subset of) MongoDB expressions and convert them to Specifications to be used to Spring-data-jpa project.
 
-This library provides an `ExpressionsRepository` to be extended by your application repositories, and it looks like:
+## Usage:
+
+The usage of the library is simple. This library provides an single interface `ExpressionsRepository` to be extended by your application repositories, and it looks like:
+
 ```java
 public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 
@@ -18,9 +21,11 @@ To use the library, you will need to accept an object of type `Expressions` in y
 
 ```java
 @PostMapping("/search")
-public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions,
-                                            Pageable pageable) {
+public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions, Pageable pageable) {
+
     expressions.and(Expression.of("departementId", $eq, getCurrentUserDeptId()));
+    // add additional filters by ANDing or ORing more expression
+    
     return ok()
             .body(employeeRepository.findAll(expressions, pageable)
             .map(employeeMapper::toDto)
@@ -28,9 +33,7 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
 }
 ```
 
-
-
-## Examples json expressions (sent to the rest api):
+## Examples json expressions (could be send to rest api):
 
 1-
 
@@ -84,7 +87,10 @@ output:
 ... where last_name = ? or first_name = ? and birth_date > ?
 ```
 
-For a list of json queries, see the [resources](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/tree/master/src/test/resources) directory   and the file [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
+For a list of json queries, see :
+1. the [resources](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/tree/master/src/test/resources) directory  
+2. [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
+3. [Mongodb docs](https://docs.mongodb.com/manual/tutorial/query-documents/) as a reference for the queries.
 
 ## Operators:
 The following is lis of supported [operators](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/main/java/com/github/mhewedy/expressions/Operator.java):
@@ -111,4 +117,4 @@ $and     |  expr1 and expr2
 
 ## Thanks:
 
-Special thanks for [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design and doing review for the code.  
+Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design and the inspring with ideas and for doing the review for the code.  
