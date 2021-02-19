@@ -78,8 +78,7 @@ $in      |  col in (val1, val2, ...)
 $nin     |  col not in (val1, val2, ...)
 $or      |  expr1 or expr2
 $and     |  expr1 and expr2
-```
 
 ## Thanks:
-Special thanks for [Rashad Saif](https://github.com/rashadsaif) and Hamada alnoby for helping 
-in the design and doing review for the code.  
+
+Special thanks for [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design and doing review for the code.  
