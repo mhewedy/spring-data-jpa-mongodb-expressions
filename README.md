@@ -56,6 +56,8 @@ output:
 ... where last_name = ? or first_name = ? and birth_date > ?
 ```
 
+For a list of examples, see: [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
+
 ## Operators:
 The following is lis of supported [operators](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/main/java/com/github/mhewedy/expressions/Operator.java):
 
