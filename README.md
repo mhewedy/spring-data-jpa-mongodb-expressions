@@ -33,7 +33,8 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
 }
 ```
 
-## Examples json expressions (could be send to rest api):
+## Examples json expressions:
+The following is an example expressions that could be sent to the Controller Rest Apis, and will be serialized into `Expressions` object.
 
 1-
 
