@@ -118,4 +118,4 @@ $and     |  expr1 and expr2
 
 ## Thanks:
 
-Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design and the inspring with ideas and for doing the review for the code.  
+Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design, inspring with ideas, and for doing the review for the code.  
