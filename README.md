@@ -1,8 +1,36 @@
 # Spring data JPA Mongodb expressions
 
-Parses (subset of) mongodb expressions and convert it to Specifications to be used to Spring-data-jpa project. 
+Parses (a subset of) MongoDB expressions and convert them to Specifications to be used to Spring-data-jpa project.
 
-## Examples:
+This library provides an `ExpressionsRepository` to be extended by your application repositories, and it looks like:
+```java
+public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
+
+    List<T> findAll(Expressions expressions);
+
+    List<T> findAll(Expressions expressions, Sort sort);
+
+    Page<T> findAll(Expressions expressions, Pageable pageable);
+}
+```
+
+To use the library, you will need to accept an object of type `Expressions` in your controller method:
+
+```java
+@PostMapping("/search")
+public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions,
+                                            Pageable pageable) {
+    expressions.and(Expression.of("departementId", $eq, getCurrentUserDeptId()));
+    return ok()
+            .body(employeeRepository.findAll(expressions, pageable)
+            .map(employeeMapper::toDto)
+            );
+}
+```
+
+
+
+## Examples json expressions (sent to the rest api):
 
 1-
 
@@ -56,7 +84,7 @@ output:
 ... where last_name = ? or first_name = ? and birth_date > ?
 ```
 
-For a list of examples, see: [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
+For a list of json queries, see the [resources](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/tree/master/src/test/resources) directory   and the file [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
 
 ## Operators:
 The following is lis of supported [operators](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/main/java/com/github/mhewedy/expressions/Operator.java):
