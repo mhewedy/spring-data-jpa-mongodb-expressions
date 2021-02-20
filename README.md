@@ -17,7 +17,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 }
 ```
 
-To use the library, you will need to accept an object of type `Expressions` in your controller method:
+To use the library, you will need to add an object of type `Expressions` in your controller method parameter list:
 
 ```java
 @PostMapping("/search")
@@ -34,7 +34,7 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
 ```
 
 ## Examples json expressions:
-The following is an example expressions that could be sent to the Controller Rest Apis, and will be serialized into `Expressions` object.
+The following is an example expressions that could be sent to the Controller Rest Apis, and will be deserialized into the `Expressions` object.
 
 1-
 
