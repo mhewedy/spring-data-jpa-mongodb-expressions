@@ -26,8 +26,8 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
     expressions.and(Expression.of("departementId", $eq, getCurrentUserDeptId()));
     // add additional filters by ANDing or ORing more expression
     
-    return ok().body(employeeRepository.findAll(expressions, pageable)
-                        .map(employeeMapper::toDto)
+    return ok().body(
+                employeeRepository.findAll(expressions, pageable).map(employeeMapper::toDto)
         );
 }
 ```
