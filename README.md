@@ -115,6 +115,11 @@ $nin     |  col not in (val1, val2, ...)
 $or      |  expr1 or expr2
 $and     |  expr1 and expr2
 
+## Limitations:
+This library by design doesn't support joining multiple entites. this decision took to keep things simple and more importanlty
+in order not to make the generated sql queries not optimized. However if you have such need you can create a DB View and map 
+it to an entity, it will allow to much better queries.
+
 ## Thanks:
 
 Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design, inspring with ideas, and for doing the review for the code.  
