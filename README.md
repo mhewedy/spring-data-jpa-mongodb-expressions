@@ -143,7 +143,7 @@ $and     |  expr1 and expr2
 ## Limitations:
 This library by design doesn't support joining multiple entites. this decision took to keep things simple and more importanlty
 in order not to make the generated sql queries not optimized. However if you have such need you can create a DB View and map 
-it to an entity, it will allow to much better queries.
+it to an entity, it will allow result in much better queries.
 
 ## Plan:
 Create a javascript client to build the mongodb queries.
