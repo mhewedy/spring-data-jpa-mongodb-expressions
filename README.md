@@ -2,8 +2,8 @@
 
 Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used to Spring-data-jpa project.
 
-## What spring-data-jpa-mongodb-expressions provides:
-`spring-data-jpa-mongodb-expressions` allows you to use the [MongoDB query syntax](https://docs.mongodb.com/manual/tutorial/query-documents/) to query your relational database. This is specially useful to build dynamic search from the frontend app (a common case in business apps).
+## What spring-data-jpa-mongodb-expressions provides?
+`spring-data-jpa-mongodb-expressions` allows you to **use the [MongoDB query syntax](https://docs.mongodb.com/manual/tutorial/query-documents/) to query your relational database.** This is specially useful to build dynamic search from the frontend app (a common case in business apps).
 
 So, you can build the mongodb query-like json from the frontend app and pass it to the controller, and then optionally you enrich it with addtional conditions and pass it to the repository layer, in which the monogodb query will be translated automatically to JPA specification and executed.
 
