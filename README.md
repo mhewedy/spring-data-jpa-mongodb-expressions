@@ -3,7 +3,7 @@
 
 [![Java CI with Maven](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml/badge.svg)](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml) | [![codecov](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions/branch/master/graph/badge.svg?token=3BR9MGYVC8)](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions)
 
-Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used to Spring-data-jpa project.
+Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used with Spring-data-jpa.
 
 ## What Spring Data JPA MongoDB expressions provides?
 `spring-data-jpa-mongodb-expressions` allows you to **use the [MongoDB query syntax](https://docs.mongodb.com/manual/tutorial/query-documents/) to query your relational database.** This is specially useful to build dynamic search from the frontend app (a common case in business apps).
