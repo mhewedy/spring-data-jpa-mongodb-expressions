@@ -22,4 +22,6 @@ public class Employee {
     public LocalDate birthDate;
     public Integer age;
     public Instant hireDate;
+    public Short type;
+    public Boolean active;
 }

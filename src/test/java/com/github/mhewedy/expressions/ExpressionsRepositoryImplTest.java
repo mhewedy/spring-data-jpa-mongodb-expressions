@@ -45,11 +45,11 @@ public class ExpressionsRepositoryImplTest {
     public void setup() {
         log.info("setting up");
         List<Employee> employees = Arrays.asList(
-                new Employee(null, "ahmed", "ibrahim", LocalDate.of(1980, 10, 10), 10, Instant.parse("2007-12-03T10:15:30.00Z")),
-                new Employee(null, "mohammad", "ibrahim", LocalDate.of(1985, 10, 10), 20, Instant.parse("2009-12-03T10:15:30.00Z")),
-                new Employee(null, "mostafa", "ahmed", LocalDate.of(1988, 10, 10), 30, Instant.parse("2011-12-03T10:15:30.00Z")),
-                new Employee(null, "wael", "ibrahim", LocalDate.of(1990, 10, 10), 40, Instant.parse("2015-12-03T10:15:30.00Z")),
-                new Employee(null, "farida", "abdullah", LocalDate.of(1979, 10, 10), 50, Instant.parse("2017-12-03T10:15:30.00Z"))
+                new Employee(null, "ahmed", "ibrahim", LocalDate.of(1980, 10, 10), 10, Instant.parse("2007-12-03T10:15:30.00Z"), (short) 1, true),
+                new Employee(null, "mohammad", "ibrahim", LocalDate.of(1985, 10, 10), 20, Instant.parse("2009-12-03T10:15:30.00Z"), (short) 1, true),
+                new Employee(null, "mostafa", "ahmed", LocalDate.of(1988, 10, 10), 30, Instant.parse("2011-12-03T10:15:30.00Z"), (short) 2, true),
+                new Employee(null, "wael", "ibrahim", LocalDate.of(1990, 10, 10), 40, Instant.parse("2015-12-03T10:15:30.00Z"), (short) 2, true),
+                new Employee(null, "farida", "abdullah", LocalDate.of(1979, 10, 10), 50, Instant.parse("2017-12-03T10:15:30.00Z"), (short) 2, false)
         );
         employeeRepository.saveAll(employees);
     }
@@ -83,7 +83,7 @@ public class ExpressionsRepositoryImplTest {
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
         Page<Employee> employeeList =
-        employeeRepository.findAll(expressions, PageRequest.of(0, 3, Sort.by("firstName").descending()));
+                employeeRepository.findAll(expressions, PageRequest.of(0, 3, Sort.by("firstName").descending()));
         assertThat(employeeList).isNotNull();
         assertThat(employeeList.getTotalElements()).isEqualTo(5);
         assertThat(employeeList.getSize()).isEqualTo(3);
@@ -219,7 +219,7 @@ public class ExpressionsRepositoryImplTest {
     @Test
     public void testSearchByIgnoreCaseContains() throws Exception {
 
-        String  json = loadResourceJsonFile("testSearchByIgnoreCaseContains");
+        String json = loadResourceJsonFile("testSearchByIgnoreCaseContains");
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
@@ -279,6 +279,19 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(2);
 
         // where last_name=? and (age in (? , ?) or birth_date<?)
+    }
+
+    @Test
+    public void testSearchUsingInOperatorInNonIntegerNumericField() throws Exception {
+        String json = loadResourceJsonFile("testSearchUsingInOperatorInNonIntegerNumericField");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(5);
+
+        // where type in ? or active=?
     }
 
     @SneakyThrows

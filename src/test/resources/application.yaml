@@ -1,0 +1,4 @@
+spring:
+  jpa:
+    properties:
+      'hibernate.criteria.literal_handling_mode': bind

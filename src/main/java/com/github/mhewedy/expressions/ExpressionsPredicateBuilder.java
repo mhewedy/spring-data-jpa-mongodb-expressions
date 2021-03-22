@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mhewedy.expressions.Expression.*;
+import static java.util.stream.Collectors.toList;
 
 class ExpressionsPredicateBuilder {
 
@@ -39,7 +40,7 @@ class ExpressionsPredicateBuilder {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    static List<Predicate> getPredicates(CriteriaBuilder cb,
+    private static List<Predicate> getPredicates(CriteriaBuilder cb,
                                          Path<?> from, ManagedType<?> type,
                                          List<Expression> expressions) {
 
@@ -149,7 +150,7 @@ class ExpressionsPredicateBuilder {
                 ListExpression listExpression = (ListExpression) expression;
 
                 SingularAttribute attribute = type.getSingularAttribute(listExpression.field);
-                List<Object> attributeValues = listExpression.values;
+                List<Object> attributeValues = convertValueToAttributeType(listExpression.values, attribute.getJavaType());
                 Path exprPath = from.get(attribute);
 
                 Predicate predicate;
@@ -224,5 +225,30 @@ class ExpressionsPredicateBuilder {
 
         // strings and numeric types don't need  conversion
         return value;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    private static List<Object> convertValueToAttributeType(List<Object> values, Class javaType) {
+        if (values == null || values.isEmpty()) {
+            return values;
+        }
+
+        if (javaType.equals(Short.class)) {
+            return values.stream().map(it -> ((Integer) it).shortValue()).collect(toList());
+        }
+        if (javaType.equals(Long.class)) {
+            return values.stream().map(it -> ((Integer) it).longValue()).collect(toList());
+        }
+        if (javaType.equals(Byte.class)) {
+            return values.stream().map(it -> ((Integer) it).byteValue()).collect(toList());
+        }
+        if (javaType.equals(Double.class)) {
+            return values.stream().map(it -> ((Integer) it).doubleValue()).collect(toList());
+        }
+        if (javaType.equals(Float.class)) {
+            return values.stream().map(it -> ((Integer) it).floatValue()).collect(toList());
+        }
+
+        return values;
     }
 }
