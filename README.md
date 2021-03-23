@@ -28,17 +28,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 
 ## How to use the library:
 
-1. Download:
-
-```xml
-<dependency>
-  <groupId>com.github.mhewedy</groupId>
-  <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.0.1</version>
-</dependency>
-```
-
-2. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
+1. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
 
 ```java
 @Configuration
@@ -46,7 +36,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 class ApplicationConfiguration { … }
 ```
 
-3. Change the parent repository of your JPA repositories: 
+2. Change the parent repository of your JPA repositories: 
 
 ```java
 @Repository
@@ -54,7 +44,7 @@ public interface EmployeeRepository extends ExpressionsRepository<Employee, Long
 }
 ```
 
-4. Modify the search controller to accept `Expressions` in its parameter list:
+3. Modify the search controller to accept `Expressions` in its parameter list:
 
 ```java
 @PostMapping("/search")
@@ -152,6 +142,16 @@ $in      |  col in (val1, val2, ...)
 $nin     |  col not in (val1, val2, ...)
 $or      |  expr1 or expr2
 $and     |  expr1 and expr2
+
+## Install:
+
+```xml
+<dependency>
+  <groupId>com.github.mhewedy</groupId>
+  <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
 
 ## Limitations:
 This library by design doesn't support joining multiple entites. this decision took to keep things simple and more importanlty
