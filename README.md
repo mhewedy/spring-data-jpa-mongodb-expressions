@@ -28,7 +28,17 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 
 ## How to use the library:
 
-1. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
+1. Download:
+
+```xml
+<dependency>
+  <groupId>com.github.mhewedy</groupId>
+  <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
+2. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
 
 ```java
 @Configuration
@@ -36,7 +46,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 class ApplicationConfiguration { … }
 ```
 
-2. Change the parent repository of your JPA repositories: 
+3. Change the parent repository of your JPA repositories: 
 
 ```java
 @Repository
@@ -44,7 +54,7 @@ public interface EmployeeRepository extends ExpressionsRepository<Employee, Long
 }
 ```
 
-3. Modify the search controller to accept `Expressions` in its parameter list:
+4. Modify the search controller to accept `Expressions` in its parameter list:
 
 ```java
 @PostMapping("/search")
