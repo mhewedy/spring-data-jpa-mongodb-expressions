@@ -12,7 +12,7 @@ import static com.github.mhewedy.expressions.Expression.*;
 
 
 /**
- * Represents Group of expression using mongodb query api <br />
+ * Represents Group of expression using mongodb query api.
  * <p>
  * Example:
  * <pre>
@@ -22,7 +22,7 @@ import static com.github.mhewedy.expressions.Expression.*;
  * }
  * </pre>
  * <p>
- * Support a list of Operators defined in {@link Operator}. <br />
+ * Support a list of Operators defined in {@link Operator}.
  *
  * @see ExpressionsRepository#findAll(Expressions)
  * @see ExpressionsRepository#findAll(Expressions, Sort)
@@ -36,7 +36,7 @@ public class Expressions extends HashMap<String, Object> {
      * then adds to it the current expressions attached at the root
      * and the expression passes as parameter.
      * <p>
-     * Example: <br />
+     * Example:
      * Suppose we have the following expression as json: <pre> {"firstName": "ali"} </pre>
      * <p>
      * Then we added the following:
@@ -63,7 +63,7 @@ public class Expressions extends HashMap<String, Object> {
      * </pre>
      * Or in sql as:
      * <pre>
-     *  where firstName = "ali" or lastName = "ibrahim" and age >= 10
+     *  where firstName = "ali" or lastName = "ibrahim" and age &gt;= 10
      * </pre>
      */
     public Expressions or(Expression expression) {
@@ -86,7 +86,7 @@ public class Expressions extends HashMap<String, Object> {
     /**
      * Add the parameter expression to the list of expression in the expressions object.
      * <p>
-     * Example: <br />
+     * Example:
      * Suppose we have the following expression as json:
      * <pre> {"firstName": "ali"} </pre>
      * <p>
@@ -113,7 +113,7 @@ public class Expressions extends HashMap<String, Object> {
      * </pre>
      * Or in sql as:
      * <pre>
-     * where firstName = "ali" and birthDate > "1980-10-10"
+     * where firstName = "ali" and birthDate &gt; "1980-10-10"
      *     and (lastName = "ibrahim" or age in (10, 30) )
      * </pre>
      */
@@ -130,7 +130,7 @@ public class Expressions extends HashMap<String, Object> {
 
     /**
      * The bridge between {@link Expression} and the internal representation of mongodb query lang
-     * represented by {@link Expressions} class. <br />
+     * represented by {@link Expressions} class.
      */
     private static void add(Expression expression, Map<String, Object> map) {
 

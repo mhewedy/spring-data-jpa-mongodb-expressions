@@ -12,14 +12,14 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Expression class considered the base for all other expressions as well as contains
- * factory method to build the expressions object. <br />
+ * factory method to build the expressions object.
  * <p>
  * So it represents the java api for the expressions
  * <p>
  * <p>
- * Example: <br />
+ * Example:
  * We can build complex expressions and pass it to the spring data jpa {@link ExpressionsRepository#findAll(Expressions)}
- * using the factory methods in this class as following: <br /><br />
+ * using the factory methods in this class as following: <p>
  *
  * <pre>
  * var expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toList;
  * </pre>
  * Then the output could be represented as:
  * <pre>
- * where lastName = "ibrahim" and (age in (10 , 20) or birth_date < "1980-01-01")
+ * where lastName = "ibrahim" and (age in (10 , 20) or birth_date &lt; "1980-01-01")
  * </pre>
  * <p>
  * The Expression API also service as an intermediate representations that resides between
