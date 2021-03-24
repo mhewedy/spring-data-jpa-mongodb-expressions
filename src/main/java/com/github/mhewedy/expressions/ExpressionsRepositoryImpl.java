@@ -50,7 +50,7 @@ public class ExpressionsRepositoryImpl<T, ID>
 
         @Override
         public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-
+            query.distinct(true);   // to eliminate duplicate in case of one-to-many and many-to-many associations
             return ExpressionsPredicateBuilder.getPredicate(root, cb, expressions);
         }
     }

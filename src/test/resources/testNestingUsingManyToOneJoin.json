@@ -1,0 +1,4 @@
+{
+  "lastName": "ibrahim",
+  "department.name": {"$contains":  "sw"}
+}

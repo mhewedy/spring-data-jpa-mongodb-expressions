@@ -91,22 +91,31 @@ Expression:
 ```json
 {
   "$or": [
-    {
-      "lastName": "ibrahim"
-    },
+    {"lastName": "ibrahim"},
     {
       "$and": [
+        {"firstName": "mostafa"},
         {
-          "firstName": "mostafa"
-        },
-        {
-          "birthDate": {
-            "$gt": "1990-01-01"
-          }
+          "birthDate": {"$gt": "1990-01-01"}
         }
       ]
     }
   ]
+}
+```
+
+output:
+```sql
+... where last_name = ? or first_name = ? and birth_date > ?
+```
+
+3-
+
+Expression (joins):
+```json
+{
+  "lastName": "ibrahim",
+  "department.name": {"$contains":  "sw"}
 }
 ```
 
@@ -149,17 +158,11 @@ $and     |  expr1 and expr2
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 
-## Limitations:
-This library by design doesn't support joining multiple entites. this decision took to keep things simple and more importanlty
-in order not to make the generated sql queries not optimized. However if you have such need you can create a DB View and map 
-it to an entity, it will allow result in much better queries.
-
 ## Plan:
-* Support nested objects
 * Create a javascript client to build the mongodb queries.
 
 ## Thanks:

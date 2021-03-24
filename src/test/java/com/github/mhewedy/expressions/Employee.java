@@ -3,11 +3,10 @@ package com.github.mhewedy.expressions;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -24,4 +23,9 @@ public class Employee {
     public Instant hireDate;
     public Short type;
     public Boolean active;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    public Department department;
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id")
+    public List<Task> tasks;
 }

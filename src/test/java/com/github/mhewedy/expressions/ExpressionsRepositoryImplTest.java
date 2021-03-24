@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -45,11 +46,21 @@ public class ExpressionsRepositoryImplTest {
     public void setup() {
         log.info("setting up");
         List<Employee> employees = Arrays.asList(
-                new Employee(null, "ahmed", "ibrahim", LocalDate.of(1980, 10, 10), 10, Instant.parse("2007-12-03T10:15:30.00Z"), (short) 1, true),
-                new Employee(null, "mohammad", "ibrahim", LocalDate.of(1985, 10, 10), 20, Instant.parse("2009-12-03T10:15:30.00Z"), (short) 1, true),
-                new Employee(null, "mostafa", "ahmed", LocalDate.of(1988, 10, 10), 30, Instant.parse("2011-12-03T10:15:30.00Z"), (short) 2, true),
-                new Employee(null, "wael", "ibrahim", LocalDate.of(1990, 10, 10), 40, Instant.parse("2015-12-03T10:15:30.00Z"), (short) 2, true),
-                new Employee(null, "farida", "abdullah", LocalDate.of(1979, 10, 10), 50, Instant.parse("2017-12-03T10:15:30.00Z"), (short) 2, false)
+                new Employee(null, "ahmed", "ibrahim", LocalDate.of(1980, 10, 10), 10,
+                        Instant.parse("2007-12-03T10:15:30.00Z"), (short) 1, true, new Department(null, "hr", new City(null, "cairo")),
+                        Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr"))),
+                new Employee(null, "mohammad", "ibrahim", LocalDate.of(1985, 10, 10), 20,
+                        Instant.parse("2009-12-03T10:15:30.00Z"), (short) 1, true, new Department(null, "sw arch", new City(null, "giaz")),
+                        Arrays.asList(new Task(null, "fix sw arch"), new Task(null, "fix sw arch"))),
+                new Employee(null, "mostafa", "ahmed", LocalDate.of(1988, 10, 10), 30,
+                        Instant.parse("2011-12-03T10:15:30.00Z"), (short) 2, true, new Department(null, "sw dev", new City(null, "alex")),
+                        Arrays.asList(new Task(null, "fix sw dev"), new Task(null, "fix sw dev"))),
+                new Employee(null, "wael", "ibrahim", LocalDate.of(1990, 10, 10), 40,
+                        Instant.parse("2015-12-03T10:15:30.00Z"), (short) 2, true, new Department(null, "hr", new City(null, "cairo")),
+                        Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr"))),
+                new Employee(null, "farida", "abdullah", LocalDate.of(1979, 10, 10), 50,
+                        Instant.parse("2017-12-03T10:15:30.00Z"), (short) 2, false, new Department(null, "hr", new City(null, "cairo")),
+                        Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr")))
         );
         employeeRepository.saveAll(employees);
     }
@@ -261,7 +272,7 @@ public class ExpressionsRepositoryImplTest {
             fail("should throw exception");
         } catch (Exception ex) {
             assertThat(ex.getMessage())
-                    .contains("Unable to locate SingularAttribute")
+                    .contains("Unable to locate")
                     .contains("[invalidFieldName]");
         }
     }
@@ -292,6 +303,58 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(5);
 
         // where type in ? or active=?
+    }
+
+    @Test
+    public void testNestingUsingManyToOneJoin() throws Exception {
+        String json = loadResourceJsonFile("testNestingUsingManyToOneJoin");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)
+    }
+
+    @Test
+    public void testNestingUsingManyToOneJoinUsingInQueries() throws Exception {
+        String json = loadResourceJsonFile("testNestingUsingManyToOneJoinUsingInQueries");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(4);
+
+        // employee e inner join department d on e.department_id=d.id where d.name in (? , ?)
+    }
+
+    @Test
+    public void testNestingUsingManyToOneJoinUsingDeepNestedLevel() throws Exception {
+        String json = loadResourceJsonFile("testNestingUsingManyToOneJoinUsingDeepNestedLevel");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(2);
+
+        // from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?
+    }
+
+    @Test
+    public void testNestingUsingOneToManyJoin() throws Exception {
+        String json = loadResourceJsonFile("testNestingUsingOneToManyJoin");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(5);
+
+        // from employee e inner join task t on e.id=t.employee_id where t.name like ?
     }
 
     @SneakyThrows
