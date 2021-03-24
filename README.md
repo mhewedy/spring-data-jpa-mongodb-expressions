@@ -1,7 +1,8 @@
 # Spring Data JPA MongoDB expressions
 
 
-[![Java CI with Maven](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml/badge.svg)](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml) | [![codecov](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions/branch/master/graph/badge.svg?token=3BR9MGYVC8)](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions)
+[![Java CI with Maven](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml/badge.svg)](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml) [![codecov](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions/branch/master/graph/badge.svg?token=3BR9MGYVC8)](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions) [![javadoc](https://javadoc.io/badge2/com.github.mhewedy/spring-data-jpa-mongodb-expressions/javadoc.svg)](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions)
+
 
 Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used with Spring-data-jpa.
 
