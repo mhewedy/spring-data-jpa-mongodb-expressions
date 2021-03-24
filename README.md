@@ -159,7 +159,8 @@ in order not to make the generated sql queries not optimized. However if you hav
 it to an entity, it will allow result in much better queries.
 
 ## Plan:
-Create a javascript client to build the mongodb queries.
+* Support nested objects
+* Create a javascript client to build the mongodb queries.
 
 ## Thanks:
 
