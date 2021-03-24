@@ -202,15 +202,13 @@ class ExpressionsPredicateBuilder {
             } else if (expression instanceof OrExpression) {
                 predicates.add(cb.or(
                         getPredicates(cb, from, type,
-                                ((OrExpression) expression).expressions)
-                                .toArray(new Predicate[0])
+                                ((OrExpression) expression).expressions).toArray(new Predicate[0])
                 ));
 
             } else if (expression instanceof AndExpression) {
                 predicates.add(cb.and(
                         getPredicates(cb, from, type,
-                                ((AndExpression) expression).expressions)
-                                .toArray(new Predicate[0])
+                                ((AndExpression) expression).expressions).toArray(new Predicate[0])
                 ));
             }
         }
