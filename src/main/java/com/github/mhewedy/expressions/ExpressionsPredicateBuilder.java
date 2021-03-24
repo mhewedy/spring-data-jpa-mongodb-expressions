@@ -2,20 +2,28 @@ package com.github.mhewedy.expressions;
 
 import org.springframework.util.Assert;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.github.mhewedy.expressions.Expression.*;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 class ExpressionsPredicateBuilder {
+
+    private static final Set<Attribute.PersistentAttributeType> ASSOCIATION_TYPES;
+
+    static {
+        ASSOCIATION_TYPES = EnumSet.of(Attribute.PersistentAttributeType.MANY_TO_MANY, //
+                Attribute.PersistentAttributeType.MANY_TO_ONE, //
+                Attribute.PersistentAttributeType.ONE_TO_MANY, //
+                Attribute.PersistentAttributeType.ONE_TO_ONE);
+    }
 
     static <T> Predicate getPredicate(Root<T> root, CriteriaBuilder cb, Expressions expressions) {
 
@@ -41,8 +49,8 @@ class ExpressionsPredicateBuilder {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static List<Predicate> getPredicates(CriteriaBuilder cb,
-                                         Path<?> from, ManagedType<?> type,
-                                         List<Expression> expressions) {
+                                                 Path<?> from, ManagedType<?> type,
+                                                 List<Expression> expressions) {
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -52,11 +60,22 @@ class ExpressionsPredicateBuilder {
 
                 SingularExpression singularExpression = (SingularExpression) expression;
 
-                SingularAttribute attribute = type.getSingularAttribute(singularExpression.field);
+                final String field = extractField(singularExpression.field);
+                SingularAttribute attribute = type.getSingularAttribute(field);
+
+                if (isAssociation(attribute)) {
+                    final String subField = extractSubField(singularExpression.field);
+                    final SingularExpression subExpression =
+                            new SingularExpression(subField, singularExpression.operator, singularExpression.value);
+                    predicates.addAll(
+                            getPredicates(cb, ((From<?, ?>) from).join(field),
+                                    (ManagedType<?>) attribute.getType(), singletonList(subExpression))
+                    );
+                    continue;
+                }
+
                 Object attributeValue = convertValueToAttributeType(singularExpression.value, attribute.getJavaType());
-
                 Path exprPath = from.get(attribute);
-
                 Predicate predicate;
 
                 switch (singularExpression.operator) {
@@ -148,8 +167,20 @@ class ExpressionsPredicateBuilder {
             } else if (expression instanceof ListExpression) {
 
                 ListExpression listExpression = (ListExpression) expression;
+                final String field = extractField(listExpression.field);
+                SingularAttribute attribute = type.getSingularAttribute(field);
 
-                SingularAttribute attribute = type.getSingularAttribute(listExpression.field);
+                if (isAssociation(attribute)) {
+                    final String subField = extractSubField(listExpression.field);
+                    final ListExpression subExpression =
+                            new ListExpression(subField, listExpression.operator, listExpression.values);
+                    predicates.addAll(
+                            getPredicates(cb, ((From<?, ?>) from).join(field),
+                                    (ManagedType<?>) attribute.getType(), singletonList(subExpression))
+                    );
+                    continue;
+                }
+
                 List<Object> attributeValues = convertValueToAttributeType(listExpression.values, attribute.getJavaType());
                 Path exprPath = from.get(attribute);
 
@@ -191,6 +222,19 @@ class ExpressionsPredicateBuilder {
         }
 
         return predicates;
+    }
+
+    private static String extractField(String field) {
+        return field.contains(".") ? field.split("\\.")[0] : field;
+    }
+
+    private static String extractSubField(String field) {
+        //if field is "abc.efg.xyz", then return "efg.xyz", so to support n-level association
+        return Arrays.stream(field.split("\\.")).skip(1).collect(Collectors.joining("."));
+    }
+
+    private static boolean isAssociation(Attribute<?, ?> attribute) {
+        return ASSOCIATION_TYPES.contains(attribute.getPersistentAttributeType());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
