@@ -344,7 +344,7 @@ public class ExpressionsRepositoryImplTest {
         // from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?
     }
 
-    @Disabled // TODO one-to-many note supported yet
+    @Test
     public void testNestingUsingOneToManyJoin() throws Exception {
         String json = loadResourceJsonFile("testNestingUsingOneToManyJoin");
 
@@ -354,7 +354,7 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList).isNotNull();
         assertThat(employeeList.size()).isEqualTo(5);
 
-        //
+        // from employee e inner join task t on e.id=t.employee_id where t.name like ?
     }
 
     @SneakyThrows

@@ -111,7 +111,7 @@ output:
 
 3-
 
-Expression (many-to-one):
+Expression (joins):
 ```json
 {
   "lastName": "ibrahim",
@@ -163,9 +163,6 @@ $and     |  expr1 and expr2
 ```
 
 ## Plan:
-* Support nested objects:
-  * support many-to-one and one-to-one (Done)
-  * support one-to-many (TODO)  
 * Create a javascript client to build the mongodb queries.
 
 ## Thanks:

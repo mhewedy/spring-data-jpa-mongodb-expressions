@@ -26,5 +26,6 @@ public class Employee {
     @ManyToOne(cascade = CascadeType.PERSIST)
     public Department department;
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id")
     public List<Task> tasks;
 }
