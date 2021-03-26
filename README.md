@@ -164,7 +164,7 @@ $and     |  expr1 and expr2
 ```
 
 ## How to build the query on Frontend:
-See this snippet to see how to build the query from js: https://playcode.io/753066/
+See this [snippet](https://playcode.io/753066/) to see how to build the query from js.
 
 ## Thanks:
 
