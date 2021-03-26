@@ -163,8 +163,8 @@ $and     |  expr1 and expr2
 </dependency>
 ```
 
-## Plan:
-* Create a javascript client to build the mongodb queries.
+## How to build the query on Frontend:
+See this snippet to see how to build the query from js: https://playcode.io/753066/
 
 ## Thanks:
 
