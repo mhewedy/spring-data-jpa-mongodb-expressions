@@ -122,7 +122,7 @@ Expression (joins):
 
 output:
 ```sql
-... where last_name = ? or first_name = ? and birth_date > ?
+... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.name like ?
 ```
 
 For a list of json queries, see :
