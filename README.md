@@ -28,7 +28,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 ```
 See [javadoc](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions) for more information.
 
-## How to start 🛸
+## How to start 🚀
 
 1. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
 
