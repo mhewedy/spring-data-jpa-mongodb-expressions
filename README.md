@@ -26,7 +26,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
     Page<T> findAll(Expressions expressions, Pageable pageable);
 }
 ```
-See [![javadoc](https://javadoc.io/badge2/com.github.mhewedy/spring-data-jpa-mongodb-expressions/javadoc.svg)](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions) for more information.
+See [javadoc](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions) for more information.
 
 ## How to start
 
