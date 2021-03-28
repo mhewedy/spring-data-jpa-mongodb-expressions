@@ -4,15 +4,15 @@
 [![Java CI with Maven](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml/badge.svg)](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml) [![codecov](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions/branch/master/graph/badge.svg?token=3BR9MGYVC8)](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions) [![javadoc](https://javadoc.io/badge2/com.github.mhewedy/spring-data-jpa-mongodb-expressions/javadoc.svg)](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions)
 
 
-Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used with Spring-data-jpa.
+Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used with Spring-Data-JPA 🎉.
 
-## Why?
+## Why? 🤖
 `spring-data-jpa-mongodb-expressions` allows you to **use the [MongoDB query syntax](https://docs.mongodb.com/manual/tutorial/query-documents/) to query your relational database.** This is specially useful to build dynamic search from the frontend app (a common case in business apps).
 
 So, you can build the mongodb query-like json from the frontend app and pass it to the controller, and then optionally you enrich it with addtional conditions and pass it to the repository layer, in which the monogodb query will be translated automatically to JPA specification and executed.
 
 
-## API
+## API 👾
 
 This library provides an single interface `ExpressionsRepository` to be extended by your application repositories:
 
@@ -28,7 +28,7 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
 ```
 See [javadoc](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions) for more information.
 
-## How to start
+## How to start 🛸
 
 1. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
 
@@ -62,7 +62,7 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
 }
 ```
 
-## Examples json expressions
+## Examples json expressions 🎭
 The following is an example expressions that could be sent to the Controller Rest Apis, and will be deserialized into the `Expressions` object.
 
 1-
@@ -167,6 +167,6 @@ $and     |  expr1 and expr2
 ## How to build the query on Frontend?
 See this [snippet](https://playcode.io/753066/) to see how to build the query from js.
 
-## Thanks
+## Thanks 🎖
 
 Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design, inspring with ideas, and for doing the review for the code.  
