@@ -167,6 +167,6 @@ $and     |  expr1 and expr2
 ## How to build the query on Frontend?
 See this [snippet](https://playcode.io/753066/) to see how to build the query from js.
 
-## Thanks 🎖
+## Special Thanks 🎖
 
 Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby for helping in the design, inspring with ideas, and for doing the review for the code.  
