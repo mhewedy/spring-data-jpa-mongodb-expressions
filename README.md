@@ -6,7 +6,7 @@
 
 Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutorial/query-documents/) and convert them to Specifications to be used with Spring-Data-JPA 🎉.
 
-## 🧾 Why?
+## ⚡️ Why?
 `spring-data-jpa-mongodb-expressions` allows you to **use the [MongoDB query syntax](https://docs.mongodb.com/manual/tutorial/query-documents/) to query your relational database.** This is specially useful to build dynamic search from the frontend app (a common case in business apps).
 
 So, you can build the mongodb query-like json from the frontend app and pass it to the controller, and then optionally you enrich it with addtional conditions and pass it to the repository layer, in which the monogodb query will be translated automatically to JPA specification and executed.
@@ -163,6 +163,14 @@ $and     |  expr1 and expr2
   <version>0.0.2</version>
 </dependency>
 ```
+
+## Compatibility with Spring-Data-JPA
+`spring-data-jpa-mongodb-expressions` depends mostly on public APIs from `JPA` and `Spring-data-jpa` projects, such as `javax.persistence.criteria.Predicate`, `org.springframework.data.domain.Pageable` and `org.springframework.data.jpa.domain.Specification`.
+
+So, Unless the public APIs for `JPA` and `Spring-data-jpa` don't change, it is safe to use `spring-data-jpa-mongodb-expressions`.
+
+Also, `spring-data-jpa-mongodb-expressions` declares `spring-boot-starter-data-jpa` as an optional dependency, which means it isn't a transitive dependency and no dependencies will be transferred to your project (from spring or what so ever) as a result of using `spring-data-jpa-mongodb-expressions`.
+
 
 ## 🎭 How to build the query on Frontend?
 See this [snippet](https://playcode.io/753066/) to see how to build the query from js.
