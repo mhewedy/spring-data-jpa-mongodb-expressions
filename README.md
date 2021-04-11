@@ -61,8 +61,10 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
         );
 }
 ```
+ And that's it, you can now send Mongodb-like json queries to the api.
 
-## 🏮 Examples json expressions
+## 🏮 Examples json queries:
+
 The following is an example expressions that could be sent to the Controller Rest Apis, and will be deserialized into the `Expressions` object.
 
 1-
@@ -126,7 +128,8 @@ output:
 ... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.name like ?
 ```
 
-For a list of json queries, see :
+For a list of json queries see :
+
 1. the [resources](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/tree/master/src/test/resources) directory  
 2. [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
 3. [Mongodb docs](https://docs.mongodb.com/manual/tutorial/query-documents/) as a reference for the queries.
@@ -167,9 +170,9 @@ $and     |  expr1 and expr2
 ## Compatibility with Spring-Data-JPA
 `spring-data-jpa-mongodb-expressions` depends mostly on public APIs from `JPA` and `Spring-data-jpa` projects, such as `javax.persistence.criteria.Predicate`, `org.springframework.data.domain.Pageable` and `org.springframework.data.jpa.domain.Specification`.
 
-So, Unless the public APIs for `JPA` and `Spring-data-jpa` don't change, it is safe to use `spring-data-jpa-mongodb-expressions`.
+So unless the public APIs for `JPA` and `Spring-data-jpa` don't change, it is safe to use `spring-data-jpa-mongodb-expressions`.
 
-Also, `spring-data-jpa-mongodb-expressions` declares `spring-boot-starter-data-jpa` as an optional dependency, which means it isn't a transitive dependency and no dependencies will be transferred to your project (from spring or what so ever) as a result of using `spring-data-jpa-mongodb-expressions`.
+Also `spring-data-jpa-mongodb-expressions` declares `spring-boot-starter-data-jpa` as an optional dependency, which means it isn't a transitive dependency and no dependencies will be transferred to your project (from spring or what so ever) as a result of using `spring-data-jpa-mongodb-expressions`.
 
 
 ## 🎭 How to build the query on Frontend?
