@@ -357,6 +357,33 @@ public class ExpressionsRepositoryImplTest {
         // from employee e inner join task t on e.id=t.employee_id where t.name like ?
     }
 
+    @Test
+    public void testNestingUsingManyToOneJoinWithMultipleFields() throws Exception {
+        String json = loadResourceJsonFile("testNestingUsingManyToOneJoinWithMultipleFields");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(0);
+
+        // from employee e inner join department d on e.department_id=d.id  where e.last_name=? or d.id=? or d.name=?
+    }
+
+    @Test
+    public void testNestingUsingManyToOneJoinWithMultipleFields_Advanced() throws Exception {
+        String json = loadResourceJsonFile("testNestingUsingManyToOneJoinWithMultipleFields_Advanced");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(2);
+
+        // from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id
+        // where e.last_name=? and c.name=? and (d.name in (? , ?))
+    }
+
     @SneakyThrows
     private String loadResourceJsonFile(String name) {
         File file = ResourceUtils.getFile("classpath:" + name + ".json");
