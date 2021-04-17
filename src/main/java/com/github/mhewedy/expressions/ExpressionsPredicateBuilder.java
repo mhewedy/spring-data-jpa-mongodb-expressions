@@ -62,8 +62,11 @@ class ExpressionsPredicateBuilder {
                     final SingularExpression subExpression =
                             new SingularExpression(subField, singularExpression.operator, singularExpression.value);
                     predicates.addAll(
-                            getPredicates(cb, ((From<?, ?>) from).join(field), extractSubFieldType(attribute),
-                                    singletonList(subExpression))
+                            getPredicates(cb,
+                                    reuseOrCreateJoin((From<?, ?>) from, attribute, field),
+                                    extractSubFieldType(attribute),
+                                    singletonList(subExpression)
+                            )
                     );
                     continue;
                 }
@@ -169,8 +172,11 @@ class ExpressionsPredicateBuilder {
                     final ListExpression subExpression =
                             new ListExpression(subField, listExpression.operator, listExpression.values);
                     predicates.addAll(
-                            getPredicates(cb, ((From<?, ?>) from).join(field), extractSubFieldType(attribute),
-                                    singletonList(subExpression))
+                            getPredicates(cb,
+                                    reuseOrCreateJoin((From<?, ?>) from, attribute, field),
+                                    extractSubFieldType(attribute),
+                                    singletonList(subExpression)
+                            )
                     );
                     continue;
                 }
@@ -214,6 +220,13 @@ class ExpressionsPredicateBuilder {
         }
 
         return predicates;
+    }
+
+    private static Path<?> reuseOrCreateJoin(From<?, ?> from, Attribute<?, ?> attribute, String field) {
+        return from.getJoins().stream()
+                .filter(it -> it.getAttribute() == attribute)
+                .findFirst()
+                .orElseGet(() -> from.join(field));
     }
 
     @SuppressWarnings({"rawtypes"})
