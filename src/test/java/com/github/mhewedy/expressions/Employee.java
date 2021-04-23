@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee {
+public class Employee extends Auditable {
     @Id
     @GeneratedValue
     public Long id;
@@ -26,6 +26,6 @@ public class Employee {
     @ManyToOne(cascade = CascadeType.PERSIST)
     public Department department;
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name="employee_id")
+    @JoinColumn(name = "employee_id")
     public List<Task> tasks;
 }

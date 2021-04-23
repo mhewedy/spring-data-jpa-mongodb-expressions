@@ -147,7 +147,7 @@ public class ExpressionsRepositoryImplTest {
     }
 
     @Test
-    public void testUsingTheBuilderMethodOfExpressionssWithAnd() throws Exception {
+    public void testUsingTheBuilderMethodOfExpressionsWithAnd() throws Exception {
 
         String json = loadResourceJsonFile("testUsingTheBuilderMethodOfExpressionssWithAnd");
 
@@ -273,7 +273,8 @@ public class ExpressionsRepositoryImplTest {
         } catch (Exception ex) {
             assertThat(ex.getMessage())
                     .contains("Unable to locate")
-                    .contains("[invalidFieldName]");
+                    .contains("[invalidFieldName]")/*
+                    .contains("ManagedType [com.github.mhewedy.expressions.Employee]")*/;
         }
     }
 
