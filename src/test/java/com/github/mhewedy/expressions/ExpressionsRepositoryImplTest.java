@@ -272,9 +272,8 @@ public class ExpressionsRepositoryImplTest {
             fail("should throw exception");
         } catch (Exception ex) {
             assertThat(ex.getMessage())
-                    .contains("Unable to locate")
-                    .contains("[invalidFieldName]")/*
-                    .contains("ManagedType [com.github.mhewedy.expressions.Employee]")*/;
+                    .contains("invalidFieldName")
+                    .contains("com.github.mhewedy.expressions.Employee");
         }
     }
 

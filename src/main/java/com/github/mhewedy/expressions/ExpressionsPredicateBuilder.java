@@ -55,7 +55,7 @@ class ExpressionsPredicateBuilder {
                 SingularExpression singularExpression = (SingularExpression) expression;
 
                 final String field = extractField(singularExpression.field);
-                Attribute<?, ?> attribute = type.getAttribute(field);
+                Attribute<?, ?> attribute = getAttribute(type, field);
 
                 if (attribute.isAssociation()) {
                     final String subField = extractSubField(singularExpression.field);
@@ -165,7 +165,7 @@ class ExpressionsPredicateBuilder {
 
                 ListExpression listExpression = (ListExpression) expression;
                 final String field = extractField(listExpression.field);
-                Attribute<?, ?> attribute = type.getAttribute(field);
+                Attribute<?, ?> attribute = getAttribute(type, field);
 
                 if (attribute.isAssociation()) {
                     final String subField = extractSubField(listExpression.field);
@@ -220,6 +220,21 @@ class ExpressionsPredicateBuilder {
         }
 
         return predicates;
+    }
+
+    private static Attribute<?, ?> getAttribute(ManagedType<?> type, String field) {
+        try {
+            return type.getAttribute(field);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Unable to locate attribute with the the given name [%s] on this ManagedType [%s]," +
+                                    " Are you sure this ManagedType or one of its ancestors contains such attribute?",
+                            field,
+                            type.getJavaType().getName()
+                    )
+            );
+        }
     }
 
     private static Path<?> reuseOrCreateJoin(From<?, ?> from, Attribute<?, ?> attribute, String field) {
