@@ -75,12 +75,8 @@ Expression:
 {
   "lastName": "ibrahim",
   "$and": [
-    {
-      "birthDate": {"$gt": "1981-01-01"}
-    },
-    {
-      "birthDate": {"$lte": "1985-10-10"}
-    }
+    {"birthDate": {"$gt": "1981-01-01"}},
+    {"birthDate": {"$lte": "1985-10-10"}}
   ]
 }
 ```
@@ -100,9 +96,7 @@ Expression:
     {
       "$and": [
         {"firstName": "mostafa"},
-        {
-          "birthDate": {"$gt": "1990-01-01"}
-        }
+        {"birthDate": {"$gt": "1990-01-01"}}
       ]
     }
   ]
