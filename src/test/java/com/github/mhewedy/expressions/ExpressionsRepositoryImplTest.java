@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -46,19 +45,19 @@ public class ExpressionsRepositoryImplTest {
     public void setup() {
         log.info("setting up");
         List<Employee> employees = Arrays.asList(
-                new Employee(null, "ahmed", "ibrahim", LocalDate.of(1980, 10, 10), 10,
+                new Employee(null, "ahmed", "ibrahim", new LingualString("ahmed ar", "ahmed en"), LocalDate.of(1980, 10, 10), 10,
                         Instant.parse("2007-12-03T10:15:30.00Z"), (short) 1, true, new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr"))),
-                new Employee(null, "mohammad", "ibrahim", LocalDate.of(1985, 10, 10), 20,
+                new Employee(null, "mohammad", "ibrahim", new LingualString("mohammad ar", "mohammad en"), LocalDate.of(1985, 10, 10), 20,
                         Instant.parse("2009-12-03T10:15:30.00Z"), (short) 1, true, new Department(null, "sw arch", new City(null, "giaz")),
                         Arrays.asList(new Task(null, "fix sw arch"), new Task(null, "fix sw arch"))),
-                new Employee(null, "mostafa", "ahmed", LocalDate.of(1988, 10, 10), 30,
+                new Employee(null, "mostafa", "ahmed", new LingualString("mostafa ar", "mostafa en"),  LocalDate.of(1988, 10, 10), 30,
                         Instant.parse("2011-12-03T10:15:30.00Z"), (short) 2, true, new Department(null, "sw dev", new City(null, "alex")),
                         Arrays.asList(new Task(null, "fix sw dev"), new Task(null, "fix sw dev"))),
-                new Employee(null, "wael", "ibrahim", LocalDate.of(1990, 10, 10), 40,
+                new Employee(null, "wael", "ibrahim", new LingualString("wael ar", "wael en"),  LocalDate.of(1990, 10, 10), 40,
                         Instant.parse("2015-12-03T10:15:30.00Z"), (short) 2, true, new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr"))),
-                new Employee(null, "farida", "abdullah", LocalDate.of(1979, 10, 10), 50,
+                new Employee(null, "farida", "abdullah", new LingualString("farida ar", "farida en"),  LocalDate.of(1979, 10, 10), 50,
                         Instant.parse("2017-12-03T10:15:30.00Z"), (short) 2, false, new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr")))
         );
@@ -382,6 +381,32 @@ public class ExpressionsRepositoryImplTest {
 
         // from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id
         // where e.last_name=? and c.name=? and (d.name in (? , ?))
+    }
+
+    @Test
+    public void testEmbeddedAndJoin() throws Exception {
+        String json = loadResourceJsonFile("testEmbeddedAndJoin");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?
+    }
+
+    @Test
+    public void testEmbeddedInAndJoin() throws Exception {
+        String json = loadResourceJsonFile("testEmbeddedInAndJoin");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(2);
+
+        // from employee e inner join department d on e.department_id=d.id where (e.employee_name_ar in (? , ?)) and d.name=?
     }
 
     @SneakyThrows

@@ -71,8 +71,15 @@ class ExpressionsPredicateBuilder {
                     continue;
                 }
 
-                Object attributeValue = convertValueToAttributeType(singularExpression.value, attribute.getJavaType());
                 Path exprPath = from.get((SingularAttribute) attribute);
+
+                if (Attribute.PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
+                    final String subField = extractSubField(singularExpression.field);
+                    attribute = extractSubFieldType(attribute).getAttribute(subField);
+                    exprPath = exprPath.get((SingularAttribute) attribute);
+                }
+
+                Object attributeValue = convertValueToAttributeType(singularExpression.value, attribute.getJavaType());
                 Predicate predicate;
 
                 switch (singularExpression.operator) {
@@ -181,8 +188,15 @@ class ExpressionsPredicateBuilder {
                     continue;
                 }
 
-                List<Object> attributeValues = convertValueToAttributeType(listExpression.values, attribute.getJavaType());
                 Path exprPath = from.get((SingularAttribute) attribute);
+
+                if (Attribute.PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
+                    final String subField = extractSubField(listExpression.field);
+                    attribute = extractSubFieldType(attribute).getAttribute(subField);
+                    exprPath = exprPath.get((SingularAttribute) attribute);
+                }
+
+                List<Object> attributeValues = convertValueToAttributeType(listExpression.values, attribute.getJavaType());
 
                 Predicate predicate;
 
