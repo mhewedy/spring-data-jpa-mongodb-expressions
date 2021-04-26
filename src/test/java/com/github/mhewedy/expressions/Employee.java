@@ -18,6 +18,12 @@ public class Employee extends Auditable {
 
     public String firstName;
     public String lastName;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "ar", column = @Column(name = "employee_name_ar")),
+            @AttributeOverride(name = "en", column = @Column(name = "employee_name_en"))
+    })
+    public LingualString name;
     public LocalDate birthDate;
     public Integer age;
     public Instant hireDate;
