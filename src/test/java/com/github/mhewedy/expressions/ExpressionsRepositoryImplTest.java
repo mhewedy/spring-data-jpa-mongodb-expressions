@@ -419,7 +419,7 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList).isNotNull();
         assertThat(employeeList.size()).isEqualTo(5);
 
-        //
+        // from employee e where cast(e.age as varchar(255)) like ?
     }
 
     @SneakyThrows
