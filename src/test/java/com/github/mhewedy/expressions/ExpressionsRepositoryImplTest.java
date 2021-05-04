@@ -409,6 +409,19 @@ public class ExpressionsRepositoryImplTest {
         // from employee e inner join department d on e.department_id=d.id where (e.employee_name_ar in (? , ?)) and d.name=?
     }
 
+    @Test
+    public void testNumberContains() throws Exception {
+        String json = loadResourceJsonFile("testNumberContains");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(5);
+
+        //
+    }
+
     @SneakyThrows
     private String loadResourceJsonFile(String name) {
         File file = ResourceUtils.getFile("classpath:" + name + ".json");
