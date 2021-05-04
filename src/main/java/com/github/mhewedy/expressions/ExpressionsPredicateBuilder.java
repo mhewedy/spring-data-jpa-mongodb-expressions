@@ -145,22 +145,22 @@ class ExpressionsPredicateBuilder {
                         break;
                     // like
                     case $start:
-                        predicate = cb.like(exprPath, attributeValue + "%");
+                        predicate = cb.like(exprPath.as(String.class), attributeValue + "%");
                         break;
                     case $end:
-                        predicate = cb.like(exprPath, "%" + attributeValue);
+                        predicate = cb.like(exprPath.as(String.class), "%" + attributeValue);
                         break;
                     case $contains:
-                        predicate = cb.like(exprPath, "%" + attributeValue + "%");
+                        predicate = cb.like(exprPath.as(String.class), "%" + attributeValue + "%");
                         break;
                     case $istart:
-                        predicate = cb.like(cb.lower(exprPath), ((String) attributeValue).toLowerCase() + "%");
+                        predicate = cb.like(cb.lower(exprPath.as(String.class)), attributeValue.toString().toLowerCase() + "%");
                         break;
                     case $iend:
-                        predicate = cb.like(cb.lower(exprPath), "%" + ((String) attributeValue).toLowerCase());
+                        predicate = cb.like(cb.lower(exprPath.as(String.class)), "%" + attributeValue.toString().toLowerCase());
                         break;
                     case $icontains:
-                        predicate = cb.like(cb.lower(exprPath), "%" + ((String) attributeValue).toLowerCase() + "%");
+                        predicate = cb.like(cb.lower(exprPath.as(String.class)), "%" + attributeValue.toString().toLowerCase() + "%");
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + singularExpression);
