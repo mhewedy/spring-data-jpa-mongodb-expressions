@@ -21,26 +21,28 @@ public class ExpressionsRepositoryImpl<T, ID>
         extends SimpleJpaRepository<T, ID> implements ExpressionsRepository<T, ID> {
 
     public ExpressionsRepositoryImpl(JpaEntityInformation<T, Long>
-                                      entityInformation, EntityManager entityManager) {
+                                             entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
     }
 
     @Override
     public List<T> findAll(Expressions expressions) {
-        ExpressionsSpecification<T> specifications = new ExpressionsSpecification<>(expressions);
-        return findAll(specifications);
+        return findAll(new ExpressionsSpecification<>(expressions));
     }
 
     @Override
     public List<T> findAll(Expressions expressions, Sort sort) {
-        ExpressionsSpecification<T> specifications = new ExpressionsSpecification<>(expressions);
-        return findAll(specifications, sort);
+        return findAll(new ExpressionsSpecification<>(expressions), sort);
     }
 
     @Override
     public Page<T> findAll(Expressions expressions, Pageable pageable) {
-        ExpressionsSpecification<T> specifications = new ExpressionsSpecification<>(expressions);
-        return findAll(specifications, pageable);
+        return findAll(new ExpressionsSpecification<>(expressions), pageable);
+    }
+
+    @Override
+    public long count(Expressions expressions) {
+        return count(new ExpressionsSpecification<>(expressions));
     }
 
     @RequiredArgsConstructor

@@ -422,6 +422,18 @@ public class ExpressionsRepositoryImplTest {
         // from employee e where cast(e.age as varchar(255)) like ?
     }
 
+    @Test
+    public void testNumberContains_Count() throws Exception {
+        String json = loadResourceJsonFile("testNumberContains");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        long count = employeeRepository.count(expressions);
+        assertThat(count).isEqualTo(5);
+
+        // from employee e where cast(e.age as varchar(255)) like ?
+    }
+
     @SneakyThrows
     private String loadResourceJsonFile(String name) {
         File file = ResourceUtils.getFile("classpath:" + name + ".json");
