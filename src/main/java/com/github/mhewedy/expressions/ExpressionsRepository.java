@@ -16,4 +16,6 @@ public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
     List<T> findAll(Expressions expressions, Sort sort);
 
     Page<T> findAll(Expressions expressions, Pageable pageable);
+
+    long count(Expressions expressions);
 }
