@@ -1,19 +1,19 @@
-package com.github.mhewedy.expressions;
+package com.github.mhewedy.expressions.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
+public class Department {
 
     @Id
     @GeneratedValue
     public Long id;
     public String name;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    public City city;
 }

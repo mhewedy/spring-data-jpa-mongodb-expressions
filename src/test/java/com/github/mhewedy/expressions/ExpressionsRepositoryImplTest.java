@@ -1,6 +1,7 @@
 package com.github.mhewedy.expressions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mhewedy.expressions.model.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.mhewedy.expressions.model.Status.ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.fail;
 
@@ -45,21 +47,66 @@ public class ExpressionsRepositoryImplTest {
     public void setup() {
         log.info("setting up");
         List<Employee> employees = Arrays.asList(
-                new Employee(null, "ahmed", "ibrahim", new LingualString("ahmed ar", "ahmed en"), LocalDate.of(1980, 10, 10), 10,
-                        Instant.parse("2007-12-03T10:15:30.00Z"), (short) 1, true, new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr"))),
-                new Employee(null, "mohammad", "ibrahim", new LingualString("mohammad ar", "mohammad en"), LocalDate.of(1985, 10, 10), 20,
-                        Instant.parse("2009-12-03T10:15:30.00Z"), (short) 1, true, new Department(null, "sw arch", new City(null, "giaz")),
-                        Arrays.asList(new Task(null, "fix sw arch"), new Task(null, "fix sw arch"))),
-                new Employee(null, "mostafa", "ahmed", new LingualString("mostafa ar", "mostafa en"),  LocalDate.of(1988, 10, 10), 30,
-                        Instant.parse("2011-12-03T10:15:30.00Z"), (short) 2, true, new Department(null, "sw dev", new City(null, "alex")),
-                        Arrays.asList(new Task(null, "fix sw dev"), new Task(null, "fix sw dev"))),
-                new Employee(null, "wael", "ibrahim", new LingualString("wael ar", "wael en"),  LocalDate.of(1990, 10, 10), 40,
-                        Instant.parse("2015-12-03T10:15:30.00Z"), (short) 2, true, new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr"))),
-                new Employee(null, "farida", "abdullah", new LingualString("farida ar", "farida en"),  LocalDate.of(1979, 10, 10), 50,
-                        Instant.parse("2017-12-03T10:15:30.00Z"), (short) 2, false, new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr"), new Task(null, "fix hr")))
+                new Employee(null,
+                        "ahmed",
+                        "ibrahim",
+                        new LingualString("ahmed ar", "ahmed en"),
+                        LocalDate.of(1980, 10, 10),
+                        10,
+                        Instant.parse("2007-12-03T10:15:30.00Z"),
+                        (short) 1,
+                        true,
+                        new Department(null, "hr", new City(null, "cairo")),
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE))
+                ),
+                new Employee(null,
+                        "mohammad",
+                        "ibrahim",
+                        new LingualString("mohammad ar", "mohammad en"),
+                        LocalDate.of(1985, 10, 10),
+                        20,
+                        Instant.parse("2009-12-03T10:15:30.00Z"),
+                        (short) 1,
+                        true,
+                        new Department(null, "sw arch", new City(null, "giaz")),
+                        Arrays.asList(new Task(null, "fix sw arch", ACTIVE), new Task(null, "fix sw arch", ACTIVE))
+                ),
+                new Employee(null,
+                        "mostafa",
+                        "ahmed",
+                        new LingualString("mostafa ar", "mostafa en"),
+                        LocalDate.of(1988, 10, 10),
+                        30,
+                        Instant.parse("2011-12-03T10:15:30.00Z"),
+                        (short) 2,
+                        true,
+                        new Department(null, "sw dev", new City(null, "alex")),
+                        Arrays.asList(new Task(null, "fix sw dev", ACTIVE), new Task(null, "fix sw dev", ACTIVE))
+                ),
+                new Employee(null,
+                        "wael",
+                        "ibrahim",
+                        new LingualString("wael ar", "wael en"),
+                        LocalDate.of(1990, 10, 10),
+                        40,
+                        Instant.parse("2015-12-03T10:15:30.00Z"),
+                        (short) 2,
+                        true,
+                        new Department(null, "hr", new City(null, "cairo")),
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE))
+                ),
+                new Employee(null,
+                        "farida",
+                        "abdullah",
+                        new LingualString("farida ar", "farida en"),
+                        LocalDate.of(1979, 10, 10),
+                        50,
+                        Instant.parse("2017-12-03T10:15:30.00Z"),
+                        (short) 2,
+                        false,
+                        new Department(null, "hr", new City(null, "cairo")),
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE))
+                )
         );
         employeeRepository.saveAll(employees);
     }
@@ -272,7 +319,7 @@ public class ExpressionsRepositoryImplTest {
         } catch (Exception ex) {
             assertThat(ex.getMessage())
                     .contains("invalidFieldName")
-                    .contains("com.github.mhewedy.expressions.Employee");
+                    .contains("com.github.mhewedy.expressions.model.Employee");
         }
     }
 

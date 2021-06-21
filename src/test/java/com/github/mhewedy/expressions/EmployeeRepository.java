@@ -1,5 +1,6 @@
 package com.github.mhewedy.expressions;
 
+import com.github.mhewedy.expressions.model.Employee;
 import org.springframework.stereotype.Repository;
 
 @Repository
