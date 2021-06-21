@@ -329,6 +329,6 @@ class ExpressionsPredicateBuilder {
             return values.stream().map(it -> ((Integer) it).floatValue()).collect(toList());
         }
 
-        return values;
+        return values.stream().map(it -> convertValueToAttributeType(it, javaType)).collect(toList());
     }
 }

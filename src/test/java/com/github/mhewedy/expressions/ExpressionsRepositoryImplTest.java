@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.mhewedy.expressions.model.Status.ACTIVE;
+import static com.github.mhewedy.expressions.model.Status.NOT_ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.fail;
 
@@ -105,7 +106,7 @@ public class ExpressionsRepositoryImplTest {
                         (short) 2,
                         false,
                         new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE))
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", NOT_ACTIVE))
                 )
         );
         employeeRepository.saveAll(employees);
@@ -479,6 +480,30 @@ public class ExpressionsRepositoryImplTest {
         assertThat(count).isEqualTo(5);
 
         // from employee e where cast(e.age as varchar(255)) like ?
+    }
+
+    @Test
+    public void testEnumInInts() throws Exception {
+        String json = loadResourceJsonFile("testEnumInInts");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(5);
+
+        // from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)
+    }
+
+    @Test
+    public void testEnumNotInStrings() throws Exception {
+        String json = loadResourceJsonFile("testEnumNotInStrings");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // from employee e inner join task t on e.id=t.employee_id where t.status not in (?)
     }
 
     @SneakyThrows
