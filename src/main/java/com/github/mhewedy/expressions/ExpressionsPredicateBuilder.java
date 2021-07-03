@@ -59,16 +59,18 @@ class ExpressionsPredicateBuilder {
 
                 if (attribute.isAssociation()) {
                     final String subField = extractSubField(singularExpression.field);
-                    final SingularExpression subExpression =
-                            new SingularExpression(subField, singularExpression.operator, singularExpression.value);
-                    predicates.addAll(
-                            getPredicates(cb,
-                                    reuseOrCreateJoin((From<?, ?>) from, attribute, field),
-                                    extractSubFieldType(attribute),
-                                    singletonList(subExpression)
-                            )
-                    );
-                    continue;
+                    if (!subField.isEmpty()) {
+                        final SingularExpression subExpression =
+                                new SingularExpression(subField, singularExpression.operator, singularExpression.value);
+                        predicates.addAll(
+                                getPredicates(cb,
+                                        reuseOrCreateJoin((From<?, ?>) from, attribute, field),
+                                        extractSubFieldType(attribute),
+                                        singletonList(subExpression)
+                                )
+                        );
+                        continue;
+                    }
                 }
 
                 Path exprPath = from.get((SingularAttribute) attribute);
@@ -176,16 +178,18 @@ class ExpressionsPredicateBuilder {
 
                 if (attribute.isAssociation()) {
                     final String subField = extractSubField(listExpression.field);
-                    final ListExpression subExpression =
-                            new ListExpression(subField, listExpression.operator, listExpression.values);
-                    predicates.addAll(
-                            getPredicates(cb,
-                                    reuseOrCreateJoin((From<?, ?>) from, attribute, field),
-                                    extractSubFieldType(attribute),
-                                    singletonList(subExpression)
-                            )
-                    );
-                    continue;
+                    if (!subField.isEmpty()) {
+                        final ListExpression subExpression =
+                                new ListExpression(subField, listExpression.operator, listExpression.values);
+                        predicates.addAll(
+                                getPredicates(cb,
+                                        reuseOrCreateJoin((From<?, ?>) from, attribute, field),
+                                        extractSubFieldType(attribute),
+                                        singletonList(subExpression)
+                                )
+                        );
+                        continue;
+                    }
                 }
 
                 Path exprPath = from.get((SingularAttribute) attribute);
@@ -242,7 +246,7 @@ class ExpressionsPredicateBuilder {
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException(
                     String.format(
-                            "Unable to locate attribute with the the given name [%s] on this ManagedType [%s]," +
+                            "Unable to locate attribute with the given name [%s] on this ManagedType [%s]," +
                                     " Are you sure this ManagedType or one of its ancestors contains such attribute?",
                             field,
                             type.getJavaType().getName()

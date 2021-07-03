@@ -107,6 +107,18 @@ public class ExpressionsRepositoryImplTest {
                         false,
                         new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", NOT_ACTIVE))
+                ),
+                new Employee(null,
+                        "fofo",
+                        "bobo",
+                        new LingualString("fofo ar", "fofo en"),
+                        LocalDate.of(1979, 10, 10),
+                        50,
+                        Instant.parse("2017-12-03T10:15:30.00Z"),
+                        (short) 2,
+                        false,
+                        null,
+                        null
                 )
         );
         employeeRepository.saveAll(employees);
@@ -143,7 +155,7 @@ public class ExpressionsRepositoryImplTest {
         Page<Employee> employeeList =
                 employeeRepository.findAll(expressions, PageRequest.of(0, 3, Sort.by("firstName").descending()));
         assertThat(employeeList).isNotNull();
-        assertThat(employeeList.getTotalElements()).isEqualTo(5);
+        assertThat(employeeList.getTotalElements()).isEqualTo(6);
         assertThat(employeeList.getSize()).isEqualTo(3);
         assertThat(employeeList.getContent().get(0).firstName).isEqualTo("wael");
     }
@@ -221,7 +233,7 @@ public class ExpressionsRepositoryImplTest {
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList).isNotNull();
-        assertThat(employeeList.size()).isEqualTo(5);
+        assertThat(employeeList.size()).isEqualTo(6);
 
         // where ?=1
     }
@@ -255,7 +267,7 @@ public class ExpressionsRepositoryImplTest {
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList).isNotNull();
-        assertThat(employeeList.size()).isEqualTo(5);
+        assertThat(employeeList.size()).isEqualTo(6);
 
         // where employee0_.first_name is null or employee0_.last_name is not null
     }
@@ -347,7 +359,7 @@ public class ExpressionsRepositoryImplTest {
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList).isNotNull();
-        assertThat(employeeList.size()).isEqualTo(5);
+        assertThat(employeeList.size()).isEqualTo(6);
 
         // where type in ? or active=?
     }
@@ -465,7 +477,7 @@ public class ExpressionsRepositoryImplTest {
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList).isNotNull();
-        assertThat(employeeList.size()).isEqualTo(5);
+        assertThat(employeeList.size()).isEqualTo(6);
 
         // from employee e where cast(e.age as varchar(255)) like ?
     }
@@ -477,7 +489,7 @@ public class ExpressionsRepositoryImplTest {
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
         long count = employeeRepository.count(expressions);
-        assertThat(count).isEqualTo(5);
+        assertThat(count).isEqualTo(6);
 
         // from employee e where cast(e.age as varchar(255)) like ?
     }
@@ -497,6 +509,18 @@ public class ExpressionsRepositoryImplTest {
     @Test
     public void testEnumNotInStrings() throws Exception {
         String json = loadResourceJsonFile("testEnumNotInStrings");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // from employee e inner join task t on e.id=t.employee_id where t.status not in (?)
+    }
+
+    @Test
+    public void testManyToOneIsNull() throws Exception {
+        String json = loadResourceJsonFile("testManyToOneIsNull");
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
