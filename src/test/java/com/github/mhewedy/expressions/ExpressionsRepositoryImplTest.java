@@ -527,7 +527,17 @@ public class ExpressionsRepositoryImplTest {
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList.size()).isEqualTo(1);
 
-        // from employee e inner join task t on e.id=t.employee_id where t.status not in (?)
+        // from employee e where e.department is null
+    }
+
+    @Test
+    public void testBooleanOperatorFromJava() {
+        Expressions expressions = Expression.of("active", Operator.$eq, false).build();
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(2);
+
+        // where e.active=?
     }
 
     @SneakyThrows
