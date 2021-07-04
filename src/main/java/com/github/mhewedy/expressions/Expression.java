@@ -51,6 +51,10 @@ public abstract class Expression {
         return new SingularExpression(field, operator, value == null ? null : value.toString());
     }
 
+    public static Expression of(String field, Operator operator, Boolean value) {
+        return new SingularExpression(field, operator, value);
+    }
+
     /**
      * Used with operators require list of elements,
      * such as {@link Operator#$in} and {@link Operator#$nin}
@@ -75,6 +79,14 @@ public abstract class Expression {
         return new ListExpression(field, operator,
                 Arrays.stream(values).map(Object::toString).collect(toList())
         );
+    }
+
+    /**
+     * Used with operators require list of elements,
+     * such as {@link Operator#$in} and {@link Operator#$nin}
+     */
+    public static Expression of(String field, Operator operator, Boolean... values) {
+        return new ListExpression(field, operator, Arrays.asList(values));
     }
 
     /**
