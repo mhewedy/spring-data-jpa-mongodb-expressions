@@ -181,3 +181,6 @@ Special thanks to [Rashad Saif](https://github.com/rashadsaif) and Hamada Elnoby
     
 ## Next Release
 See [List of issues](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues?q=is%3Aissue+milestone%3A0.0.3) to be shipped in the next release
+    
+## In the News
+This repo has mentioned in [spring.io](http://spring.io/blog/2021/07/06/this-week-in-spring-july-6th-2021) weekly news.
