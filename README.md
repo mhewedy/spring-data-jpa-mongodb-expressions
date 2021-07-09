@@ -125,7 +125,7 @@ output:
 ... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.name like ?
 ```
 
-For a list of json queries see :
+For a list of example json queries see :
 
 1. the [resources](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/tree/master/src/test/resources) directory  
 2. [ExpressionsRepositoryImplTest.java](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/src/test/java/com/github/mhewedy/expressions/ExpressionsRepositoryImplTest.java)
