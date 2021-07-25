@@ -14,9 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v2
       with:
         java-version: 1.8
+        distribution: 'adopt'
+        server-id: ossrh
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
     - name: Build with Maven
       run: mvn -B compile --file pom.xml
 
@@ -27,4 +31,12 @@ jobs:
       run: mvn cobertura:cobertura
       
     - name: Submit code coverage
-      run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_SECRET }}
+      run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_SECRET }}  
+      
+    - name: Publish package
+      if: ${{ startsWith('refs/tags/v', github.ref) }}
+      run: mvn --batch-mode deploy
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+    
