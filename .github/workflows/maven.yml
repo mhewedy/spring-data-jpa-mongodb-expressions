@@ -35,7 +35,7 @@ jobs:
       
     - name: Publish package
       if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-      run: mvn --batch-mode deploy
+      run: mvn -DskipTests --batch-mode deploy
       env:
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
