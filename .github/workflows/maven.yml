@@ -4,10 +4,7 @@
 name: Java CI with Maven
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  [push, pull_request]
 
 jobs:
   build:
@@ -30,4 +27,4 @@ jobs:
       run: mvn cobertura:cobertura
       
     - name: Submit code coverage
-      run: bash <(curl -s https://codecov.io/bash) -t 0ee99b73-2ba6-403e-80fe-245f9c6932cb
+      run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_SECRET }}
