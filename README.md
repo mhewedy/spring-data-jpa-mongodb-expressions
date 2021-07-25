@@ -41,11 +41,11 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
         );
 }
 ```
- And that's it, you can now send Mongodb-like json queries to the api.
+ And that's it, you can now send Mongodb-like json queries to the API.
 
-## 🏮 Examples json queries:
+## 🏮 Examples Mongodb-like json queries:
 
-The following is an example expressions that could be sent to the Controller Rest Apis, and will be deserialized into the `Expressions` object.
+The following is an example expressions that could be sent to the Controller REST APIs, and will be deserialized into the `Expressions` object.
 
 1-
 
