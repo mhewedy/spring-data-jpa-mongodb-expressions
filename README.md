@@ -12,25 +12,6 @@ Parses (a subset of) [MongoDB expressions](https://docs.mongodb.com/manual/tutor
 
 So, you can build the mongodb query-like json from the frontend app and pass it to the controller, and then optionally you enrich it with addtional conditions and pass it to the repository layer, in which the monogodb query will be translated automatically to JPA specification and executed.
 
-
-## 📚 API
-
-This library provides an single interface `ExpressionsRepository` to be extended by your application repositories:
-
-```java
-public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
-
-    List<T> findAll(Expressions expressions);
-
-    List<T> findAll(Expressions expressions, Sort sort);
-
-    Page<T> findAll(Expressions expressions, Pageable pageable);
-    
-    long count(Expressions expressions);
-}
-```
-See [javadoc](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions) for more information.
-
 ## 🚀 How to start
 
 1. You need to [customize](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository) the base repository to be the `ExpressionsRepositoryImpl`.
@@ -53,12 +34,8 @@ public interface EmployeeRepository extends ExpressionsRepository<Employee, Long
 
 ```java
 @PostMapping("/search")
-public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions, Pageable pageable) {
-
-    // optional part
-    expressions.and(Expression.of("departementId", $eq, getCurrentUserDeptId()));
-    // add additional filters by ANDing or ORing more expression
-    
+public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions, 
+                                                Pageable pageable) {    
     return ok().body(
                 employeeRepository.findAll(expressions, pageable).map(employeeMapper::toDto)
         );
