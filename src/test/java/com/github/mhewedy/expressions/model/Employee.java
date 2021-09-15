@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -34,4 +35,5 @@ public class Employee extends Auditable {
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
     public List<Task> tasks;
+    public UUID serial;
 }

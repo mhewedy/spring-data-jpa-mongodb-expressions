@@ -11,6 +11,7 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.github.mhewedy.expressions.Expression.*;
@@ -297,7 +298,6 @@ class ExpressionsPredicateBuilder {
         if (javaType.equals(ZonedDateTime.class)) {
             return ZonedDateTime.parse((CharSequence) value);
         }
-
         if (javaType.isEnum()) {
             if (Number.class.isAssignableFrom(value.getClass())) {
                 return javaType.getEnumConstants()[((Number) value).intValue()];
@@ -305,6 +305,9 @@ class ExpressionsPredicateBuilder {
                 return Enum.valueOf(javaType, (String) value);
             }
             throw new IllegalArgumentException("enum value should be number or string");
+        }
+        if (javaType.equals(UUID.class)) {
+            return UUID.fromString((String) value);
         }
 
         // strings and numeric types don't need  conversion

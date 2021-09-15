@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.github.mhewedy.expressions.model.Status.ACTIVE;
 import static com.github.mhewedy.expressions.model.Status.NOT_ACTIVE;
@@ -58,7 +59,8 @@ public class ExpressionsRepositoryImplTest {
                         (short) 1,
                         true,
                         new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE))
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE)),
+                        UUID.fromString("2dfb7bc7-38a6-4826-b6d3-297969d17244")
                 ),
                 new Employee(null,
                         "mohammad",
@@ -70,7 +72,8 @@ public class ExpressionsRepositoryImplTest {
                         (short) 1,
                         true,
                         new Department(null, "sw arch", new City(null, "giaz")),
-                        Arrays.asList(new Task(null, "fix sw arch", ACTIVE), new Task(null, "fix sw arch", ACTIVE))
+                        Arrays.asList(new Task(null, "fix sw arch", ACTIVE), new Task(null, "fix sw arch", ACTIVE)),
+                        UUID.randomUUID()
                 ),
                 new Employee(null,
                         "mostafa",
@@ -82,7 +85,8 @@ public class ExpressionsRepositoryImplTest {
                         (short) 2,
                         true,
                         new Department(null, "sw dev", new City(null, "alex")),
-                        Arrays.asList(new Task(null, "fix sw dev", ACTIVE), new Task(null, "fix sw dev", ACTIVE))
+                        Arrays.asList(new Task(null, "fix sw dev", ACTIVE), new Task(null, "fix sw dev", ACTIVE)),
+                        UUID.randomUUID()
                 ),
                 new Employee(null,
                         "wael",
@@ -94,7 +98,8 @@ public class ExpressionsRepositoryImplTest {
                         (short) 2,
                         true,
                         new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE))
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE)),
+                        UUID.randomUUID()
                 ),
                 new Employee(null,
                         "farida",
@@ -106,7 +111,8 @@ public class ExpressionsRepositoryImplTest {
                         (short) 2,
                         false,
                         new Department(null, "hr", new City(null, "cairo")),
-                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", NOT_ACTIVE))
+                        Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", NOT_ACTIVE)),
+                        UUID.randomUUID()
                 ),
                 new Employee(null,
                         "fofo",
@@ -118,7 +124,8 @@ public class ExpressionsRepositoryImplTest {
                         (short) 2,
                         false,
                         null,
-                        null
+                        null,
+                        UUID.randomUUID()
                 )
         );
         employeeRepository.saveAll(employees);
@@ -536,6 +543,18 @@ public class ExpressionsRepositoryImplTest {
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList.size()).isEqualTo(2);
+
+        // where e.active=?
+    }
+
+    @Test
+    public void testUUID() throws Exception {
+        String json = loadResourceJsonFile("testUUID");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
 
         // where e.active=?
     }
