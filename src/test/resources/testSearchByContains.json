@@ -1,0 +1,5 @@
+{
+  "lastName": {
+    "$contains": "rah"
+  }
+}
