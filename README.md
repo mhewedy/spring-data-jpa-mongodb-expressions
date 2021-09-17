@@ -102,6 +102,37 @@ output:
 ... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.name like ?
 ```
 
+4-
+
+Expression:
+```json
+{
+  "lastName": null
+}
+```
+
+output:
+```sql
+... where e.last_name is null
+```
+
+5- 
+
+Expression (enums):
+```json
+{
+  "tasks.status": {"$in":  [0, 1]}
+}
+```
+
+output:
+```sql
+... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)
+```
+
+> Note: enums support passing the enum name as string as well (e.g. `{"tasks.status": {"$nin":  ["ACTIVE"]}}`)
+
+
 For a list of example json queries see :
 
 1. the [resources](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/tree/master/src/test/resources) directory  
