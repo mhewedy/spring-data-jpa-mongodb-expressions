@@ -1,2 +1,20 @@
 = Spring Data JPA Mongodb Expressions
 
+.Table Title
+|===
+|Column 1, Header Row |Column 2, Header Row
+
+|Cell in column 1, row 1
+|Cell in column 2, row 1
+
+|Cell in column 1, row 2
+|Cell in column 2, row 2
+|===
+
+
+....
+error: 1954 Forbidden search
+absolutely fatal: operation lost in the dodecahedron of doom
+
+Would you like to try again? y/n
+....
