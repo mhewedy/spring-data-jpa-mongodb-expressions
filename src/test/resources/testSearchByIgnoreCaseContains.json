@@ -1,5 +1,0 @@
-{
-  "lastName": {
-    "$icontains": "Rah"
-  }
-}

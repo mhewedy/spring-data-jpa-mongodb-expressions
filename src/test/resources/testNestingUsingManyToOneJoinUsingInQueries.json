@@ -1,3 +1,0 @@
-{
-  "department.name": {"$in":  ["hr", "sw arch"]}
-}

@@ -1,4 +1,0 @@
-{
-  "name.ar": {"$in":  ["ahmed ar", "wael ar"]},
-  "department.name": "hr"
-}

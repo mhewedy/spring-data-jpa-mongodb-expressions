@@ -1,5 +1,0 @@
-{
-  "lastName": {
-    "$not_supported_operator": "rah"
-  }
-}

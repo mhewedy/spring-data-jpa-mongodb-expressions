@@ -1,5 +1,0 @@
-{
-  "lastName": "ibrahim",
-  "department.city.name": "cairo",
-  "department.name": {"$in":  ["hr", "sw arch"]}
-}
