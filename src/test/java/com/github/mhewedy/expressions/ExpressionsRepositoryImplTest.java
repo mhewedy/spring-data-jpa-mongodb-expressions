@@ -433,7 +433,7 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList).isNotNull();
         assertThat(employeeList.size()).isEqualTo(0);
 
-        // from employee e inner join department d on e.department_id=d.id  where e.last_name=? or d.id=? or d.name=?
+        // from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?
     }
 
     @Test
@@ -556,7 +556,7 @@ public class ExpressionsRepositoryImplTest {
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList.size()).isEqualTo(1);
 
-        // where e.active=?
+        // where e.serial=?
     }
 
     @SneakyThrows
