@@ -2,12 +2,14 @@
 
 include::include.adoc[]
 
+****
 From its name, **Spring Data JPA MongoDB Expressions** inspired by
 https://docs.mongodb.com/manual/tutorial/query-documents/[MongoDB Query Language,role=external,window=_blank]
 and uses a subset of the language and converts it to Spring Data JPA Specifications under the hood.
 
 In this section we will see by example all the supported features started by basic querying to
 comparision operators to joins and other features.
+****
 
 == Overview
 
@@ -58,10 +60,13 @@ Generated SQL:
 ... where last_name=? and birth_date<?
 ----
 +
-IMPORTANT: In *MongoDB*, the default comparison operator if omitted is `_$eq_` (equals) and the default logical operator
-between two expressions is `_$and_` (AND). +
+.Default Comparison and Logical Operators
+****
+In *MongoDB*, the default comparison operator if omitted is `_$eq_` (equals) and the default logical operator
+between two expressions is `_$and_` (AND).
 This is why the generated sql compares `last_name` using `$eq` operator (equals) and then use the `$and` (AND) operator between the two expressions. +
 You can know more about MongoDB query language from this https://docs.mongodb.com/manual/tutorial/query-documents/[link,role=external,window=_blank].
+****
 +
 2. Basic queries with comparison operators:
 +
@@ -77,6 +82,9 @@ Generated SQL:
 ----
 TIP: In case of passing a string value into a field of type `java.time` API (e.g. `LocalDate`, `Instant`, etc...),
 the method `parse` on the corresponding type is responsible of convert the string into an object of that type.
++
+NOTE: However the default logical operator is `$and`, in the above example we had to add it explicitly, this is because
+in `JSON` you cannot have duplicated object keys (in this case would be `birthDate`).
 +
 3. Send search query with no conditions:
 +
