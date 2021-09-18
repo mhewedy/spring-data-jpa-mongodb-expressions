@@ -14,6 +14,7 @@ comparision operators to joins and other features.
 Before we go into details of the query language, we will go through the steps it takes to convert `JSON`-encoded
 `MongoDB`-like Query to SQL query.
 
+.High Level Operations
 image::images/hld.png[High Level Overview,align=center]
 
 The first step (yellow):: The query is created at the frontend app (Angular, React, Vue, etc...) in JSON format
@@ -25,8 +26,7 @@ and thus can be passed to your Repository (the one the extends `com.github.mhewe
 This intermediate step allows you to add additional conditions easily on the deserialized `Expressions` object as
 it is not uncommon you need to restrict the query passed from the frontend. +
 
-NOTE: Later in this section we will learn more about the `Expressions` API. Also you can see the <<#_public_api,Public API>>
-for details on how to use the `Expressions` and `Expression` objects.
+NOTE: You can see the <<#_public_api,Public API>> for details on how to use the `Expressions` and `Expression` objects.
 
 The third step (red):: Where the `Expressions` object is being converted into Spring Data JPA `Specification` object
 and then Spring Data JPA along with the underlying Persistence provider will take care of the rest
@@ -34,11 +34,14 @@ and then Spring Data JPA along with the underlying Persistence provider will tak
 
 == Queries
 
-To get an idea about the queries in this section, here's the domain model:
+To get an idea about the queries in this section, here's the domain that the queries will apply on:
 
+.Sample domain model
 image::images/sample-domain-model.png[Sample Domain Model,align=center,width=400px]
 
+NOTE: You might need to have a look on the <<#_operators,supported operators list>> before proceed to the next section.
 
+=== Basic Queries
 1. Basic query:
 +
 [source,json]
@@ -54,11 +57,13 @@ Generated SQL:
 ----
 ... where last_name=? and birth_date<?
 ----
-NOTE: In MongoDB, the default comparison operator is `_equals_` and the default logical operator between two expressions is `_AND_`.
-this is why the generated sql compares `last_name` using equals and then use the AND operator between the two expressions.
-You can know more about MongoDB query language from this https://start.spring.io/#!dependencies=data-jpa[link,role=external,window=_blank].
 +
-2. Basic queries with comparision operators:
+IMPORTANT: In *MongoDB*, the default comparison operator if omitted is `_$eq_` (equals) and the default logical operator
+between two expressions is `_$and_` (AND). +
+This is why the generated sql compares `last_name` using `$eq` operator (equals) and then use the `$and` (AND) operator between the two expressions. +
+You can know more about MongoDB query language from this https://docs.mongodb.com/manual/tutorial/query-documents/[link,role=external,window=_blank].
++
+2. Basic queries with comparison operators:
 +
 [source,json]
 ----
@@ -70,56 +75,10 @@ Generated SQL:
 ----
 ... where last_name=? and birth_date>? and birth_date<=?
 ----
-TIP: In case of passing a string value into a field of type `java.time` API , the method `parse` on the corresponding
-type is responsible to convert the string into the corresponding type.
+TIP: In case of passing a string value into a field of type `java.time` API (e.g. `LocalDate`, `Instant`, etc...),
+the method `parse` on the corresponding type is responsible of convert the string into an object of that type.
 +
-See <<#_operators,Operators>> for list of supported Operators.
-3. Paging and sorting:
-+
-[source,json]
-----
-include::{jsondir}/testPagingAndSorting.json[]
-----
-+
-[source,java]
-----
-// in the controller:
-Page<Employee> employeeList =
-        employeeRepository.findAll(expressions,
-                        PageRequest.of(0, 3, Sort.by("firstName").descending())
-        );
-----
-Generated SQL:
-+
-[source]
-----
-... where hire_date<? order by first_name desc limit ?
-----
-4. Complex case with multiple OR and AND Expressions:
-+
-[source,json]
-----
-include::{jsondir}/testComplexCaseWithMultipleOrAndExpressions.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... where last_name = ? or first_name = ? and birth_date > ?
-----
-5. Complex case with multiple OR and AND Expressions:
-+
-[source,json]
-----
-include::{jsondir}/testComplexCaseWithMultipleOrAndExpressions2.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... where last_name = ? and (first_name = ? or birth_date < ?)
-----
-6. Send search query with no conditions:
+3. Send search query with no conditions:
 +
 [source,json]
 ----
@@ -131,7 +90,9 @@ Generated SQL:
 ----
 ... where ?=1
 ----
-7. Search with `null` value:
+NOTE: `?` in the query parameter above is bound to the value `true`
++
+4. Search with `null` value (`is null` and `is not null`):
 +
 [source,json]
 ----
@@ -149,8 +110,40 @@ Generated SQL:
 ----
 ... where first_name is null or last_name is not null
 ----
-TIP: See <<#_expressions_api,Expressions API>> for more about the usage of `Expressions` API.
-8. Using Contains for search in fields:
+
+=== Logical operators
+
+According to MongoDB query language, the default logical operator if omitted is the `$and` operator.
+The following are examples of complex logical operators that follows operator precedence.
+
+1. Complex case with multiple OR and AND Expressions:
++
+[source,json]
+----
+include::{jsondir}/testComplexCaseWithMultipleOrAndExpressions.json[]
+----
+Generated SQL:
++
+[source]
+----
+... where last_name = ? or first_name = ? and birth_date > ?
+----
+2. Complex case with multiple OR and AND Expressions:
++
+[source,json]
+----
+include::{jsondir}/testComplexCaseWithMultipleOrAndExpressions2.json[]
+----
+Generated SQL:
++
+[source]
+----
+... where last_name = ? and (first_name = ? or birth_date < ?)
+----
+
+=== Text Operators
+
+1. Using Contains for search in fields:
 +
 [source,json]
 ----
@@ -162,7 +155,7 @@ Generated SQL:
 ----
 ... where last_name like ?
 ----
-9. Using Contains ignore case for search in fields:
+2. Using Contains ignore case for search in fields:
 +
 [source,json]
 ----
@@ -174,93 +167,8 @@ Generated SQL:
 ----
 ... where lower(last_name) like ?
 ----
-10. Using Many to one Join:
 +
-[source,json]
-----
-include::{jsondir}/testNestingUsingManyToOneJoin.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)
-----
-11. Using Many to one Join using IN queries:
-+
-[source,json]
-----
-include::{jsondir}/testNestingUsingManyToOneJoinUsingInQueries.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)
-----
-12. Using Many to one Join using deep nested level:
-+
-[source,json]
-----
-include::{jsondir}/testNestingUsingManyToOneJoinUsingDeepNestedLevel.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?
-----
-13. Many to One with multiple fields of the One association in the where condition :
-+
-[source,json]
-----
-include::{jsondir}/testNestingUsingManyToOneJoinWithMultipleFields.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... from employee e inner join department d on e.department_id=d.id  where e.last_name=? or d.id=? or d.name=?
-----
-14. Many to one where association is null:
-+
-[source,json]
-----
-include::{jsondir}/testManyToOneIsNull.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... from employee e where e.department is null
-----
-15. Using One to Many join:
-+
-[source,json]
-----
-include::{jsondir}/testNestingUsingOneToManyJoin.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... from employee e inner join task t on e.id=t.employee_id where t.name like ?
-----
-NOTE: Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
-in such case you can create a database _view_ and map it to an JPA Entity and then build your search on it.
-16. Using embedded fields:
-+
-[source,json]
-----
-include::{jsondir}/testEmbeddedAndJoin.json[]
-----
-Generated SQL:
-+
-[source]
-----
-... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?
-----
-17. Using contains for number fields:
+3. Using contains for number fields:
 +
 [source,json]
 ----
@@ -272,7 +180,134 @@ Generated SQL:
 ----
 ... from employee e where cast(e.age as varchar(255)) like ?
 ----
-18. Passing enumerations as Integer ordinal:
+
+NOTE: Other text <<#_operators,operators>> are supported as well, such as `$start`, `$end`, `$istart`, `$iend`
+
+TIP: the `i` character at the start of the text operator donates case-insensitive nature of the operator.
+
+
+=== Paging and sorting
+
+Due to being built on top of Spring Data JPA, __Spring Data JPA MongoDB Expressions__ library is fully compitable with the
+Paging and Sorting features of Spring Data JPA.
+
+1. Paging and sorting:
++
+[source,json]
+----
+include::{jsondir}/testPagingAndSorting.json[]
+----
++
+[source,java]
+----
+// in the controller:
+
+Pageable pageable = PageRequest.of(0, 3, Sort.by("firstName").descending()); // or from the controller method parameters
+Page<Employee> employeeList = employeeRepository.findAll(expressions, pageable);
+----
+Generated SQL:
++
+[source]
+----
+... where hire_date<? order by first_name desc limit ?
+----
+
+
+=== Joins
+1. **Many to one **Join:
++
+[source,json]
+----
+include::{jsondir}/testNestingUsingManyToOneJoin.json[]
+----
+Generated SQL:
++
+[source]
+----
+... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)
+----
+2. Many to one Join with `IN` queries:
++
+[source,json]
+----
+include::{jsondir}/testNestingUsingManyToOneJoinUsingInQueries.json[]
+----
+Generated SQL:
++
+[source]
+----
+... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)
+----
+3. Using Many to one Join with deep nested level:
++
+[source,json]
+----
+include::{jsondir}/testNestingUsingManyToOneJoinUsingDeepNestedLevel.json[]
+----
+Generated SQL:
++
+[source]
+----
+... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?
+----
+4. Many to One with multiple fields of the One association in the where condition :
++
+[source,json]
+----
+include::{jsondir}/testNestingUsingManyToOneJoinWithMultipleFields.json[]
+----
+Generated SQL:
++
+[source]
+----
+... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?
+----
+5. Many to one where association is `null`:
++
+[source,json]
+----
+include::{jsondir}/testManyToOneIsNull.json[]
+----
+Generated SQL:
++
+[source]
+----
+... from employee e where e.department is null
+----
+6. Using *One to Many* join:
++
+[source,json]
+----
+include::{jsondir}/testNestingUsingOneToManyJoin.json[]
+----
+Generated SQL:
++
+[source]
+----
+... from employee e inner join task t on e.id=t.employee_id where t.name like ?
+----
++
+NOTE: The `distinct` keyword is being used in the queries to eliminate duplicates in case of `one-to-many` and `many-to-many` joins.
+
+NOTE: Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
+in such case you can create a database _view_ and map it to an JPA Entity and then build your search on it.
+
+=== Embedded
+1. Using embedded fields:
++
+[source,json]
+----
+include::{jsondir}/testEmbeddedAndJoin.json[]
+----
+Generated SQL:
++
+[source]
+----
+... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?
+----
+
+=== Enums
+1. Passing enums as Integer ordinal:
 +
 [source,json]
 ----
@@ -284,7 +319,7 @@ Generated SQL:
 ----
 ... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)
 ----
-19. Passing enumerations as string enum names:
+2. Passing enums as string enum names:
 +
 [source,json]
 ----
@@ -296,7 +331,10 @@ Generated SQL:
 ----
 ... from employee e inner join task t on e.id=t.employee_id where t.status not in (?)
 ----
-20. querying against UUID fields:
+
+=== UUID
+
+1. querying against UUID fields:
 +
 [source,json]
 ----
@@ -306,69 +344,34 @@ Generated SQL:
 +
 [source]
 ----
-... where e.active=?
-----
-
-== Expressions API
-`Expressions` is the core class used to add more conditions, or build conditions from scratch,
-see https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions/latest/index.html[__javadoc__,role=external,window=_blank].
-
-The following example build a Expressions api and pass it to the repository:
-
-[source,java]
-----
-Expressions expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
-        .and(Expression.or(
-                Expression.of("age", Operator.$in, 10, 20),
-                Expression.of("birthDate", Operator.$lt, LocalDate.of(1980, 1, 1)))
-        ).build();
-
-List<Employee> employeeList = employeeRepository.findAll(expressions);
-----
-Generated SQL:
-[source]
-----
-... where last_name=? and (age in (? , ?) or birth_date<?)
-----
-
-One important use case that usually will be used, is to add conditions to a deserialized `Expressions` object:
-[source,java]
-----
-expressions.and(Expression.or(
-                Expression.of("lastName", Operator.$eq, "ibrahim"),
-                Expression.of("age", Operator.$in, 10, 30)
-        ));
-----
-Generated SQL:
-[source]
-----
-... and (last_name=? or age in (? , ?))
+... where e.serial=?
 ----
 
 == Operators
 
-The following is a list of supported operators:
+The following is the list of supported operators:
 
-[frame=ends]
+.Operators List
+[frame=all, grid=all,stripes=even]
 |===
 |Operator      | Description
 
-|$eq      | col = val   (if val is null then => col is null)
-|$ne     |  col <> val  (if val is null then => col is not null)
-|$ieq    |  lower(col) = lower(val)
-|$gt     |  col > val
-|$gte    |  col >= val
-|$lt     |  col < val
-|$lte    |  col <= val
-|$start  |  col like 'val%'
-|$end     |  col like '%val'
-|$contains|  col like '%val%'
-|$istart  |  lower(col) like 'lower(val)%'
-|$iend    |  lower(col) like '%lower(val)'
-|$icontains|  lower(col) like '%lower(val)%'
-|$in      |  col in (val1, val2, ...)
-|$nin     |  col not in (val1, val2, ...)
-|$or      |  expr1 or expr2
-|$and     |  expr1 and expr2
+|`$eq`      | col = val   (if val is null then => col is null)
+|`$ne`     |  col <> val  (if val is null then => col is not null)
+|`$ieq`    |  lower(col) = lower(val)
+|`$gt`     |  col > val
+|`$gte`    |  col >= val
+|`$lt`     |  col < val
+|`$lte`    |  col <= val
+|`$start`  |  col like 'val%'
+|`$end`     |  col like '%val'
+|`$contains`|  col like '%val%'
+|`$istart`  |  lower(col) like 'lower(val)%'
+|`$iend`    |  lower(col) like '%lower(val)'
+|`$icontains`|  lower(col) like '%lower(val)%'
+|`$in`      |  col in (val1, val2, ...)
+|`$nin`     |  col not in (val1, val2, ...)
+|`$or`      |  expr1 or expr2
+|`$and`     |  expr1 and expr2
 |===
 

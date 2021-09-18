@@ -470,8 +470,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_query_specifications">Query Specifications</a>
 <ul class="sectlevel2">
 <li><a href="#_overview">Overview</a></li>
-<li><a href="#_queries">Queries</a></li>
-<li><a href="#_expressions_api">Expressions API</a></li>
+<li><a href="#_queries">Queries</a>
+<ul class="sectlevel3">
+<li><a href="#_basic_queries">Basic Queries</a></li>
+<li><a href="#_logical_operators">Logical operators</a></li>
+<li><a href="#_text_operators">Text Operators</a></li>
+<li><a href="#_paging_and_sorting">Paging and sorting</a></li>
+<li><a href="#_joins">Joins</a></li>
+<li><a href="#_embedded">Embedded</a></li>
+<li><a href="#_enums">Enums</a></li>
+<li><a href="#_uuid">UUID</a></li>
+</ul>
+</li>
 <li><a href="#_operators">Operators</a></li>
 </ul>
 </li>
@@ -608,6 +618,21 @@ public ResponseEntity&lt;Page&lt;EmployeeDto&gt;&gt; search(@RequestBody Express
 </div>
 <div class="paragraph">
 <p>And that&#8217;s it, you can now send Mongodb-like json queries to the API. (see <a href="#_query_specifications">Query Specifications</a> )</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+As the time of writing, Hibernate by default using a
+<a href="https://docs.jboss.org/hibernate/orm/current/javadocs/org/hibernate/query/criteria/LiteralHandlingMode.html" class="external" target="_blank" rel="noopener">Literal Handling mode</a>
+of <code>AUTO</code> when using Criteria API, which means Criteria queries uses bind parameters for any literal that is not a numeric value.
+You can choose to override it by setting the JPA property <code>hibernate.criteria.literal_handling_mode</code> to <code>bind</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -779,6 +804,7 @@ comparision operators to joins and other features.</p>
 <div class="content">
 <img src="images/hld.png" alt="High Level Overview">
 </div>
+<div class="title">Figure 1. High Level Operations</div>
 </div>
 <div class="dlist">
 <dl>
@@ -805,8 +831,7 @@ it is not uncommon you need to restrict the query passed from the frontend.<br><
 <div class="title">Note</div>
 </td>
 <td class="content">
-Later in this section we will learn more about the <code>Expressions</code> API. Also you can see the <a href="#_public_api">Public API</a>
-for details on how to use the <code>Expressions</code> and <code>Expression</code> objects.
+You can see the <a href="#_public_api">Public API</a> for details on how to use the <code>Expressions</code> and <code>Expression</code> objects.
 </td>
 </tr>
 </table>
@@ -825,13 +850,28 @@ and then Spring Data JPA along with the underlying Persistence provider will tak
 <div class="sect2">
 <h3 id="_queries"><a class="link" href="#_queries">Queries</a></h3>
 <div class="paragraph">
-<p>To get an idea about the queries in this section, here&#8217;s the domain model:</p>
+<p>To get an idea about the queries in this section, here&#8217;s the domain that the queries will apply on:</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
 <img src="images/sample-domain-model.png" alt="Sample Domain Model" width="400px">
 </div>
+<div class="title">Figure 2. Sample domain model</div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+You might need to have a look on the <a href="#_operators">supported operators list</a> before proceed to the next section.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_basic_queries"><a class="link" href="#_basic_queries">Basic Queries</a></h4>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -852,23 +892,24 @@ and then Spring Data JPA along with the underlying Persistence provider will tak
 <pre class="highlight"><code>... where last_name=? and birth_date&lt;?</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Note</div>
+<div class="title">Important</div>
 </td>
 <td class="content">
-In MongoDB, the default comparison operator is <code><em>equals</em></code> and the default logical operator between two expressions is <code><em>AND</em></code>.
-this is why the generated sql compares <code>last_name</code> using equals and then use the AND operator between the two expressions.
-You can know more about MongoDB query language from this <a href="https://start.spring.io/#!dependencies=data-jpa" class="external" target="_blank" rel="noopener">link</a>.
+In <strong>MongoDB</strong>, the default comparison operator if omitted is <code><em>$eq</em></code> (equals) and the default logical operator
+between two expressions is <code><em>$and</em></code> (AND).<br>
+This is why the generated sql compares <code>last_name</code> using <code>$eq</code> operator (equals) and then use the <code>$and</code> (AND) operator between the two expressions.<br>
+You can know more about MongoDB query language from this <a href="https://docs.mongodb.com/manual/tutorial/query-documents/" class="external" target="_blank" rel="noopener">link</a>.
 </td>
 </tr>
 </table>
 </div>
 </li>
 <li>
-<p>Basic queries with comparision operators:</p>
+<p>Basic queries with comparison operators:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -899,32 +940,18 @@ You can know more about MongoDB query language from this <a href="https://start.
 <div class="title">Tip</div>
 </td>
 <td class="content">
-In case of passing a string value into a field of type <code>java.time</code> API , the method <code>parse</code> on the corresponding
-type is responsible to convert the string into the corresponding type.
+In case of passing a string value into a field of type <code>java.time</code> API (e.g. <code>LocalDate</code>, <code>Instant</code>, etc&#8230;&#8203;),
+the method <code>parse</code> on the corresponding type is responsible of convert the string into an object of that type.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>See <a href="#_operators">Operators</a> for list of supported Operators.</p>
-</div>
 </li>
 <li>
-<p>Paging and sorting:</p>
+<p>Send search query with no conditions:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "hireDate": {"$lt": "2021-01-01T00:00:00Z"}
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// in the controller:
-Page&lt;Employee&gt; employeeList =
-        employeeRepository.findAll(expressions,
-                        PageRequest.of(0, 3, Sort.by("firstName").descending())
-        );</code></pre>
+<pre class="highlight"><code class="language-json" data-lang="json">{}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -932,10 +959,57 @@ Page&lt;Employee&gt; employeeList =
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where hire_date&lt;? order by first_name desc limit ?</code></pre>
+<pre class="highlight"><code>... where ?=1</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>?</code> in the query parameter above is bound to the value <code>true</code>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Search with <code>null</code> value (<code>is null</code> and <code>is not null</code>):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "firstName": null
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// in the controller:
+expressions.or(Expression.of("lastName", Operator.$ne, (String) null));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated SQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>... where first_name is null or last_name is not null</code></pre>
 </div>
 </div>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_logical_operators"><a class="link" href="#_logical_operators">Logical operators</a></h4>
+<div class="paragraph">
+<p>According to MongoDB query language, the default logical operator if omitted is the <code>$and</code> operator.
+The following are examples of complex logical operators that follows operator precedence.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Complex case with multiple OR and AND Expressions:</p>
 <div class="listingblock">
@@ -1004,58 +1078,13 @@ Page&lt;Employee&gt; employeeList =
 </div>
 </div>
 </li>
-<li>
-<p>Send search query with no conditions:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{}</code></pre>
+</ol>
 </div>
 </div>
-<div class="paragraph">
-<p>Generated SQL:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>... where ?=1</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Search with <code>null</code> value:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "firstName": null
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// in the controller:
-expressions.or(Expression.of("lastName", Operator.$ne, (String) null));</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Generated SQL:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>... where first_name is null or last_name is not null</code></pre>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Tip</div>
-</td>
-<td class="content">
-See <a href="#_expressions_api">Expressions API</a> for more about the usage of <code>Expressions</code> API.
-</td>
-</tr>
-</table>
-</div>
-</li>
+<div class="sect3">
+<h4 id="_text_operators"><a class="link" href="#_text_operators">Text Operators</a></h4>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Using Contains for search in fields:</p>
 <div class="listingblock">
@@ -1097,7 +1126,95 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 </div>
 </li>
 <li>
-<p>Using Many to one Join:</p>
+<p>Using contains for number fields:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "age": {
+    "$contains": "0"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated SQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>... from employee e where cast(e.age as varchar(255)) like ?</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Other text <a href="#_operators">operators</a> are supported as well, such as <code>$start</code>, <code>$end</code>, <code>$istart</code>, <code>$iend</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+the <code>i</code> character at the start of the text operator donates case-insensitive nature of the operator.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_paging_and_sorting"><a class="link" href="#_paging_and_sorting">Paging and sorting</a></h4>
+<div class="paragraph">
+<p>Due to being built on top of Spring Data JPA, <em>Spring Data JPA MongoDB Expressions</em> library is fully compitable with the
+Paging and Sorting features of Spring Data JPA.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Paging and sorting:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "hireDate": {"$lt": "2021-01-01T00:00:00Z"}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// in the controller:
+
+Pageable pageable = PageRequest.of(0, 3, Sort.by("firstName").descending()); // or from the controller method parameters
+Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, pageable);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated SQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>... where hire_date&lt;? order by first_name desc limit ?</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_joins"><a class="link" href="#_joins">Joins</a></h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Many to one </strong>Join:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1116,7 +1233,7 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 </div>
 </li>
 <li>
-<p>Using Many to one Join using IN queries:</p>
+<p>Many to one Join with <code>IN</code> queries:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1134,7 +1251,7 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 </div>
 </li>
 <li>
-<p>Using Many to one Join using deep nested level:</p>
+<p>Using Many to one Join with deep nested level:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1168,12 +1285,12 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join department d on e.department_id=d.id  where e.last_name=? or d.id=? or d.name=?</code></pre>
+<pre class="highlight"><code>... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Many to one where association is null:</p>
+<p>Many to one where association is <code>null</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1191,7 +1308,7 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 </div>
 </li>
 <li>
-<p>Using One to Many join:</p>
+<p>Using <strong>One to Many</strong> join:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1214,13 +1331,32 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 <div class="title">Note</div>
 </td>
 <td class="content">
+The <code>distinct</code> keyword is being used in the queries to eliminate duplicates in case of <code>one-to-many</code> and <code>many-to-many</code> joins.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
 Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
 in such case you can create a database <em>view</em> and map it to an JPA Entity and then build your search on it.
 </td>
 </tr>
 </table>
 </div>
-</li>
+</div>
+<div class="sect3">
+<h4 id="_embedded"><a class="link" href="#_embedded">Embedded</a></h4>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Using embedded fields:</p>
 <div class="listingblock">
@@ -1240,28 +1376,15 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 </div>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enums"><a class="link" href="#_enums">Enums</a></h4>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Using contains for number fields:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "age": {
-    "$contains": "0"
-  }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Generated SQL:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>... from employee e where cast(e.age as varchar(255)) like ?</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Passing enumerations as Integer ordinal:</p>
+<p>Passing enums as Integer ordinal:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1279,7 +1402,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 </li>
 <li>
-<p>Passing enumerations as string enum names:</p>
+<p>Passing enums as string enum names:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
@@ -1296,6 +1419,13 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 </div>
 </li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_uuid"><a class="link" href="#_uuid">UUID</a></h4>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>querying against UUID fields:</p>
 <div class="listingblock">
@@ -1310,67 +1440,21 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where e.active=?</code></pre>
+<pre class="highlight"><code>... where e.serial=?</code></pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_expressions_api"><a class="link" href="#_expressions_api">Expressions API</a></h3>
-<div class="paragraph">
-<p><code>Expressions</code> is the core class used to add more conditions, or build conditions from scratch,
-see <a href="https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions/latest/index.html" class="external" target="_blank" rel="noopener"><em>javadoc</em></a>.</p>
-</div>
-<div class="paragraph">
-<p>The following example build a Expressions api and pass it to the repository:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Expressions expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
-        .and(Expression.or(
-                Expression.of("age", Operator.$in, 10, 20),
-                Expression.of("birthDate", Operator.$lt, LocalDate.of(1980, 1, 1)))
-        ).build();
-
-List&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Generated SQL:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>... where last_name=? and (age in (? , ?) or birth_date&lt;?)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>One important use case that usually will be used, is to add conditions to a deserialized <code>Expressions</code> object:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">expressions.and(Expression.or(
-                Expression.of("lastName", Operator.$eq, "ibrahim"),
-                Expression.of("age", Operator.$in, 10, 30)
-        ));</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Generated SQL:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>... and (last_name=? or age in (? , ?))</code></pre>
-</div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_operators"><a class="link" href="#_operators">Operators</a></h3>
 <div class="paragraph">
-<p>The following is a list of supported operators:</p>
+<p>The following is the list of supported operators:</p>
 </div>
-<table class="tableblock frame-ends grid-all stretch">
+<table class="tableblock frame-all grid-all stripes-even stretch">
+<caption class="title">Table 1. Operators List</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1383,71 +1467,71 @@ List&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions);</co
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$eq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$eq</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col = val   (if val is null then &#8658; col is null)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$ne</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$ne</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col &lt;&gt; val  (if val is null then &#8658; col is not null)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$ieq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$ieq</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lower(col) = lower(val)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$gt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$gt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col &gt; val</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$gte</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$gte</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col &gt;= val</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$lt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$lt</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col &lt; val</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$lte</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$lte</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col &#8656; val</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$start</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$start</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col like 'val%'</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$end</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$end</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col like '%val'</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$contains</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$contains</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col like '%val%'</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$istart</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$istart</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lower(col) like 'lower(val)%'</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$iend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$iend</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lower(col) like '%lower(val)'</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$icontains</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$icontains</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lower(col) like '%lower(val)%'</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$in</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$in</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col in (val1, val2, &#8230;&#8203;)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$nin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$nin</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">col not in (val1, val2, &#8230;&#8203;)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$or</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$or</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">expr1 or expr2</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$and</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$and</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">expr1 and expr2</p></td>
 </tr>
 </tbody>
@@ -1459,7 +1543,7 @@ List&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions);</co
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-18 16:29:34 UTC
+Last updated 2021-09-18 21:27:30 UTC
 </div>
 </div>
 </body>
