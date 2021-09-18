@@ -86,7 +86,7 @@ Examples:
 
 [source,java]
 ----
-Expressions expressions =  ... // acceptd as a parameter for controller method
+Expressions expressions =  ... // accepted as a parameter for the controller method
 
 expressions.and(Expression.or(
         Expression.of("lastName", Operator.$eq, "ibrahim"),
