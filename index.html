@@ -1021,6 +1021,19 @@ See <a href="#_expressions_api">Expressions API</a> for more about the usage of 
 <pre class="highlight"><code>... from employee e inner join task t on e.id=t.employee_id where t.name like ?</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
+in such case you can create a database <em>view</em> and map it to an JPA Entity and then build your search on it.
+</td>
+</tr>
+</table>
+</div>
 </li>
 <li>
 <p>Using embedded fields:</p>
@@ -1260,7 +1273,7 @@ List&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions);</co
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-18 03:34:11 UTC
+Last updated 2021-09-18 03:56:43 UTC
 </div>
 </div>
 </body>

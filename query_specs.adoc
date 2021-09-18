@@ -237,6 +237,8 @@ Generated SQL:
 ----
 ... from employee e inner join task t on e.id=t.employee_id where t.name like ?
 ----
+NOTE: Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
+in such case you can create a database _view_ and map it to an JPA Entity and then build your search on it.
 16. Using embedded fields:
 +
 [source,json]
