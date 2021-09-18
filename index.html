@@ -460,6 +460,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_code_changes">Code changes</a></li>
 </ul>
 </li>
+<li><a href="#_public_api">Public API</a>
+<ul class="sectlevel2">
+<li><a href="#_expressionsrepository_interface">ExpressionsRepository interface</a></li>
+<li><a href="#_expressions_and_expression_classes">Expressions and Expression classes</a></li>
+</ul>
+</li>
 <li><a href="#_query_specifications">Query Specifications</a>
 <ul class="sectlevel2">
 <li><a href="#_overview">Overview</a></li>
@@ -597,6 +603,130 @@ public ResponseEntity&lt;Page&lt;EmployeeDto&gt;&gt; search(@RequestBody Express
 </div>
 <div class="paragraph">
 <p>And that&#8217;s it, you can now send Mongodb-like json queries to the API. (see <a href="#_query_specifications">Query Specifications</a> )</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_public_api"><a class="link" href="#_public_api">Public API</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Spring Data JPA MongoDB Expressions</strong>. has 3 main public API types one interface and two classes - that you need to be aware of .</p>
+</div>
+<div class="sect2">
+<h3 id="_expressionsrepository_interface"><a class="link" href="#_expressionsrepository_interface">ExpressionsRepository interface</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public interface ExpressionsRepository&lt;T, ID&gt; extends JpaRepository&lt;T, ID&gt; {
+
+    List&lt;T&gt; findAll(Expressions expressions);
+
+    List&lt;T&gt; findAll(Expressions expressions, Sort sort);
+
+    Page&lt;T&gt; findAll(Expressions expressions, Pageable pageable);
+
+    long count(Expressions expressions);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>com.github.mhewedy.expressions.ExpressionsRepository</code> is the interface that your Repositories will extend and use
+the methods of it to pass <code>Expressions</code> objects received from the Rest Controller.</p>
+</div>
+<div class="paragraph">
+<p>As seen, you can pass <code>Pageable</code> object for sorting and paging as well.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_and_expression_classes"><a class="link" href="#_expressions_and_expression_classes">Expressions and Expression classes</a></h3>
+<div class="paragraph">
+<p><code>com.github.mhewedy.expressions.Expressions</code> class is the class used in the controller method to deserialize the query
+json object into it. it will hold all the conditions passed from the frontend app.</p>
+</div>
+<div class="paragraph">
+<p>Besides, the user can add more conditions at the backend (e.g. to enforce more restrictions).
+see <a href="https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions/latest/index.html" class="external" target="_blank" rel="noopener"><em>javadoc</em></a>.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the public API for the <code>Expressions</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Expressions extends HashMap&lt;String, Object&gt; {
+
+
+    public Expressions or(Expression expression) {
+    	// ...
+    }
+
+
+    public Expressions and(Expression expression) {
+        //
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As shown above, it is mainly used to add ORed or ANDed expressions on for existing instance of the object (usually
+deserialized from the JSON representation sent by the frontend app).</p>
+</div>
+<div class="paragraph">
+<p>One more class is <code>com.github.mhewedy.expressions.Expression</code> which represents a single expression that can be
+added to the <code>Expressions</code> object.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s the public API for the <code>Expression</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public abstract class Expression {
+
+    public static Expression of(String field, Operator operator, String value) {
+        //
+    }
+
+    public static Expression of(String field, Operator operator, Number value) {
+        //
+    }
+
+    // .....
+
+    public static Expression and(Expression... expressions) {
+        //
+    }
+
+    public static Expression or(Expression... expressions) {
+		//
+    }
+
+    public Expression and(Expression expression) {
+		//
+    }
+
+    public Expression or(Expression expression) {
+        //
+    }
+
+    public Expressions build() {
+        return Expressions.of(this);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As shown, it is used mainly as a static factory to create <code>Expression</code> instance then convert it to <code>Expressions</code> using the
+<code>build</code> method.</p>
+</div>
+<div class="paragraph">
+<p>Example usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">expressions.and(Expression.or(
+        Expression.of("lastName", Operator.$eq, "ibrahim"),
+        Expression.of("age", Operator.$in, 10, 30)
+));</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1273,7 +1403,7 @@ List&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions);</co
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-18 03:56:43 UTC
+Last updated 2021-09-18 04:24:19 UTC
 </div>
 </div>
 </body>

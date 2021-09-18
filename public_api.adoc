@@ -1,0 +1,106 @@
+= Public API
+
+include::include.adoc[]
+
+*Spring Data JPA MongoDB Expressions*. has 3 main public API types one interface and two classes - that you need to be aware of .
+
+== ExpressionsRepository interface
+
+[source,java]
+----
+public interface ExpressionsRepository<T, ID> extends JpaRepository<T, ID> {
+
+    List<T> findAll(Expressions expressions);
+
+    List<T> findAll(Expressions expressions, Sort sort);
+
+    Page<T> findAll(Expressions expressions, Pageable pageable);
+
+    long count(Expressions expressions);
+}
+----
+
+`com.github.mhewedy.expressions.ExpressionsRepository` is the interface that your Repositories will extend and use
+the methods of it to pass `Expressions` objects received from the Rest Controller.
+
+As seen, you can pass `Pageable` object for sorting and paging as well.
+
+== Expressions and Expression classes
+
+`com.github.mhewedy.expressions.Expressions` class is the class used in the controller method to deserialize the query
+json object into it. it will hold all the conditions passed from the frontend app.
+
+Besides, the user can add more conditions at the backend (e.g. to enforce more restrictions).
+see https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions/latest/index.html[__javadoc__,role=external,window=_blank].
+
+Here's the public API for the `Expressions` class:
+[source,java]
+----
+public class Expressions extends HashMap<String, Object> {
+
+
+    public Expressions or(Expression expression) {
+    	// ...
+    }
+
+
+    public Expressions and(Expression expression) {
+        //
+    }
+}
+----
+As shown above, it is mainly used to add ORed or ANDed expressions on for existing instance of the object (usually
+deserialized from the JSON representation sent by the frontend app).
+
+
+One more class is `com.github.mhewedy.expressions.Expression` which represents a single expression that can be
+added to the `Expressions` object.
+
+Here's the public API for the `Expression` class:
+[source,java]
+----
+public abstract class Expression {
+
+    public static Expression of(String field, Operator operator, String value) {
+        //
+    }
+
+    public static Expression of(String field, Operator operator, Number value) {
+        //
+    }
+
+    // .....
+
+    public static Expression and(Expression... expressions) {
+        //
+    }
+
+    public static Expression or(Expression... expressions) {
+		//
+    }
+
+    public Expression and(Expression expression) {
+		//
+    }
+
+    public Expression or(Expression expression) {
+        //
+    }
+
+    public Expressions build() {
+        return Expressions.of(this);
+    }
+}
+----
+As shown, it is used mainly as a static factory to create `Expression` instance then convert it to `Expressions` using the
+`build` method.
+
+Example usage:
+
+[source,java]
+----
+expressions.and(Expression.or(
+        Expression.of("lastName", Operator.$eq, "ibrahim"),
+        Expression.of("age", Operator.$in, 10, 30)
+));
+----
