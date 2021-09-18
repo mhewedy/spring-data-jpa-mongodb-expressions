@@ -4,28 +4,37 @@ include::include.adoc[]
 
 From its name, **Spring Data JPA MongoDB Expressions** inspired by
 https://docs.mongodb.com/manual/tutorial/query-documents/[MongoDB Query Language,role=external,window=_blank]
-uses a subset of the language and converts it to Spring Data JPA Specifications under the hood.
+and uses a subset of the language and converts it to Spring Data JPA Specifications under the hood.
 
-In this section we will see by example all the supported features started by basic querying to comparision operators to joins and other features.
+In this section we will see by example all the supported features started by basic querying to
+comparision operators to joins and other features.
 
 == Overview
 
-Before we go into details of the implemented query language, we will go through the steps it takes to convert JSON encoded MongoDB-like Query to SQL query.
+Before we go into details of the query language, we will go through the steps it takes to convert `JSON`-encoded
+`MongoDB`-like Query to SQL query.
 
 image::images/hld.png[High Level Overview,align=center]
 
-*The first step (yellow)*: The query is created at the frontend app (Angular, React, Vue, etc...) in JSON format according to MongoDB Query language rules and as will be shown in this section.
+The first step (yellow):: The query is created at the frontend app (Angular, React, Vue, etc...) in JSON format
+according to MongoDB Query language rules and as will be shown in this section.
 
-*The second step (green)*: The JSON is being deserialized into `com.github.mhewedy.expressions.Expressions` object and thus can be passed to your Repository (the one the extends `com.github.mhewedy.expressions.ExpressionsRepository`).
+The second step (green):: The JSON is being deserialized into `com.github.mhewedy.expressions.Expressions` object
+and thus can be passed to your Repository (the one the extends `com.github.mhewedy.expressions.ExpressionsRepository`).
++
+This intermediate step allows you to add additional conditions easily on the deserialized `Expressions` object as
+it is not uncommon you need to restrict the query passed from the frontend. +
 
-This intermediate step allow you to add additional conditions easily on the deserialized `Expressions` object as it is not uncommon you need to restrict the query passed from the frontend by user-specific criteria. +
-Later in this section we will learn more about the `Expressions` API.
+NOTE: Later in this section we will learn more about the `Expressions` API. Also you can see the <<#_public_api,Public API>>
+for details on how to use the `Expressions` and `Expression` objects.
 
-*The third step (red)*: Where the Expressions object is being converted into Spring Data JPA `Specification` object and then Spring Data JPA along with the underlying Persistence provider will take care of the rest (including paging and sorting, etc...).
+The third step (red):: Where the `Expressions` object is being converted into Spring Data JPA `Specification` object
+and then Spring Data JPA along with the underlying Persistence provider will take care of the rest
+(including paging and sorting, etc...).
 
 == Queries
 
-To get an idea about the queries in this section, here's the domain model.
+To get an idea about the queries in this section, here's the domain model:
 
 image::images/sample-domain-model.png[Sample Domain Model,align=center,width=400px]
 
