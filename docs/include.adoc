@@ -2,3 +2,4 @@
 :revnumber: 0.0.4
 :jsondir: ../src/test/resources
 :sectlinks: true
+:source-highlighter: highlight.js
