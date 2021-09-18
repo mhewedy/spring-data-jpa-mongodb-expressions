@@ -290,7 +290,7 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList).isNotNull();
         assertThat(employeeList.size()).isEqualTo(3);
 
-        // where employee0_.first_name is null or employee0_.last_name is not null
+        // where employee0_.last_name like ?
     }
 
     @Test

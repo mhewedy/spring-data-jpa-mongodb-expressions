@@ -1,17 +1,72 @@
 = Getting Started
 include::include.adoc[]
 
-It's really easy to get started with Spock. This section shows you how.
+It's really easy to get started with *Spring Data JPA MongoDB Expressions*. This section shows you how.
 
-== Spock Web Console
+== Installation
 
-https://meetspock.appspot.com/[Spock Web Console] is a website that allows you to instantly view, edit, run, and
-even publish Spock specifications. It is the perfect place to toy around with Spock without making any commitments.
-So why not run https://meetspock.appspot.com/edit/9001[Hello, Spock!] right away?
+Add the following dependency in your Spring/Spring Boot project, where you already have
+https://start.spring.io/#!dependencies=data-jpa[__spring-data-jpa__,role=external,window=_blank] dependency added.
 
-== Spock Example Project
+=== Maven
+[source,xml]
+----
+<dependency>
+  <groupId>com.github.mhewedy</groupId>
+  <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
+  <version>0.0.4</version>
+</dependency>
+----
 
-To try Spock in your local environment, clone or download/unzip the
-https://github.com/spockframework/spock-example[Spock Example Project]. It comes with fully working Ant, Gradle, and
-Maven builds that require no further setup. The Gradle build even bootstraps Gradle itself and gets you up and
-running in Eclipse or IDEA with a single command. See the README for detailed instructions.
+=== Gradle
+[source,groovy]
+----
+implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.0.4'
+----
+
+NOTE: *Spring Data JPA MongoDB Expressions* will not bring any dependencies with it, this is by design, so to avoid version overlap
+in the dependencies. So make sure to setup your project to include the proper version of Spring Data JPA.
+
+== Code changes
+Three easy steps you need to do to be able to use __Spring Data JPA MongoDB Expressions__:
+
+TIP: All public APIs of Spring Data JPA MongoDB Expressions are in the package `com.github.mhewedy.expressions.*`
+
+1. You need to customize the base repository to be the `ExpressionsRepositoryImpl`.
++
+[source,java]
+----
+@SpringBootApplication
+@EnableJpaRepositories(repositoryBaseClass = ExpressionsRepositoryImpl.class)
+public class MyApplication {
+
+}
+----
++
+learn more about customizing the base repository in the https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository[spring data jpa documentations,role=external,window=_blank]
+
+2. Change the parent repository of your JPA repositories to `ExpressionsRepository`
++
+[source,java]
+----
+@Repository
+public interface EmployeeRepository extends ExpressionsRepository<Employee, Long> {
+}
+----
+
+3. Modify the search controller to accept `Expressions` in its parameter list:
++
+[source,java]
+----
+@PostMapping("/search")
+public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions,
+                                                Pageable pageable) {
+    return ok().body(
+                employeeRepository.findAll(expressions, pageable).map(employeeMapper::toDto)
+        );
+}
+----
+
+And that's it, you can now send Mongodb-like json queries to the API. (see <<query_specs.adoc#_query_specifications,Query Specifications>> )
+
+
