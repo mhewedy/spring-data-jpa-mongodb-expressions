@@ -462,8 +462,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_public_api">Public API</a>
 <ul class="sectlevel2">
-<li><a href="#_expressionsrepository_interface">ExpressionsRepository interface</a></li>
-<li><a href="#_expressions_and_expression_classes">Expressions and Expression classes</a></li>
+<li><a href="#_expressionsrepository_interface"><code>ExpressionsRepository</code> interface</a></li>
+<li><a href="#_expressions_class"><code>Expressions</code> class</a></li>
+<li><a href="#_expression_class"><code>Expression</code> class</a></li>
 </ul>
 </li>
 <li><a href="#_query_specifications">Query Specifications</a>
@@ -484,13 +485,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p><strong>Spring Data JPA MongoDB Expressions</strong> is a library that allows you to query Spring Data JPA Repositories using
 <a href="https://docs.mongodb.com/manual/tutorial/query-documents/" class="external" target="_blank" rel="noopener">MongoDB Query Language</a>.<br>
-It parses (a subset of) MongoDB expressions and convert them to Spring Data JPA Specifications to be used with <em>Spring Data JPA</em> Repositories.<br>
-It is specially useful for so many JavaScript clients that like to build queries using convenient MongoDB expressions and
+It parses (a subset of) MongoDB expressions <em>(which itself a initiative and easy to learn Language)</em> and convert them to
+Spring Data JPA Specifications to be used with <em>Spring Data JPA</em> Repositories.</p>
+</div>
+<div class="paragraph">
+<p>It is specially useful for so many JavaScript clients that like to build queries using convenient MongoDB expressions and
 send the query to the Spring-based API to be processed by the Repository.</p>
 </div>
 <div class="paragraph">
-<p>So, The idea is that you can build the <em>MongoDB</em> query-like <em>JSON</em> from the frontend app and pass it to the controller,
-and then optionally you enrich it with additional conditions and pass it to the repository layer,
+<p>The idea is that you can build the <em>MongoDB</em> query-like <em>JSON</em> from the frontend app and pass it to the Spring Controller,
+and then optionally enrich it with additional conditions and pass it to the JPA Repository,
 in which the <em>MongoDB</em> query will be translated automatically to JPA specification and executed.</p>
 </div>
 </div>
@@ -526,15 +530,15 @@ in which the <em>MongoDB</em> query will be translated automatically to JPA spec
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.0.4'</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Note</div>
+<div class="title">Important</div>
 </td>
 <td class="content">
-<strong>Spring Data JPA MongoDB Expressions</strong> will not bring any dependencies with it, this is by design, so to avoid version overlap
-in the dependencies. So make sure to setup your project to include the proper version of Spring Data JPA.
+<strong>Spring Data JPA MongoDB Expressions</strong> will not bring any dependencies with it - this is by design - so to avoid version overlap
+in the dependencies. So make sure to setup your spring project to include the proper version of Spring Data JPA.
 </td>
 </tr>
 </table>
@@ -546,14 +550,14 @@ in the dependencies. So make sure to setup your project to include the proper ve
 <div class="paragraph">
 <p>Three easy steps you need to do to be able to use <em>Spring Data JPA MongoDB Expressions</em>:</p>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Tip</div>
+<div class="title">Note</div>
 </td>
 <td class="content">
-All public APIs of Spring Data JPA MongoDB Expressions are in the package <code>com.github.mhewedy.expressions.*</code>
+All public APIs (classes and interfaces) of Spring Data JPA MongoDB Expressions are in the package <code>com.github.mhewedy.expressions.*</code>
 </td>
 </tr>
 </table>
@@ -561,7 +565,7 @@ All public APIs of Spring Data JPA MongoDB Expressions are in the package <code>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>You need to customize the base repository to be the <code>ExpressionsRepositoryImpl</code>.</p>
+<p>You need to customize the base repository to be the <code>ExpressionsRepositoryImpl</code>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">@SpringBootApplication
@@ -572,7 +576,8 @@ public class MyApplication {
 </div>
 </div>
 <div class="paragraph">
-<p>learn more about customizing the base repository in the <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository" class="external" target="_blank" rel="noopener">spring data jpa documentations</a></p>
+<p>You can learn more about customizing the base repository in the
+<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository" class="external" target="_blank" rel="noopener">spring data jpa documentations</a></p>
 </div>
 </li>
 <li>
@@ -611,10 +616,10 @@ public ResponseEntity&lt;Page&lt;EmployeeDto&gt;&gt; search(@RequestBody Express
 <h2 id="_public_api"><a class="link" href="#_public_api">Public API</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Spring Data JPA MongoDB Expressions</strong>. has 3 main public API types one interface and two classes - that you need to be aware of .</p>
+<p><strong>Spring Data JPA MongoDB Expressions</strong>. has 3 main public APIs (one interface and two classes) that you need to be aware of .</p>
 </div>
 <div class="sect2">
-<h3 id="_expressionsrepository_interface"><a class="link" href="#_expressionsrepository_interface">ExpressionsRepository interface</a></h3>
+<h3 id="_expressionsrepository_interface"><a class="link" href="#_expressionsrepository_interface"><code>ExpressionsRepository</code> interface</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public interface ExpressionsRepository&lt;T, ID&gt; extends JpaRepository&lt;T, ID&gt; {
@@ -630,21 +635,21 @@ public ResponseEntity&lt;Page&lt;EmployeeDto&gt;&gt; search(@RequestBody Express
 </div>
 </div>
 <div class="paragraph">
-<p><code>com.github.mhewedy.expressions.ExpressionsRepository</code> is the interface that your Repositories will extend and use
-the methods of it to pass <code>Expressions</code> objects received from the Rest Controller.</p>
+<p><code>com.github.mhewedy.expressions.ExpressionsRepository</code> is the interface that your Repositories will need to extend and use
+its methods to pass <code>Expressions</code> objects received from the Rest Controller.</p>
 </div>
 <div class="paragraph">
 <p>As seen, you can pass <code>Pageable</code> object for sorting and paging as well.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expressions_and_expression_classes"><a class="link" href="#_expressions_and_expression_classes">Expressions and Expression classes</a></h3>
+<h3 id="_expressions_class"><a class="link" href="#_expressions_class"><code>Expressions</code> class</a></h3>
 <div class="paragraph">
 <p><code>com.github.mhewedy.expressions.Expressions</code> class is the class used in the controller method to deserialize the query
-json object into it. it will hold all the conditions passed from the frontend app.</p>
+JSON object into it. it will hold all the conditions passed from the frontend app.</p>
 </div>
 <div class="paragraph">
-<p>Besides, the user can add more conditions at the backend (e.g. to enforce more restrictions).
+<p>The user can add more conditions at the backend (e.g. to enforce more restrictions).
 see <a href="https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions/latest/index.html" class="external" target="_blank" rel="noopener"><em>javadoc</em></a>.</p>
 </div>
 <div class="paragraph">
@@ -654,22 +659,31 @@ see <a href="https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-e
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public class Expressions extends HashMap&lt;String, Object&gt; {
 
+    public Expressions or(Expression expression) {}
 
-    public Expressions or(Expression expression) {
-    	// ...
-    }
-
-
-    public Expressions and(Expression expression) {
-        //
-    }
+    public Expressions and(Expression expression) {}
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>As shown above, it is mainly used to add ORed or ANDed expressions on for existing instance of the object (usually
+<p>As shown above, it is mainly used to add ORed or ANDed expressions for an existing instance (usually
 deserialized from the JSON representation sent by the frontend app).</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The two public methods in <code>Expressions</code> object accepts objects of type <code>Expression</code>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expression_class"><a class="link" href="#_expression_class"><code>Expression</code> class</a></h3>
 <div class="paragraph">
 <p>One more class is <code>com.github.mhewedy.expressions.Expression</code> which represents a single expression that can be
 added to the <code>Expressions</code> object.</p>
@@ -681,51 +695,63 @@ added to the <code>Expressions</code> object.</p>
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public abstract class Expression {
 
-    public static Expression of(String field, Operator operator, String value) {
-        //
-    }
+    public static Expression of(String field, Operator operator, String value) {}
 
-    public static Expression of(String field, Operator operator, Number value) {
-        //
-    }
+    public static Expression of(String field, Operator operator, Number value) {}
 
     // .....
+    // .....
 
-    public static Expression and(Expression... expressions) {
-        //
-    }
+    public static Expression and(Expression... expressions) {}
 
-    public static Expression or(Expression... expressions) {
-		//
-    }
+    public static Expression or(Expression... expressions) {}
 
-    public Expression and(Expression expression) {
-		//
-    }
+    public Expression and(Expression expression) {}
 
-    public Expression or(Expression expression) {
-        //
-    }
+    public Expression or(Expression expression) {}
 
-    public Expressions build() {
-        return Expressions.of(this);
-    }
+    public Expressions build() {}
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>As shown, it is used mainly as a static factory to create <code>Expression</code> instance then convert it to <code>Expressions</code> using the
-<code>build</code> method.</p>
+<code>build</code> method or pass it to one of the two methods of the <code>Expressions</code> class that accept the <code>Expression</code> object.</p>
 </div>
-<div class="paragraph">
-<p>Example usage:</p>
+<div class="paragraph lead">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>Expression</code> static builder methods to create a single Expression and ANDing it to the <code>Expressions</code> object:</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">expressions.and(Expression.or(
+<pre class="highlight"><code class="language-java" data-lang="java">Expressions expressions =  ... // acceptd as a parameter for controller method
+
+expressions.and(Expression.or(
         Expression.of("lastName", Operator.$eq, "ibrahim"),
         Expression.of("age", Operator.$in, 10, 30)
 ));</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>Expression</code> static builder methods with <code>build</code> method to create <code>Expressions</code> object:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Expressions expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
+    .and(Expression.or(
+            Expression.of("age", Operator.$in, 10, 20),
+            Expression.of("birthDate", Operator.$lt, LocalDate.of(1980, 1, 1)))
+    ).build();</code></pre>
 </div>
 </div>
 </div>
@@ -737,39 +763,69 @@ added to the <code>Expressions</code> object.</p>
 <div class="paragraph">
 <p>From its name, <strong>Spring Data JPA MongoDB Expressions</strong> inspired by
 <a href="https://docs.mongodb.com/manual/tutorial/query-documents/" class="external" target="_blank" rel="noopener">MongoDB Query Language</a>
-uses a subset of the language and converts it to Spring Data JPA Specifications under the hood.</p>
+and uses a subset of the language and converts it to Spring Data JPA Specifications under the hood.</p>
 </div>
 <div class="paragraph">
-<p>In this section we will see by example all the supported features started by basic querying to comparision operators to joins and other features.</p>
+<p>In this section we will see by example all the supported features started by basic querying to
+comparision operators to joins and other features.</p>
 </div>
 <div class="sect2">
 <h3 id="_overview"><a class="link" href="#_overview">Overview</a></h3>
 <div class="paragraph">
-<p>Before we go into details of the implemented query language, we will go through the steps it takes to convert JSON encoded MongoDB-like Query to SQL query.</p>
+<p>Before we go into details of the query language, we will go through the steps it takes to convert <code>JSON</code>-encoded
+<code>MongoDB</code>-like Query to SQL query.</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
 <img src="images/hld.png" alt="High Level Overview">
 </div>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">The first step (yellow)</dt>
+<dd>
+<p>The query is created at the frontend app (Angular, React, Vue, etc&#8230;&#8203;) in JSON format
+according to MongoDB Query language rules and as will be shown in this section.</p>
+</dd>
+<dt class="hdlist1">The second step (green)</dt>
+<dd>
+<p>The JSON is being deserialized into <code>com.github.mhewedy.expressions.Expressions</code> object
+and thus can be passed to your Repository (the one the extends <code>com.github.mhewedy.expressions.ExpressionsRepository</code>).</p>
 <div class="paragraph">
-<p><strong>The first step (yellow)</strong>: The query is created at the frontend app (Angular, React, Vue, etc&#8230;&#8203;) in JSON format according to MongoDB Query language rules and as will be shown in this section.</p>
+<p>This intermediate step allows you to add additional conditions easily on the deserialized <code>Expressions</code> object as
+it is not uncommon you need to restrict the query passed from the frontend.<br></p>
 </div>
-<div class="paragraph">
-<p><strong>The second step (green)</strong>: The JSON is being deserialized into <code>com.github.mhewedy.expressions.Expressions</code> object and thus can be passed to your Repository (the one the extends <code>com.github.mhewedy.expressions.ExpressionsRepository</code>).</p>
+</dd>
+</dl>
 </div>
-<div class="paragraph">
-<p>This intermediate step allow you to add additional conditions easily on the deserialized <code>Expressions</code> object as it is not uncommon you need to restrict the query passed from the frontend by user-specific criteria.<br>
-Later in this section we will learn more about the <code>Expressions</code> API.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Later in this section we will learn more about the <code>Expressions</code> API. Also you can see the <a href="#_public_api">Public API</a>
+for details on how to use the <code>Expressions</code> and <code>Expression</code> objects.
+</td>
+</tr>
+</table>
 </div>
-<div class="paragraph">
-<p><strong>The third step (red)</strong>: Where the Expressions object is being converted into Spring Data JPA <code>Specification</code> object and then Spring Data JPA along with the underlying Persistence provider will take care of the rest (including paging and sorting, etc&#8230;&#8203;).</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">The third step (red)</dt>
+<dd>
+<p>Where the <code>Expressions</code> object is being converted into Spring Data JPA <code>Specification</code> object
+and then Spring Data JPA along with the underlying Persistence provider will take care of the rest
+(including paging and sorting, etc&#8230;&#8203;).</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_queries"><a class="link" href="#_queries">Queries</a></h3>
 <div class="paragraph">
-<p>To get an idea about the queries in this section, here&#8217;s the domain model.</p>
+<p>To get an idea about the queries in this section, here&#8217;s the domain model:</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -1403,7 +1459,7 @@ List&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions);</co
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-18 04:24:19 UTC
+Last updated 2021-09-18 16:29:34 UTC
 </div>
 </div>
 </body>

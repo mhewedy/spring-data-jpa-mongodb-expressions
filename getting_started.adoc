@@ -9,30 +9,30 @@ Add the following dependency in your Spring/Spring Boot project, where you alrea
 https://start.spring.io/#!dependencies=data-jpa[__spring-data-jpa__,role=external,window=_blank] dependency added.
 
 === Maven
-[source,xml]
+[source,xml,subs="attributes+"]
 ----
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.0.4</version>
+  <version>{revnumber}</version>
 </dependency>
 ----
 
 === Gradle
-[source,groovy]
+[source,groovy,subs="attributes+"]
 ----
-implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.0.4'
+implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:{revnumber}'
 ----
 
-NOTE: *Spring Data JPA MongoDB Expressions* will not bring any dependencies with it, this is by design, so to avoid version overlap
-in the dependencies. So make sure to setup your project to include the proper version of Spring Data JPA.
+IMPORTANT: *Spring Data JPA MongoDB Expressions* will not bring any dependencies with it - this is by design - so to avoid version overlap
+in the dependencies. So make sure to setup your spring project to include the proper version of Spring Data JPA.
 
 == Code changes
 Three easy steps you need to do to be able to use __Spring Data JPA MongoDB Expressions__:
 
-TIP: All public APIs of Spring Data JPA MongoDB Expressions are in the package `com.github.mhewedy.expressions.*`
+NOTE: All public APIs (classes and interfaces) of Spring Data JPA MongoDB Expressions are in the package `com.github.mhewedy.expressions.*`
 
-1. You need to customize the base repository to be the `ExpressionsRepositoryImpl`.
+1. You need to customize the base repository to be the `ExpressionsRepositoryImpl`:
 +
 [source,java]
 ----
@@ -43,8 +43,8 @@ public class MyApplication {
 }
 ----
 +
-learn more about customizing the base repository in the https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository[spring data jpa documentations,role=external,window=_blank]
-
+You can learn more about customizing the base repository in the
+https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.customize-base-repository[spring data jpa documentations,role=external,window=_blank]
 2. Change the parent repository of your JPA repositories to `ExpressionsRepository`
 +
 [source,java]
