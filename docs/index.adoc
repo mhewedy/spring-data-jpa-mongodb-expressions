@@ -7,5 +7,7 @@ include::introduction.adoc[leveloffset=+1]
 
 include::getting_started.adoc[leveloffset=+1]
 
+include::public_api.adoc[leveloffset=+1]
+
 include::query_specs.adoc[leveloffset=+1]
 
