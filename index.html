@@ -437,6 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
@@ -525,7 +526,7 @@ in which the <em>MongoDB</em> query will be translated automatically to JPA spec
 <h4 id="_maven"><a class="link" href="#_maven">Maven</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.github.mhewedy&lt;/groupId&gt;
   &lt;artifactId&gt;spring-data-jpa-mongodb-expressions&lt;/artifactId&gt;
   &lt;version&gt;0.0.4&lt;/version&gt;
@@ -537,7 +538,7 @@ in which the <em>MongoDB</em> query will be translated automatically to JPA spec
 <h4 id="_gradle"><a class="link" href="#_gradle">Gradle</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.0.4'</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.0.4'</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -578,7 +579,7 @@ All public APIs (classes and interfaces) of Spring Data JPA MongoDB Expressions 
 <p>You need to customize the base repository to be the <code>ExpressionsRepositoryImpl</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@SpringBootApplication
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@SpringBootApplication
 @EnableJpaRepositories(repositoryBaseClass = ExpressionsRepositoryImpl.class)
 public class MyApplication {
 
@@ -594,7 +595,7 @@ public class MyApplication {
 <p>Change the parent repository of your JPA repositories to <code>ExpressionsRepository</code></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Repository
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Repository
 public interface EmployeeRepository extends ExpressionsRepository&lt;Employee, Long&gt; {
 }</code></pre>
 </div>
@@ -604,7 +605,7 @@ public interface EmployeeRepository extends ExpressionsRepository&lt;Employee, L
 <p>Modify the search controller to accept <code>Expressions</code> in its parameter list:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@PostMapping("/search")
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@PostMapping("/search")
 public ResponseEntity&lt;Page&lt;EmployeeDto&gt;&gt; search(@RequestBody Expressions expressions,
                                                 Pageable pageable) {
     return ok().body(
@@ -643,7 +644,7 @@ You can choose to override it by setting the JPA property <code>hibernate.criter
 <h3 id="_expressionsrepository_interface"><a class="link" href="#_expressionsrepository_interface"><code>ExpressionsRepository</code> interface</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public interface ExpressionsRepository&lt;T, ID&gt; extends JpaRepository&lt;T, ID&gt; {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface ExpressionsRepository&lt;T, ID&gt; extends JpaRepository&lt;T, ID&gt; {
 
     List&lt;T&gt; findAll(Expressions expressions);
 
@@ -678,7 +679,7 @@ see <a href="https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-e
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class Expressions extends HashMap&lt;String, Object&gt; {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Expressions extends HashMap&lt;String, Object&gt; {
 
     public Expressions or(Expression expression) {}
 
@@ -714,7 +715,7 @@ added to the <code>Expressions</code> object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public abstract class Expression {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public abstract class Expression {
 
     public static Expression of(String field, Operator operator, String value) {}
 
@@ -751,7 +752,7 @@ added to the <code>Expressions</code> object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Expressions expressions =  ... // acceptd as a parameter for controller method
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Expressions expressions =  ... // acceptd as a parameter for controller method
 
 expressions.and(Expression.or(
         Expression.of("lastName", Operator.$eq, "ibrahim"),
@@ -768,7 +769,7 @@ expressions.and(Expression.or(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Expressions expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Expressions expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
     .and(Expression.or(
             Expression.of("age", Operator.$in, 10, 20),
             Expression.of("birthDate", Operator.$lt, LocalDate.of(1980, 1, 1)))
@@ -878,7 +879,7 @@ You might need to have a look on the <a href="#_operators">supported operators l
 <p>Basic query:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": "ibrahim",
   "birthDate": {"$lte": "1985-10-10"}
 }</code></pre>
@@ -889,7 +890,7 @@ You might need to have a look on the <a href="#_operators">supported operators l
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where last_name=? and birth_date&lt;?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name=? and birth_date&lt;?</code></pre>
 </div>
 </div>
 <div class="sidebarblock">
@@ -908,7 +909,7 @@ You can know more about MongoDB query language from this <a href="https://docs.m
 <p>Basic queries with comparison operators:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": "ibrahim",
   "$and": [
     {
@@ -926,7 +927,7 @@ You can know more about MongoDB query language from this <a href="https://docs.m
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where last_name=? and birth_date&gt;? and birth_date&lt;=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name=? and birth_date&gt;? and birth_date&lt;=?</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -960,7 +961,7 @@ in <code>JSON</code> you cannot have duplicated object keys (in this case would 
 <p>Send search query with no conditions:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{}</code></pre>
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -968,7 +969,7 @@ in <code>JSON</code> you cannot have duplicated object keys (in this case would 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where ?=1</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where ?=1</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -988,14 +989,14 @@ in <code>JSON</code> you cannot have duplicated object keys (in this case would 
 <p>Search with <code>null</code> value (<code>is null</code> and <code>is not null</code>):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "firstName": null
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// in the controller:
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// in the controller:
 expressions.or(Expression.of("lastName", Operator.$ne, (String) null));</code></pre>
 </div>
 </div>
@@ -1004,7 +1005,7 @@ expressions.or(Expression.of("lastName", Operator.$ne, (String) null));</code></
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where first_name is null or last_name is not null</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where first_name is null or last_name is not null</code></pre>
 </div>
 </div>
 </li>
@@ -1023,7 +1024,7 @@ The following are examples of complex logical operators that follows operator pr
 <p>Complex case with multiple OR and AND Expressions:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "$or": [
     {
       "lastName": "ibrahim"
@@ -1049,7 +1050,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where last_name = ? or first_name = ? and birth_date &gt; ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name = ? or first_name = ? and birth_date &gt; ?</code></pre>
 </div>
 </div>
 </li>
@@ -1057,7 +1058,7 @@ The following are examples of complex logical operators that follows operator pr
 <p>Complex case with multiple OR and AND Expressions:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "$and": [
     {
       "lastName": "ibrahim"
@@ -1083,7 +1084,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where last_name = ? and (first_name = ? or birth_date &lt; ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name = ? and (first_name = ? or birth_date &lt; ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1098,7 +1099,7 @@ The following are examples of complex logical operators that follows operator pr
 <p>Using Contains for search in fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": {
     "$contains": "rah"
   }
@@ -1110,7 +1111,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where last_name like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name like ?</code></pre>
 </div>
 </div>
 </li>
@@ -1118,7 +1119,7 @@ The following are examples of complex logical operators that follows operator pr
 <p>Using Contains ignore case for search in fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": {
     "$icontains": "Rah"
   }
@@ -1130,7 +1131,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where lower(last_name) like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where lower(last_name) like ?</code></pre>
 </div>
 </div>
 </li>
@@ -1138,7 +1139,7 @@ The following are examples of complex logical operators that follows operator pr
 <p>Using contains for number fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "age": {
     "$contains": "0"
   }
@@ -1150,7 +1151,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e where cast(e.age as varchar(255)) like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e where cast(e.age as varchar(255)) like ?</code></pre>
 </div>
 </div>
 </li>
@@ -1193,14 +1194,14 @@ Paging and Sorting features of Spring Data JPA.</p>
 <p>Paging and sorting:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "hireDate": {"$lt": "2021-01-01T00:00:00Z"}
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// in the controller:
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// in the controller:
 
 Pageable pageable = PageRequest.of(0, 3, Sort.by("firstName").descending()); // or from the controller method parameters
 Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, pageable);</code></pre>
@@ -1211,7 +1212,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where hire_date&lt;? order by first_name desc limit ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where hire_date&lt;? order by first_name desc limit ?</code></pre>
 </div>
 </div>
 </li>
@@ -1226,7 +1227,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 <p><strong>Many to one </strong>Join:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": "ibrahim",
   "department.name": {"$contains":  "sw"}
 }</code></pre>
@@ -1237,7 +1238,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1245,7 +1246,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 <p>Many to one Join with <code>IN</code> queries:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "department.name": {"$in":  ["hr", "sw arch"]}
 }</code></pre>
 </div>
@@ -1255,7 +1256,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1263,7 +1264,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 <p>Using Many to one Join with deep nested level:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": "ibrahim",
   "department.city.name": "cairo"
 }</code></pre>
@@ -1274,7 +1275,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?</code></pre>
 </div>
 </div>
 </li>
@@ -1282,7 +1283,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 <p>Many to One with multiple fields of the One association in the where condition :</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "lastName": "ibrahim",
   "department.id": 10,
   "department.name": "hr"
@@ -1294,7 +1295,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?</code></pre>
 </div>
 </div>
 </li>
@@ -1302,7 +1303,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 <p>Many to one where association is <code>null</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "department": null
 }</code></pre>
 </div>
@@ -1312,7 +1313,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e where e.department is null</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e where e.department is null</code></pre>
 </div>
 </div>
 </li>
@@ -1320,7 +1321,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 <p>Using <strong>One to Many</strong> join:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "tasks.name": {"$contains":  "fix"}
 }</code></pre>
 </div>
@@ -1330,7 +1331,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join task t on e.id=t.employee_id where t.name like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join task t on e.id=t.employee_id where t.name like ?</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1370,7 +1371,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <p>Using embedded fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "name.ar": "ahmed ar",
   "department.name": "hr"
 }</code></pre>
@@ -1381,7 +1382,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?</code></pre>
 </div>
 </div>
 </li>
@@ -1396,7 +1397,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <p>Passing enums as Integer ordinal:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "tasks.status": {"$in":  [0, 1]}
 }</code></pre>
 </div>
@@ -1406,7 +1407,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1414,7 +1415,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <p>Passing enums as string enum names:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "tasks.status": {"$nin":  ["ACTIVE"]}
 }</code></pre>
 </div>
@@ -1424,7 +1425,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... from employee e inner join task t on e.id=t.employee_id where t.status not in (?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join task t on e.id=t.employee_id where t.status not in (?)</code></pre>
 </div>
 </div>
 </li>
@@ -1439,7 +1440,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <p>querying against UUID fields:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "serial": "2dfb7bc7-38a6-4826-b6d3-297969d17244"
 }</code></pre>
 </div>
@@ -1449,7 +1450,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>... where e.serial=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">... where e.serial=?</code></pre>
 </div>
 </div>
 </li>
@@ -1552,8 +1553,15 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-18 21:48:08 UTC
+Last updated 2021-09-18 21:56:14 UTC
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 </body>
 </html>
