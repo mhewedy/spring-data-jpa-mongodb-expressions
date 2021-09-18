@@ -209,8 +209,8 @@ include::{jsondir}/testPagingAndSorting.json[]
 [source,java]
 ----
 // in the controller:
-
 Pageable pageable = PageRequest.of(0, 3, Sort.by("firstName").descending()); // or from the controller method parameters
+
 Page<Employee> employeeList = employeeRepository.findAll(expressions, pageable);
 ----
 Generated SQL:

@@ -1202,8 +1202,8 @@ Paging and Sorting features of Spring Data JPA.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// in the controller:
-
 Pageable pageable = PageRequest.of(0, 3, Sort.by("firstName").descending()); // or from the controller method parameters
+
 Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, pageable);</code></pre>
 </div>
 </div>
@@ -1553,7 +1553,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-18 21:56:14 UTC
+Last updated 2021-09-18 22:09:08 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
