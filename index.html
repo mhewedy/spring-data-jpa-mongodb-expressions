@@ -629,6 +629,15 @@ public ResponseEntity&lt;Page&lt;EmployeeDto&gt;&gt; search(@RequestBody Express
 of <code>AUTO</code> when using Criteria API, which means Criteria queries uses bind parameters for any literal that is not a numeric value.
 You can choose to override it by setting the JPA property <code>hibernate.criteria.literal_handling_mode</code> to <code>bind</code>.</p>
 </div>
+<div class="listingblock">
+<div class="title">application.yaml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">spring:
+  jpa:
+    properties:
+      'hibernate.criteria.literal_handling_mode': bind</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1553,7 +1562,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-19 09:05:09 UTC
+Last updated 2021-09-19 11:08:23 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
