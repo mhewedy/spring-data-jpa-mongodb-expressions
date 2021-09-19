@@ -75,4 +75,13 @@ As the time of writing, Hibernate by default using a
 https://docs.jboss.org/hibernate/orm/current/javadocs/org/hibernate/query/criteria/LiteralHandlingMode.html[Literal Handling mode,role=external,window=_blank]
 of `AUTO` when using Criteria API, which means Criteria queries uses bind parameters for any literal that is not a numeric value.
 You can choose to override it by setting the JPA property `hibernate.criteria.literal_handling_mode` to `bind`.
+
+.application.yaml
+[source,yaml]
+----
+spring:
+  jpa:
+    properties:
+      'hibernate.criteria.literal_handling_mode': bind
+----
 ****
