@@ -12,7 +12,7 @@ See this [snippet](https://playcode.io/753066/) to see how to build the query fr
 
 #### 🎖 Special Thanks 
 
-Special thanks to [Rashad Saif](https://github.com/rashadsaif) and [Hamada Elnoby](https://github.com/hamadaelnopy) for helping in the design, inspring with ideas, and for doing the review for the code.  
+Special thanks to [Rashad Saif](https://github.com/rashadsaif) and [Hamada Elnoby](https://github.com/hamadaelnopy) for helping in the design, inspring with ideas, and for doing code review.  
     
 #### Next Release
 See [List of issues](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues?q=is%3Aissue+milestone%3A0.0.5) to be shipped in the next release
