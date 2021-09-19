@@ -1,7 +1,7 @@
 = Introduction
 include::include.adoc[]
 
-*Spring Data JPA MongoDB Expressions* is a library that allows you to query Spring Data JPA Repositories using
+https://github.com/mhewedy/spring-data-jpa-mongodb-expressions[*Spring Data JPA MongoDB Expressions*,role=external,window=_blank] is a library that allows you to query Spring Data JPA Repositories using
 https://docs.mongodb.com/manual/tutorial/query-documents/[MongoDB Query Language,role=external,window=_blank]. +
 It parses (a subset of) MongoDB expressions __(which itself a initiative and easy to learn Language)__ and convert them to
 Spring Data JPA Specifications to be used with __Spring Data JPA__ Repositories.
