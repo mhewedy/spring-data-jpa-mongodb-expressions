@@ -57,7 +57,7 @@ Generated SQL:
 +
 [source]
 ----
-... where last_name=? and birth_date<?
+... where last_name=? and birth_date<=?
 ----
 +
 .Default Comparison and Logical Operators
