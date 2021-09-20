@@ -1358,15 +1358,27 @@ The <code>distinct</code> keyword is being used in the queries to eliminate dupl
 </li>
 </ol>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Note</div>
+<div class="title">Tip</div>
 </td>
 <td class="content">
 Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
 in such case you can create a database <em>view</em> and map it to an JPA Entity and then build your search on it.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+The returned properties are the properties of the primary Entity, which means the <code>projection</code> is not supported due to limitation in spring-data-jpa addressed in this <a href="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues/4" class="external" target="_blank" rel="noopener">bug</a>, until it is fixed and if you need to return properties from other entities involved in the join, you need to follow the <em>Database VIEW</em> workaround mentioned in the previous tip.
 </td>
 </tr>
 </table>
@@ -1562,7 +1574,7 @@ in such case you can create a database <em>view</em> and map it to an JPA Entity
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-19 21:17:48 UTC
+Last updated 2021-09-20 10:54:26 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
