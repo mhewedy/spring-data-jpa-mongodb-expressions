@@ -19,10 +19,7 @@ __Spring Data JPA MongoDB Expressions__ converts the MongoDB queries into SQL qu
 https://docs.mongodb.com/manual/tutorial/query-documents/#specify-and-conditions[query,role=external,window=_blank]:
 [source,json]
 ----
-{
-  "status": "A",
-  "qty": { "$lt": 30 }
-}
+{ "status": "A", "qty": { "$lt": 30 } }
 ----
 
 will be translated to.footnote:[This is rought SQL code, as usually values are passed parameterized in the where condition.]:
