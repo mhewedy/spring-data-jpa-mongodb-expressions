@@ -15,7 +15,8 @@ in which the _MongoDB_ query will be translated automatically to JPA specificati
 
 .How it works
 ****
-__Spring Data JPA MongoDB Expressions__ converts the MongoDB queries into SQL queries. So the following MongoDB query:
+__Spring Data JPA MongoDB Expressions__ converts the MongoDB queries into SQL queries. So the following MongoDB
+https://docs.mongodb.com/manual/tutorial/query-documents/#specify-and-conditions[query,role=external,window=_blank]:
 [source,json]
 ----
 {
