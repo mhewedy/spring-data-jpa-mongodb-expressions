@@ -508,6 +508,42 @@ send the query to the Spring-based API to be processed by the Repository.</p>
 and then optionally enrich it with additional conditions and pass it to the JPA Repository,
 in which the <em>MongoDB</em> query will be translated automatically to JPA specification and executed.</p>
 </div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">How it works</div>
+<div class="paragraph">
+<p><em>Spring Data JPA MongoDB Expressions</em> converts the MongoDB queries into SQL queries. So the following MongoDB query:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "status": "A",
+  "qty": { "$lt": 30 }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will be translated to.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">SELECT * FROM inventory WHERE status = "A" AND qty &lt; 30</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+You can create MongoDB queries using simple javascript code link this one <a href="https://playcode.io/814121/" class="external" target="_blank" rel="noopener">here</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -899,7 +935,7 @@ You might need to have a look on the <a href="#_operators">supported operators l
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name=? and birth_date&lt;=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where last_name=? and birth_date&lt;=?</code></pre>
 </div>
 </div>
 <div class="sidebarblock">
@@ -936,7 +972,7 @@ You can know more about MongoDB query language from this <a href="https://docs.m
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name=? and birth_date&gt;? and birth_date&lt;=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where last_name=? and birth_date&gt;? and birth_date&lt;=?</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -978,7 +1014,7 @@ in <code>JSON</code> you cannot have duplicated object keys (in this case would 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where ?=1</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where ?=1</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1014,7 +1050,7 @@ expressions.or(Expression.of("lastName", Operator.$ne, (String) null));</code></
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where first_name is null or last_name is not null</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where first_name is null or last_name is not null</code></pre>
 </div>
 </div>
 </li>
@@ -1059,7 +1095,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name = ? or first_name = ? and birth_date &gt; ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where last_name = ? or first_name = ? and birth_date &gt; ?</code></pre>
 </div>
 </div>
 </li>
@@ -1093,7 +1129,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name = ? and (first_name = ? or birth_date &lt; ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where last_name = ? and (first_name = ? or birth_date &lt; ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1120,7 +1156,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where last_name like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where last_name like ?</code></pre>
 </div>
 </div>
 </li>
@@ -1140,7 +1176,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where lower(last_name) like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where lower(last_name) like ?</code></pre>
 </div>
 </div>
 </li>
@@ -1160,7 +1196,7 @@ The following are examples of complex logical operators that follows operator pr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e where cast(e.age as varchar(255)) like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e where cast(e.age as varchar(255)) like ?</code></pre>
 </div>
 </div>
 </li>
@@ -1221,7 +1257,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where hire_date&lt;? order by first_name desc limit ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where hire_date&lt;? order by first_name desc limit ?</code></pre>
 </div>
 </div>
 </li>
@@ -1247,7 +1283,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1265,7 +1301,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1284,7 +1320,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?</code></pre>
 </div>
 </div>
 </li>
@@ -1304,7 +1340,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?</code></pre>
 </div>
 </div>
 </li>
@@ -1322,7 +1358,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e where e.department is null</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e where e.department is null</code></pre>
 </div>
 </div>
 </li>
@@ -1340,7 +1376,7 @@ Page&lt;Employee&gt; employeeList = employeeRepository.findAll(expressions, page
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join task t on e.id=t.employee_id where t.name like ?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join task t on e.id=t.employee_id where t.name like ?</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1403,7 +1439,7 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?</code></pre>
 </div>
 </div>
 </li>
@@ -1428,7 +1464,7 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)</code></pre>
 </div>
 </div>
 </li>
@@ -1446,7 +1482,7 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... from employee e inner join task t on e.id=t.employee_id where t.status not in (?)</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... from employee e inner join task t on e.id=t.employee_id where t.status not in (?)</code></pre>
 </div>
 </div>
 </li>
@@ -1471,7 +1507,7 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">... where e.serial=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">... where e.serial=?</code></pre>
 </div>
 </div>
 </li>
@@ -1571,10 +1607,16 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 </div>
 </div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. This is rought SQL code, as usually values are passed parameterized in the where condition.
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-22 02:48:09 UTC
+Last updated 2021-09-22 03:07:51 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

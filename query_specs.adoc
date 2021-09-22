@@ -55,7 +55,7 @@ NOTE: You might need to have a look on the <<#_operators,supported operators lis
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where last_name=? and birth_date<=?
 ----
@@ -76,7 +76,7 @@ include::{jsondir}/testFindAllInBaseRepository.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where last_name=? and birth_date>? and birth_date<=?
 ----
@@ -94,7 +94,7 @@ in `JSON` you cannot have duplicated object keys (in this case would be `birthDa
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where ?=1
 ----
@@ -114,7 +114,7 @@ expressions.or(Expression.of("lastName", Operator.$ne, (String) null));
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where first_name is null or last_name is not null
 ----
@@ -132,7 +132,7 @@ include::{jsondir}/testComplexCaseWithMultipleOrAndExpressions.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where last_name = ? or first_name = ? and birth_date > ?
 ----
@@ -144,7 +144,7 @@ include::{jsondir}/testComplexCaseWithMultipleOrAndExpressions2.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where last_name = ? and (first_name = ? or birth_date < ?)
 ----
@@ -159,7 +159,7 @@ include::{jsondir}/testSearchByContains.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where last_name like ?
 ----
@@ -171,7 +171,7 @@ include::{jsondir}/testSearchByIgnoreCaseContains.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where lower(last_name) like ?
 ----
@@ -184,7 +184,7 @@ include::{jsondir}/testNumberContains.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e where cast(e.age as varchar(255)) like ?
 ----
@@ -215,7 +215,7 @@ Page<Employee> employeeList = employeeRepository.findAll(expressions, pageable);
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where hire_date<? order by first_name desc limit ?
 ----
@@ -230,7 +230,7 @@ include::{jsondir}/testNestingUsingManyToOneJoin.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join department d on e.department_id=d.id where e.last_name=? and (d.name like ?)
 ----
@@ -242,7 +242,7 @@ include::{jsondir}/testNestingUsingManyToOneJoinUsingInQueries.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... employee e inner join department d on e.department_id=d.id where d.name in (? , ?)
 ----
@@ -254,7 +254,7 @@ include::{jsondir}/testNestingUsingManyToOneJoinUsingDeepNestedLevel.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join department d on e.department_id=d.id inner join city c on d.city_id=c.id where e.last_name=? and c.name=?
 ----
@@ -266,7 +266,7 @@ include::{jsondir}/testNestingUsingManyToOneJoinWithMultipleFields.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join department d on e.department_id=d.id where e.last_name=? and d.id=? and d.name=?
 ----
@@ -278,7 +278,7 @@ include::{jsondir}/testManyToOneIsNull.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e where e.department is null
 ----
@@ -290,7 +290,7 @@ include::{jsondir}/testNestingUsingOneToManyJoin.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join task t on e.id=t.employee_id where t.name like ?
 ----
@@ -311,7 +311,7 @@ include::{jsondir}/testEmbeddedAndJoin.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join department d on e.department_id=d.id where e.employee_name_ar=? and d.name=?
 ----
@@ -325,7 +325,7 @@ include::{jsondir}/testEnumInInts.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join task t on e.id=t.employee_id where t.status in (? , ?)
 ----
@@ -337,7 +337,7 @@ include::{jsondir}/testEnumNotInStrings.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... from employee e inner join task t on e.id=t.employee_id where t.status not in (?)
 ----
@@ -352,7 +352,7 @@ include::{jsondir}/testUUID.json[]
 ----
 Generated SQL:
 +
-[source]
+[source,sql]
 ----
 ... where e.serial=?
 ----
