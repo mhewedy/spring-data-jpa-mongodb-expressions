@@ -12,3 +12,22 @@ send the query to the Spring-based API to be processed by the Repository.
 The idea is that you can build the _MongoDB_ query-like _JSON_ from the frontend app and pass it to the Spring Controller,
 and then optionally enrich it with additional conditions and pass it to the JPA Repository,
 in which the _MongoDB_ query will be translated automatically to JPA specification and executed.
+
+.How it works
+****
+__Spring Data JPA MongoDB Expressions__ converts the MongoDB queries into SQL queries. So the following MongoDB query:
+[source,json]
+----
+{
+  "status": "A",
+  "qty": { "$lt": 30 }
+}
+----
+
+will be translated to.footnote:[This is rought SQL code, as usually values are passed parameterized in the where condition.]:
+[source,sql]
+----
+SELECT * FROM inventory WHERE status = "A" AND qty < 30
+----
+TIP: You can create MongoDB queries using simple javascript code link this one https://playcode.io/814121/[here,role=external,window=_blank]
+****
