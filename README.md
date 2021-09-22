@@ -2,8 +2,7 @@
 
 [![Java CI with Maven](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml/badge.svg)](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/actions/workflows/maven.yml) [![codecov](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions/branch/master/graph/badge.svg?token=3BR9MGYVC8)](https://codecov.io/gh/mhewedy/spring-data-jpa-mongodb-expressions) [![javadoc](https://javadoc.io/badge2/com.github.mhewedy/spring-data-jpa-mongodb-expressions/javadoc.svg)](https://javadoc.io/doc/com.github.mhewedy/spring-data-jpa-mongodb-expressions) [![Join the chat at https://gitter.im/spring-data-jpa-mongodb-expressions/community](https://badges.gitter.im/spring-data-jpa-mongodb-expressions/community.svg)](https://gitter.im/spring-data-jpa-mongodb-expressions/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<image src="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/logo.png?raw=true" width="300px" 
-        style="display: block; margin: auto;">
+<image src="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/logo.png?raw=true" style="display: block; margin: auto; width: 300px;">
 
 ## See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for how to get started.
 
