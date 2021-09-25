@@ -486,6 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_operators">Operators</a></li>
 </ul>
 </li>
+<li><a href="#_how_to_build_the_expressions">How to Build the Expressions</a></li>
 </ul>
 </div>
 </div>
@@ -535,7 +536,7 @@ in which the <em>MongoDB</em> query will be translated automatically to JPA spec
 <div class="title">Tip</div>
 </td>
 <td class="content">
-You can create MongoDB queries using simple javascript code link this one <a href="https://playcode.io/814121/" class="external" target="_blank" rel="noopener">here</a>
+You can create MongoDB queries using simple javascript code see <a href="#_how_to_build_the_expressions">How to Build the Expressions</a>
 </td>
 </tr>
 </table>
@@ -1604,6 +1605,74 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_how_to_build_the_expressions"><a class="link" href="#_how_to_build_the_expressions">How to Build the Expressions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Building the expression on the frontend using <code>Javascript</code> is easy.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">const q = {};
+
+q.status = 'A';
+q.qty = { "$lt": 30 };
+
+console.log(JSON.stringify(q, null, 4));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "status": "A",
+    "qty": {
+        "$lt": 30
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Another example:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">let q = {};
+
+q.lastName = "ibrahim";
+q.$and = [
+{ birthDate: { $gt: "1981-01-03" } },
+{ birthDate: { $lte: "1981-01-03" } }
+];
+
+console.log(JSON.stringify(q, null, 4));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "lastName": "ibrahim",
+    "$and": [
+        {
+            "birthDate": {
+                "$gt": "1981-01-03"
+            }
+        },
+        {
+            "birthDate": {
+                "$lte": "1981-01-03"
+            }
+        }
+    ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footnotes">
 <hr>
@@ -1614,7 +1683,7 @@ The returned properties are the properties of the primary Entity, which means th
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2021-09-22 03:20:55 UTC
+Last updated 2021-09-25 10:27:13 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

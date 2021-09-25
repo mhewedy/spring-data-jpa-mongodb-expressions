@@ -1,0 +1,62 @@
+= How to Build the Expressions
+include::include.adoc[]
+
+Building the expression on the frontend using `Javascript` is easy.
+
+.Example:
+
+[source,javascript]
+----
+const q = {};
+
+q.status = 'A';
+q.qty = { "$lt": 30 };
+
+console.log(JSON.stringify(q, null, 4));
+----
+
+Output:
+[source,json,javascript]
+----
+{
+    "status": "A",
+    "qty": {
+        "$lt": 30
+    }
+}
+----
+
+.Another example:
+
+[source,javascript]
+----
+let q = {};
+
+q.lastName = "ibrahim";
+q.$and = [
+{ birthDate: { $gt: "1981-01-03" } },
+{ birthDate: { $lte: "1981-01-03" } }
+];
+
+console.log(JSON.stringify(q, null, 4));
+----
+
+Output:
+[source,json,javascript]
+----
+{
+    "lastName": "ibrahim",
+    "$and": [
+        {
+            "birthDate": {
+                "$gt": "1981-01-03"
+            }
+        },
+        {
+            "birthDate": {
+                "$lte": "1981-01-03"
+            }
+        }
+    ]
+}
+----
