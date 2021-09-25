@@ -27,5 +27,5 @@ will be translated to.footnote:[This is rought SQL code, as usually values are p
 ----
 SELECT * FROM inventory WHERE status = "A" AND qty < 30
 ----
-TIP: You can create MongoDB queries using simple javascript code link this one https://playcode.io/814121/[here,role=external,window=_blank]
+TIP: You can create MongoDB queries using simple javascript code see <<build_expressions.adoc#_how_to_build_the_expressions,How to Build the Expressions>>
 ****

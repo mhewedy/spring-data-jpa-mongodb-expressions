@@ -4,11 +4,7 @@
 
 <image src="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/logo.png?raw=true" style="display: block; margin: auto; width: 350px;">
 
-## See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for how to get started.
-
-
-#### 🎭 How to build the query on Frontend?
-See this [snippet](https://playcode.io/753066/) to see how to build the query from js.
+### See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for how to get started.
 
 #### 🎖 Special Thanks 
 
