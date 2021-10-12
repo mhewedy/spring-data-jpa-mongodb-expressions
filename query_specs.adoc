@@ -222,6 +222,7 @@ Generated SQL:
 
 
 === Joins
+==== Many to one
 1. **Many to one **Join:
 +
 [source,json]
@@ -282,7 +283,9 @@ Generated SQL:
 ----
 ... from employee e where e.department is null
 ----
-6. Using *One to Many* join:
+
+==== One to Many
+1. Using *One to Many* join:
 +
 [source,json]
 ----
