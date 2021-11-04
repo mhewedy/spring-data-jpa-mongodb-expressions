@@ -4,7 +4,17 @@
 
 <image src="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/logo.png?raw=true" style="display: block; margin: auto; width: 350px;">
 
-### See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for how to get started.
+### Install:
+    
+```xml
+<dependency>
+  <groupId>com.github.mhewedy</groupId>
+  <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
+  <version>0.0.4</version>
+</dependency>
+
+```
+See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for how to get started.
 
 #### 🎖 Special Thanks 
 
