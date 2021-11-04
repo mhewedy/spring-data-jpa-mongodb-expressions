@@ -14,7 +14,8 @@
 </dependency>
 
 ```
-See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for how to get started.
+
+for quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0) or See the [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for details about how to get started.
 
 #### 🎖 Special Thanks 
 
