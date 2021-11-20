@@ -15,7 +15,9 @@
 
 ```
 
-For quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0) or see [this demo example on Github](https://github.com/springexamples/spring-data-jpa-mongodb-expressions-demo).
+For quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0)
+ or [dev.to post](https://dev.to/mhewedy/using-mongodb-query-syntax-to-query-relational-database-in-java-49hf)
+ or see [this demo example on Github](https://github.com/springexamples/spring-data-jpa-mongodb-expressions-demo).
 
 See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for details about how to get started.
 
