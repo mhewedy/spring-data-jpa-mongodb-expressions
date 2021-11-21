@@ -4,6 +4,41 @@
 
 <image src="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/logo.png?raw=true" style="display: block; margin: auto; width: 350px;">
 
+### How it works:
+    
+1. Customize JPA Repository base class:
+```java
+@SpringBootApplication
+@EnableJpaRepositories(repositoryBaseClass = ExpressionsRepositoryImpl.class)
+public class Application { … }
+```
+2. Change your repository to extends `ExpressionsRepository`:
+```java
+@Repository
+public interface EmployeeRepository extends ExpressionsRepository<Employee, Long> {
+}
+```
+3. Build the controller/service:
+```java
+@PostMapping("/search")
+public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions, Pageable pageable) {
+  
+    return ok().body(
+                employeeRepository.findAll(expressions, pageable).map(employeeMapper::toDto)
+        );
+}
+```
+4. Send Mongodb query in JSON from frontend:
+![image](https://user-images.githubusercontent.com/1086049/142768436-a218d0f6-4993-4361-af01-df62ad2774c4.png)
+
+### Learn more
+
+For quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0)
+ or [dev.to post](https://dev.to/mhewedy/using-mongodb-query-syntax-to-query-relational-database-in-java-49hf)
+ or see [this demo example on Github](https://github.com/springexamples/spring-data-jpa-mongodb-expressions-demo).
+
+See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for details about how to get started.
+
 ### Install:
     
 ```xml
@@ -14,12 +49,6 @@
 </dependency>
 
 ```
-
-For quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0)
- or [dev.to post](https://dev.to/mhewedy/using-mongodb-query-syntax-to-query-relational-database-in-java-49hf)
- or see [this demo example on Github](https://github.com/springexamples/spring-data-jpa-mongodb-expressions-demo).
-
-See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for details about how to get started.
 
 #### 🎖 Special Thanks 
 
