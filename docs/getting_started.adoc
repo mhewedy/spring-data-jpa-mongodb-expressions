@@ -27,7 +27,7 @@ implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:{revnumbe
 IMPORTANT: *Spring Data JPA MongoDB Expressions* will not bring any dependencies with it - this is by design - so to avoid version overlap
 in the dependencies. So make sure to setup your spring project to include the proper version of Spring Data JPA.
 
-== Code changes
+== How to use
 Three easy steps you need to do to be able to use __Spring Data JPA MongoDB Expressions__:
 
 NOTE: All public APIs (classes and interfaces) of Spring Data JPA MongoDB Expressions are in the package `com.github.mhewedy.expressions.*`
