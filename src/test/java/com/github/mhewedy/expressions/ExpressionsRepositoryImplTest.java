@@ -25,6 +25,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.chrono.HijrahDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +55,7 @@ public class ExpressionsRepositoryImplTest {
                         "ibrahim",
                         new LingualString("ahmed ar", "ahmed en"),
                         LocalDate.of(1980, 10, 10),
+                        HijrahDate.of(1380, 10, 10),
                         10,
                         Instant.parse("2007-12-03T10:15:30.00Z"),
                         (short) 1,
@@ -67,6 +69,7 @@ public class ExpressionsRepositoryImplTest {
                         "ibrahim",
                         new LingualString("mohammad ar", "mohammad en"),
                         LocalDate.of(1985, 10, 10),
+                        HijrahDate.of(1385, 10, 10),
                         20,
                         Instant.parse("2009-12-03T10:15:30.00Z"),
                         (short) 1,
@@ -80,6 +83,7 @@ public class ExpressionsRepositoryImplTest {
                         "ahmed",
                         new LingualString("mostafa ar", "mostafa en"),
                         LocalDate.of(1988, 10, 10),
+                        HijrahDate.of(1388, 10, 10),
                         30,
                         Instant.parse("2011-12-03T10:15:30.00Z"),
                         (short) 2,
@@ -93,6 +97,7 @@ public class ExpressionsRepositoryImplTest {
                         "ibrahim",
                         new LingualString("wael ar", "wael en"),
                         LocalDate.of(1990, 10, 10),
+                        HijrahDate.of(1390, 10, 10),
                         40,
                         Instant.parse("2015-12-03T10:15:30.00Z"),
                         (short) 2,
@@ -106,6 +111,7 @@ public class ExpressionsRepositoryImplTest {
                         "abdullah",
                         new LingualString("farida ar", "farida en"),
                         LocalDate.of(1979, 10, 10),
+                        HijrahDate.of(1379, 10, 10),
                         50,
                         Instant.parse("2017-12-03T10:15:30.00Z"),
                         (short) 2,
@@ -119,6 +125,7 @@ public class ExpressionsRepositoryImplTest {
                         "bobo",
                         new LingualString("fofo ar", "fofo en"),
                         LocalDate.of(1979, 10, 10),
+                        HijrahDate.of(1379, 10, 10),
                         50,
                         Instant.parse("2017-12-03T10:15:30.00Z"),
                         (short) 2,
@@ -557,6 +564,28 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(1);
 
         // where e.serial=?
+    }
+
+    @Test
+    public void testHijrahDate() throws Exception {
+        String json = loadResourceJsonFile("testHijrahDate");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // where e.h_birth_date>=?
+    }
+
+    @Test
+    public void testHijrahDate_InJava() {
+        Expressions expressions = Expression.of("hBirthDate", Operator.$gte, HijrahDate.of(1390, 9, 29)).build();
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // where e.h_birth_date>=?
     }
 
     @SneakyThrows

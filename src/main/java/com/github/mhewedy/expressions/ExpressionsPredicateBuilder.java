@@ -8,6 +8,7 @@ import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.time.*;
+import java.time.chrono.HijrahDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -297,6 +298,9 @@ class ExpressionsPredicateBuilder {
         }
         if (javaType.equals(ZonedDateTime.class)) {
             return ZonedDateTime.parse((CharSequence) value);
+        }
+        if (javaType.equals(HijrahDate.class)) {
+            return DateTimeUtil.parseHijrah((String) value);
         }
         if (javaType.isEnum()) {
             if (Number.class.isAssignableFrom(value.getClass())) {

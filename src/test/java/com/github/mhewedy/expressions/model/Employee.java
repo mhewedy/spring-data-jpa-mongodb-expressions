@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.chrono.HijrahDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +27,7 @@ public class Employee extends Auditable {
     })
     public LingualString name;
     public LocalDate birthDate;
+    public HijrahDate hBirthDate;
     public Integer age;
     public Instant hireDate;
     public Short type;

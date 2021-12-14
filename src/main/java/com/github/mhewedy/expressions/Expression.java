@@ -48,7 +48,7 @@ public abstract class Expression {
     }
 
     public static Expression of(String field, Operator operator, Temporal value) {
-        return new SingularExpression(field, operator, value == null ? null : value.toString());
+        return new SingularExpression(field, operator, value == null ? null : DateTimeUtil.format(value));
     }
 
     public static Expression of(String field, Operator operator, Boolean value) {
