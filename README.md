@@ -33,7 +33,9 @@ public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions express
 }
 ```
 4. Send Mongodb query in JSON from frontend:
+    <table><tr><td>
 ![image](https://user-images.githubusercontent.com/1086049/142768436-a218d0f6-4993-4361-af01-df62ad2774c4.png)
+        </td></tr></table>
 
 ### Learn more
 
