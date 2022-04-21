@@ -2,7 +2,9 @@ package com.github.mhewedy.expressions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mhewedy.expressions.model.*;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +16,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,6 +32,7 @@ import java.time.chrono.HijrahDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.github.mhewedy.expressions.model.Status.ACTIVE;
 import static com.github.mhewedy.expressions.model.Status.NOT_ACTIVE;
@@ -586,6 +590,44 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(1);
 
         // where e.h_birth_date>=?
+    }
+
+    @Test
+    public void testFluentQueryInQBE() {
+        @ToString
+        @AllArgsConstructor
+        class EmployeeProjectionDTO {
+            public final String firstName;
+            public final String lastName;
+        }
+
+        List<EmployeeProjectionDTO> list = employeeRepository.findBy(Example.of(new Employee()),
+                query -> query.project("firstName", "lastName")
+                        .stream()
+                        .map(it -> new EmployeeProjectionDTO(it.firstName, it.lastName))
+                        .collect(Collectors.toList())
+        );
+        System.out.println(list);
+
+        // sql:
+        /*
+        SELECT employee0_.id               AS id1_2_,
+               employee0_.created_date     AS created_2_2_,
+               employee0_.active           AS active3_2_,
+               employee0_.age              AS age4_2_,
+               employee0_.birth_date       AS birth_da5_2_,
+               employee0_.department_id    AS departm14_2_,
+               employee0_.first_name       AS first_na6_2_,
+               employee0_.h_birth_date     AS h_birth_7_2_,
+               employee0_.hire_date        AS hire_dat8_2_,
+               employee0_.last_name        AS last_nam9_2_,
+               employee0_.employee_name_ar AS employe10_2_,
+               employee0_.employee_name_en AS employe11_2_,
+               employee0_.serial           AS serial12_2_,
+               employee0_.type             AS type13_2_
+        FROM   employee employee0_
+        WHERE ?= 1
+         */
     }
 
     @SneakyThrows
