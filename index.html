@@ -1228,13 +1228,21 @@ the <code>i</code> character at the start of the text operator donates case-inse
 <div class="sect3">
 <h4 id="_paging_and_sorting"><a class="link" href="#_paging_and_sorting">Paging and sorting</a></h4>
 <div class="paragraph">
-<p>Due to being built on top of Spring Data JPA, <em>Spring Data JPA MongoDB Expressions</em> library is fully compitable with the
+<p>Due to being built on top of Spring Data JPA, <em>Spring Data JPA MongoDB Expressions</em> library is fully compatible with the
 Paging and Sorting features of Spring Data JPA.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Paging and sorting:</p>
+<p>Paging and sorting in the url:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">/api/search?page=0&amp;size=20&amp;sort=id,desc</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Paging and sorting in code:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1692,7 +1700,7 @@ console.log(JSON.stringify(q, null, 4));</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.4<br>
-Last updated 2022-02-15 06:00:36 UTC
+Last updated 2022-06-12 11:02:09 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
