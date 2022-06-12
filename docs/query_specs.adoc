@@ -196,10 +196,18 @@ TIP: the `i` character at the start of the text operator donates case-insensitiv
 
 === Paging and sorting
 
-Due to being built on top of Spring Data JPA, __Spring Data JPA MongoDB Expressions__ library is fully compitable with the
+Due to being built on top of Spring Data JPA, __Spring Data JPA MongoDB Expressions__ library is fully compatible with the
 Paging and Sorting features of Spring Data JPA.
 
-1. Paging and sorting:
+1. Paging and sorting in the url:
++
+[source,text]
+----
+/api/search?page=0&size=20&sort=id,desc
+----
+
+
+2. Paging and sorting in code:
 +
 [source,json]
 ----
