@@ -18,14 +18,15 @@ import java.util.stream.Collectors;
 import static com.github.mhewedy.expressions.Expression.*;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static javax.persistence.metamodel.Attribute.PersistentAttributeType;
 
 class ExpressionsPredicateBuilder {
 
-    static <T> Predicate getPredicate(Root<T> root, CriteriaBuilder cb, Expressions expressions) {
+    static <T> Predicate getPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expressions expressions) {
 
         Assert.notNull(expressions, "expressions must not be null!");
 
-        List<Predicate> predicates = getPredicates(cb,
+        List<Predicate> predicates = getPredicates(query, cb,
                 root,
                 root.getModel(),
                 expressions.getExpressions());
@@ -44,7 +45,7 @@ class ExpressionsPredicateBuilder {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static List<Predicate> getPredicates(CriteriaBuilder cb,
+    private static List<Predicate> getPredicates(CriteriaQuery<?> query, CriteriaBuilder cb,
                                                  Path<?> from, ManagedType<?> type,
                                                  List<Expression> expressions) {
 
@@ -60,12 +61,16 @@ class ExpressionsPredicateBuilder {
                 Attribute<?, ?> attribute = getAttribute(type, field);
 
                 if (attribute.isAssociation()) {
+                    if (attribute instanceof PluralAttribute) {
+                        query.distinct(true);
+                    }
+
                     final String subField = extractSubField(singularExpression.field);
                     if (!subField.isEmpty()) {
                         final SingularExpression subExpression =
                                 new SingularExpression(subField, singularExpression.operator, singularExpression.value);
                         predicates.addAll(
-                                getPredicates(cb,
+                                getPredicates(query, cb,
                                         reuseOrCreateJoin((From<?, ?>) from, attribute, field),
                                         extractSubFieldType(attribute),
                                         singletonList(subExpression)
@@ -77,7 +82,7 @@ class ExpressionsPredicateBuilder {
 
                 Path exprPath = from.get((SingularAttribute) attribute);
 
-                if (Attribute.PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
+                if (PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
                     final String subField = extractSubField(singularExpression.field);
                     attribute = extractSubFieldType(attribute).getAttribute(subField);
                     exprPath = exprPath.get((SingularAttribute) attribute);
@@ -114,7 +119,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.greaterThan(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                                                               singularExpression);
                         }
                         break;
                     case $gte:
@@ -124,7 +129,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.greaterThanOrEqualTo(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                                                               singularExpression);
                         }
                         break;
                     case $lt:
@@ -134,7 +139,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.lessThan(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                                                               singularExpression);
                         }
                         break;
                     case $lte:
@@ -144,7 +149,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.lessThanOrEqualTo(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                                                               singularExpression);
                         }
                         break;
                     // like
@@ -179,12 +184,16 @@ class ExpressionsPredicateBuilder {
                 Attribute<?, ?> attribute = getAttribute(type, field);
 
                 if (attribute.isAssociation()) {
+                    if (attribute instanceof PluralAttribute) {
+                        query.distinct(true);
+                    }
+
                     final String subField = extractSubField(listExpression.field);
                     if (!subField.isEmpty()) {
                         final ListExpression subExpression =
                                 new ListExpression(subField, listExpression.operator, listExpression.values);
                         predicates.addAll(
-                                getPredicates(cb,
+                                getPredicates(query, cb,
                                         reuseOrCreateJoin((From<?, ?>) from, attribute, field),
                                         extractSubFieldType(attribute),
                                         singletonList(subExpression)
@@ -196,7 +205,7 @@ class ExpressionsPredicateBuilder {
 
                 Path exprPath = from.get((SingularAttribute) attribute);
 
-                if (Attribute.PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
+                if (PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
                     final String subField = extractSubField(listExpression.field);
                     attribute = extractSubFieldType(attribute).getAttribute(subField);
                     exprPath = exprPath.get((SingularAttribute) attribute);
@@ -227,13 +236,13 @@ class ExpressionsPredicateBuilder {
 
             } else if (expression instanceof OrExpression) {
                 predicates.add(cb.or(
-                        getPredicates(cb, from, type,
+                        getPredicates(query, cb, from, type,
                                 ((OrExpression) expression).expressions).toArray(new Predicate[0])
                 ));
 
             } else if (expression instanceof AndExpression) {
                 predicates.add(cb.and(
-                        getPredicates(cb, from, type,
+                        getPredicates(query, cb, from, type,
                                 ((AndExpression) expression).expressions).toArray(new Predicate[0])
                 ));
             }
@@ -249,7 +258,7 @@ class ExpressionsPredicateBuilder {
             throw new IllegalArgumentException(
                     String.format(
                             "Unable to locate attribute with the given name [%s] on this ManagedType [%s]," +
-                                    " Are you sure this ManagedType or one of its ancestors contains such attribute?",
+                            " Are you sure this ManagedType or one of its ancestors contains such attribute?",
                             field,
                             type.getJavaType().getName()
                     )
