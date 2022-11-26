@@ -51,7 +51,7 @@ See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-ex
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
 </dependency>
 
 ```
@@ -61,7 +61,7 @@ See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-ex
 Special thanks to [Rashad Saif](https://github.com/rashadsaif) and [Hamada Elnoby](https://github.com/hamadaelnopy) for helping in the design, inspring with ideas, and for doing code review.  
     
 #### Next Release
-See [List of issues](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues?q=is%3Aissue+milestone%3A0.0.5) to be shipped in the next release
+See [List of issues](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues?q=is%3Aissue+milestone%3A0.0.6) to be shipped in the next release
     
 #### In the News
 This repo has mentioned in [spring.io](http://spring.io/blog/2021/07/06/this-week-in-spring-july-6th-2021) weekly news.
