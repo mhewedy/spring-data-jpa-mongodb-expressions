@@ -29,9 +29,6 @@ jobs:
     - name: Test with Maven
       run: mvn -B test --file pom.xml
       
-    - name: Run code coverage
-      run: mvn cobertura:cobertura
-      
     - name: Submit code coverage
       run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_SECRET }}  
       
