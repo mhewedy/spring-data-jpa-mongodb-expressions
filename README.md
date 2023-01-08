@@ -55,7 +55,7 @@ See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-ex
 </dependency>
 
 ```
->Note: Starting from version `0.1.0` the library supports springboot 3, to use the library with springboot 2 use versions `0.0.x` e.g. version `0.0.6`.
+>Note: Starting from version `0.1.0` the library supports springboot 3, to use the library with springboot 2 use versions `0.0.x` e.g. version `0.0.5`.
 
 #### 🎖 Special Thanks 
 
