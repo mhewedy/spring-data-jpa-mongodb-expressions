@@ -3,7 +3,7 @@ package com.github.mhewedy.expressions.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.chrono.HijrahDate;

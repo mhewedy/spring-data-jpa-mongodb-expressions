@@ -1,6 +1,6 @@
 package com.github.mhewedy.expressions.model;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class LingualString {

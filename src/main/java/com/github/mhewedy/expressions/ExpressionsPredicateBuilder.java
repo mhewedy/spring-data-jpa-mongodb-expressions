@@ -2,11 +2,11 @@ package com.github.mhewedy.expressions;
 
 import org.springframework.util.Assert;
 
-import javax.persistence.criteria.*;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.PluralAttribute;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.criteria.*;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.PluralAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.time.*;
 import java.time.chrono.HijrahDate;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static com.github.mhewedy.expressions.Expression.*;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static javax.persistence.metamodel.Attribute.PersistentAttributeType;
+import static jakarta.persistence.metamodel.Attribute.PersistentAttributeType;
 
 class ExpressionsPredicateBuilder {
 

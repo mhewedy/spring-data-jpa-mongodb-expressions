@@ -51,10 +51,11 @@ See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-ex
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.0.5</version>
+  <version>0.1.0</version>
 </dependency>
 
 ```
+>Note: Starting from version `0.1.0` the library supports springboot 3, to use the library with springboot 2 use version `0.0.x`.
 
 #### 🎖 Special Thanks 
 

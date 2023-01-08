@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.2</version>
+        <version>3.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.github.mhewedy</groupId>
     <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-    <version>0.0.5</version>
+    <version>0.1.0</version>
     <name>spring-data-jpa-mongodb-expressions</name>
     <description>Spring Data JPA Mongodb Expressions</description>
 

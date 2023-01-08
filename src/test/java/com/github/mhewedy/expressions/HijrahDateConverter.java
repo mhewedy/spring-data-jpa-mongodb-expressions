@@ -2,8 +2,8 @@ package com.github.mhewedy.expressions;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.time.chrono.HijrahDate;
 import java.time.format.DateTimeFormatter;
 
