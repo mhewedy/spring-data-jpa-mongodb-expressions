@@ -66,3 +66,6 @@ See [List of issues](https://github.com/mhewedy/spring-data-jpa-mongodb-expressi
     
 #### In the News
 This repo has mentioned in [spring.io](http://spring.io/blog/2021/07/06/this-week-in-spring-july-6th-2021) weekly news.
+
+#### Online Validator
+see https://expressions-validator.fly.dev/ to help validate expressions
