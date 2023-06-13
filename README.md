@@ -11,31 +11,47 @@
 ### How it works:
     
 1. Customize JPA Repository base class:
-```java
-@SpringBootApplication
-@EnableJpaRepositories(repositoryBaseClass = ExpressionsRepositoryImpl.class)
-public class Application { … }
-```
+    ```java
+    @SpringBootApplication
+    @EnableJpaRepositories(repositoryBaseClass = ExpressionsRepositoryImpl.class)
+    public class Application { … }
+    ```
 2. Change your repository to extends `ExpressionsRepository`:
-```java
-@Repository
-public interface EmployeeRepository extends ExpressionsRepository<Employee, Long> {
-}
-```
+    ```java
+    @Repository
+    public interface EmployeeRepository extends ExpressionsRepository<Employee, Long> {
+    }
+    ```
 3. Build the controller/service:
-```java
-@PostMapping("/search")
-public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions, Pageable pageable) {
-  
-    return ok().body(
-                employeeRepository.findAll(expressions, pageable).map(employeeMapper::toDto)
-        );
-}
-```
-4. Send Mongodb query in JSON from frontend:
+    ```java
+    @PostMapping("/search")
+    public ResponseEntity<Page<EmployeeDto>> search(@RequestBody Expressions expressions, Pageable pageable) {
+
+        return ok().body(
+                    employeeRepository.findAll(expressions, pageable).map(employeeMapper::toDto)
+            );
+    }
+    ```
+4. Send [Mongodb query in JSON](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/#_queries) from frontend:
+    ```json
+    {
+      "$or": [
+        {"lastName": "ibrahim"},
+        {
+          "$and": [
+            {"firstName": "mostafa"},
+            {
+              "birthDate": {"$gt": "1990-01-01"}
+            }
+          ]
+        }
+      ]
+    }
+    ```
+    
     <table><tr><td>
 ![image](https://user-images.githubusercontent.com/1086049/142768436-a218d0f6-4993-4361-af01-df62ad2774c4.png)
-        </td></tr></table>
+</td></tr></table>
 
 ### Learn more
 
