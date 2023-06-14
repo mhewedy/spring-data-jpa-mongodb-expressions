@@ -32,7 +32,7 @@
             );
     }
     ```
-4. Send [Mongodb query in JSON](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/#_queries) from frontend:
+4. Send [Mongodb query in JSON](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/#_how_to_build_the_expressions) from frontend:
     ```json
     {
       "$or": [
