@@ -46,11 +46,6 @@
       ]
     }
     ```
-    
-    <table>
-        <tr><td>
-        <img src="https://user-images.githubusercontent.com/1086049/142768436-a218d0f6-4993-4361-af01-df62ad2774c4.png" width="100" />
-</td></tr></table>
 
 ### Learn more
 
