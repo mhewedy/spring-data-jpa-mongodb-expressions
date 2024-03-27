@@ -44,6 +44,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.fail;
 public class ExpressionsRepositoryImplTest {
 
     @Autowired
+    private BookRepository bookRepository;
+    @Autowired
     private EmployeeRepository employeeRepository;
 
     @BeforeEach
@@ -136,6 +138,11 @@ public class ExpressionsRepositoryImplTest {
                 )
         );
         employeeRepository.saveAll(employees);
+
+        bookRepository.saveAll(List.of(
+                new Book(new Book.BookId("Spring in Action", "English"), "Craig Walls"),
+                new Book(new Book.BookId("Kubernetes Up and Running", "English"), "Brendan Burns")
+        ));
     }
 
     @AfterEach
@@ -586,6 +593,42 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(1);
 
         // where e.h_birth_date>=?
+    }
+
+    @Test
+    public void testCompositeIdUsingEmbeddable() throws Exception{
+        String json = loadResourceJsonFile("testCompositeIdUsingEmbeddable");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Book> employeeList = bookRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // where b1_0.auther=?
+    }
+
+    @Test
+    public void testCompositeIdUsingEmbeddable_QueryByIdParts() throws Exception{
+        String json = loadResourceJsonFile("testCompositeIdUsingEmbeddable_QueryByIdParts");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Book> employeeList = bookRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+
+        // where b1_0.title=?
+    }
+
+    @Test
+    public void testCompositeIdUsingEmbeddable_QueryByIdParts2() throws Exception{
+        String json = loadResourceJsonFile("testCompositeIdUsingEmbeddable_QueryByIdParts2");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Book> employeeList = bookRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(2);
+
+        // where b1_0.language=?
     }
 
     @SneakyThrows
