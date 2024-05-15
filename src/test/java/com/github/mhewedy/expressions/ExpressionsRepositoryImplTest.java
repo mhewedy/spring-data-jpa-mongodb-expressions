@@ -2,6 +2,10 @@ package com.github.mhewedy.expressions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mhewedy.expressions.model.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.ResourceUtils;
@@ -43,6 +48,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.fail;
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ExpressionsRepositoryImplTest {
 
+    @Autowired
+    EntityManager entityManager;
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -596,7 +603,7 @@ public class ExpressionsRepositoryImplTest {
     }
 
     @Test
-    public void testCompositeIdUsingEmbeddable() throws Exception{
+    public void testCompositeIdUsingEmbeddable() throws Exception {
         String json = loadResourceJsonFile("testCompositeIdUsingEmbeddable");
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
@@ -608,7 +615,7 @@ public class ExpressionsRepositoryImplTest {
     }
 
     @Test
-    public void testCompositeIdUsingEmbeddable_QueryByIdParts() throws Exception{
+    public void testCompositeIdUsingEmbeddable_QueryByIdParts() throws Exception {
         String json = loadResourceJsonFile("testCompositeIdUsingEmbeddable_QueryByIdParts");
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
@@ -620,7 +627,7 @@ public class ExpressionsRepositoryImplTest {
     }
 
     @Test
-    public void testCompositeIdUsingEmbeddable_QueryByIdParts2() throws Exception{
+    public void testCompositeIdUsingEmbeddable_QueryByIdParts2() throws Exception {
         String json = loadResourceJsonFile("testCompositeIdUsingEmbeddable_QueryByIdParts2");
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
@@ -629,6 +636,25 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(2);
 
         // where b1_0.language=?
+    }
+
+    @Test
+    public void testAggregations_by_convert_to_specifications_InJava() {
+        Expressions expressions = Expression.of("hBirthDate", Operator.$gte, HijrahDate.of(1388, 9, 29)).build();
+
+        // get spring-data-jpa Specification from the expressions object
+        Specification<Employee> specification = expressions.getSpecification();
+
+        // then using old school jpa Criteria Query API
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+        Root<Employee> root = query.from(Employee.class);
+        query.select(cb.min(root.get("age"))).where(specification.toPredicate(root, query, cb));
+        Integer minAge = entityManager.createQuery(query).getSingleResult();
+
+        assertThat(minAge).isEqualTo(30);
+
+        // select min(e1_0.age) from employee e1_0 where e1_0.h_birth_date>=?
     }
 
     @SneakyThrows
