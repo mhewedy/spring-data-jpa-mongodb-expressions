@@ -46,7 +46,7 @@ public class ExpressionsRepositoryImpl<T, ID>
     }
 
     @RequiredArgsConstructor
-    private static class ExpressionsSpecification<T> implements Specification<T> {
+    static class ExpressionsSpecification<T> implements Specification<T> {
 
         private final Expressions expressions;
 
