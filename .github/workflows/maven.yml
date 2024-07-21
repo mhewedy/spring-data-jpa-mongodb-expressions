@@ -19,8 +19,8 @@ jobs:
         java-version: 17
         distribution: 'adopt'
         server-id: ossrh
-        server-username: OSSRH_USERNAME
-        server-password: OSSRH_PASSWORD
+        server-username: OSSRH_TOKEN_USERNAME
+        server-password: OSSRH_TOKEN_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
     - name: Build with Maven
@@ -38,6 +38,6 @@ jobs:
       env:
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+        #OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
     
