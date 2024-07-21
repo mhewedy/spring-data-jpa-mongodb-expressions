@@ -1,6 +1,5 @@
 package com.github.mhewedy.expressions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mhewedy.expressions.model.*;
 import jakarta.persistence.EntityManager;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.github.mhewedy.expressions.Operator.*;
-import static com.github.mhewedy.expressions.Operator.$eq;
+import static com.github.mhewedy.expressions.model.Employee.Lang;
 import static com.github.mhewedy.expressions.model.Status.ACTIVE;
 import static com.github.mhewedy.expressions.model.Status.NOT_ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -51,6 +50,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.fail;
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ExpressionsRepositoryImplTest {
 
+    private List<Employee> allEmployees;
+
     @Autowired
     EntityManager entityManager;
     @Autowired
@@ -61,7 +62,7 @@ public class ExpressionsRepositoryImplTest {
     @BeforeEach
     public void setup() {
         log.info("setting up");
-        List<Employee> employees = Arrays.asList(
+        allEmployees = Arrays.asList(
                 new Employee(null,
                         "ahmed",
                         "ibrahim",
@@ -74,7 +75,9 @@ public class ExpressionsRepositoryImplTest {
                         true,
                         new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE)),
-                        UUID.fromString("2dfb7bc7-38a6-4826-b6d3-297969d17244")
+                        UUID.fromString("2dfb7bc7-38a6-4826-b6d3-297969d17244"),
+                        Lang.AR,
+                        Lang.AR
                 ),
                 new Employee(null,
                         "mohammad",
@@ -88,7 +91,9 @@ public class ExpressionsRepositoryImplTest {
                         true,
                         new Department(null, "sw arch", new City(null, "giaz")),
                         Arrays.asList(new Task(null, "fix sw arch", ACTIVE), new Task(null, "fix sw arch", ACTIVE)),
-                        UUID.randomUUID()
+                        UUID.randomUUID(),
+                        Lang.AR,
+                        Lang.AR
                 ),
                 new Employee(null,
                         "mostafa",
@@ -102,7 +107,9 @@ public class ExpressionsRepositoryImplTest {
                         true,
                         new Department(null, "sw dev", new City(null, "alex")),
                         Arrays.asList(new Task(null, "fix sw dev", ACTIVE), new Task(null, "fix sw dev", ACTIVE)),
-                        UUID.randomUUID()
+                        UUID.randomUUID(),
+                        Lang.AR,
+                        Lang.AR
                 ),
                 new Employee(null,
                         "wael",
@@ -116,7 +123,9 @@ public class ExpressionsRepositoryImplTest {
                         true,
                         new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", ACTIVE)),
-                        UUID.randomUUID()
+                        UUID.randomUUID(),
+                        Lang.AR,
+                        Lang.AR
                 ),
                 new Employee(null,
                         "farida",
@@ -130,7 +139,9 @@ public class ExpressionsRepositoryImplTest {
                         false,
                         new Department(null, "hr", new City(null, "cairo")),
                         Arrays.asList(new Task(null, "fix hr", ACTIVE), new Task(null, "fix hr", NOT_ACTIVE)),
-                        UUID.randomUUID()
+                        UUID.randomUUID(),
+                        Lang.AR,
+                        Lang.AR
                 ),
                 new Employee(null,
                         "fofo",
@@ -144,10 +155,12 @@ public class ExpressionsRepositoryImplTest {
                         false,
                         null,
                         null,
-                        UUID.randomUUID()
+                        UUID.randomUUID(),
+                        Lang.EN,
+                        Lang.EN
                 )
         );
-        employeeRepository.saveAll(employees);
+        employeeRepository.saveAll(allEmployees);
 
         bookRepository.saveAll(List.of(
                 new Book(new Book.BookId("Spring in Action", "English"), "Craig Walls"),
@@ -661,7 +674,7 @@ public class ExpressionsRepositoryImplTest {
     }
 
     @Test
-    public void testAndingMultipleOrs_InJava() throws JsonProcessingException {
+    public void testAndingMultipleOrs_InJava() {
 
         Expressions expressions = new Expressions();
 
@@ -679,6 +692,45 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(0);
 
         // where (employee0_.age=? or employee0_.age=?) and (employee0_.first_name=? or employee0_.first_name=?)
+    }
+
+    @Test
+    public void testEnum1() {
+        Expressions expressions = new Expressions();
+        expressions.and(Expression.of("lang", $eq, Lang.EN));
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testEnum2() {
+        Expressions expressions = new Expressions();
+        expressions.and(Expression.of("langCode", $eq, Lang.EN));
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testEnum3() {
+        Expressions expressions = new Expressions();
+        expressions.and(Expression.of("langCode", $in, Lang.EN, Lang.AR));
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(allEmployees.size());
+    }
+
+    @Test
+    public void testTheList() {
+        Expressions expressions = Expression.of("lastName", $eq, "ibrahim")
+                .and(Expression.or(
+                        Expression.of("age", $in, Arrays.asList(10, 20)),
+                        Expression.of("birthDate", $lt, LocalDate.of(1980, 1, 1)))
+                ).build();
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(2);
+
+        // where last_name=? and (age in (? , ?) or birth_date<?)
     }
 
     @SneakyThrows
