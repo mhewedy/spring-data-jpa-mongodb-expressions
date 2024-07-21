@@ -55,6 +55,10 @@ public abstract class Expression {
         return new SingularExpression(field, operator, value);
     }
 
+    public static Expression of(String field, Operator operator, Object value) {
+        return new SingularExpression(field, operator, value);
+    }
+
     /**
      * Used with operators require list of elements,
      * such as {@link Operator#$in} and {@link Operator#$nin}
@@ -87,6 +91,22 @@ public abstract class Expression {
      */
     public static Expression of(String field, Operator operator, Boolean... values) {
         return new ListExpression(field, operator, Arrays.asList(values));
+    }
+
+    /**
+     * Used with operators require list of elements,
+     * such as {@link Operator#$in} and {@link Operator#$nin}
+     */
+    public static Expression of(String field, Operator operator, Object... values) {
+        return new ListExpression(field, operator, Arrays.asList(values));
+    }
+
+    /**
+     * Used with operators require list of elements,
+     * such as {@link Operator#$in} and {@link Operator#$nin}
+     */
+    public static Expression of(String field, Operator operator, List<?> values) {
+        return new ListExpression(field, operator, values);
     }
 
     /**

@@ -38,4 +38,10 @@ public class Employee extends Auditable {
     @JoinColumn(name = "employee_id")
     public List<Task> tasks;
     public UUID serial;
+    @Enumerated(EnumType.STRING)
+    public Lang lang;
+    @Enumerated(EnumType.ORDINAL)
+    public Lang langCode;
+
+    public enum Lang {AR, EN}
 }

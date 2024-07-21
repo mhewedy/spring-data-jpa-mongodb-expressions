@@ -316,8 +316,9 @@ class ExpressionsPredicateBuilder {
                 return javaType.getEnumConstants()[((Number) value).intValue()];
             } else if (String.class.isAssignableFrom(value.getClass())) {
                 return Enum.valueOf(javaType, (String) value);
+            } else {
+                return Enum.valueOf(javaType, ((Enum<?>) value).name());
             }
-            throw new IllegalArgumentException("enum value should be number or string");
         }
         if (javaType.equals(UUID.class)) {
             return UUID.fromString((String) value);
