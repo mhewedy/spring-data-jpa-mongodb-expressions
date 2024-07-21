@@ -3,6 +3,7 @@ spring:
     properties:
       'hibernate.criteria.literal_handling_mode': bind
 
-#logging:
-#  level:
-#    'org.hibernate.type': trace
+logging:
+  level:
+    com.github.mhewedy.expressions: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace

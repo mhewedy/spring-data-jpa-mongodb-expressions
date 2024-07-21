@@ -1,6 +1,8 @@
 package com.github.mhewedy.expressions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.util.ClassUtils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -19,6 +22,8 @@ import java.util.List;
 @Slf4j
 public class ExpressionsRepositoryImpl<T, ID>
         extends SimpleJpaRepository<T, ID> implements ExpressionsRepository<T, ID> {
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public ExpressionsRepositoryImpl(JpaEntityInformation<T, Long>
                                              entityInformation, EntityManager entityManager) {
@@ -52,7 +57,21 @@ public class ExpressionsRepositoryImpl<T, ID>
 
         @Override
         public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            logExpressions();
             return ExpressionsPredicateBuilder.getPredicate(root, query, cb, expressions);
+        }
+
+        @SneakyThrows
+        private void logExpressions() {
+            if (!log.isDebugEnabled()) {
+                return;
+            }
+            if (ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper",
+                    ExpressionsSpecification.class.getClassLoader())) {
+                log.debug("expressions: {}", OBJECT_MAPPER.writeValueAsString(expressions));
+            } else {
+                log.debug("expressions: {}", expressions.toString());
+            }
         }
     }
 }

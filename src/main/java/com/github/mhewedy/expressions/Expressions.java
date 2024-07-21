@@ -75,7 +75,7 @@ public class Expressions extends HashMap<String, Object> {
         List<Map<String, Object>> list = new ArrayList<>();
         this.put(Operator.$or.name(), list);
 
-        list.add(tmp);
+        if (!tmp.isEmpty()) list.add(tmp);
 
         Map<String, Object> map = new HashMap<>();
         list.add(map);
@@ -119,7 +119,19 @@ public class Expressions extends HashMap<String, Object> {
      * </pre>
      */
     public Expressions and(Expression expression) {
-        add(expression, this);
+
+        Map<String, Object> tmp = new HashMap<>(this);
+        this.clear();
+
+        List<Map<String, Object>> list = new ArrayList<>();
+        this.put(Operator.$and.name(), list);
+
+        if (!tmp.isEmpty()) list.add(tmp);
+
+        Map<String, Object> map = new HashMap<>();
+        list.add(map);
+        add(expression, map);
+
         return this;
     }
 
