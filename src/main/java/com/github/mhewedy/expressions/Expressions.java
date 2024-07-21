@@ -2,6 +2,7 @@ package com.github.mhewedy.expressions;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,6 +133,10 @@ public class Expressions extends HashMap<String, Object> {
         add(expression, map);
 
         return this;
+    }
+
+    public <T> Specification<T> getSpecification() {
+        return new ExpressionsRepositoryImpl.ExpressionsSpecification<>(this);
     }
 
     static Expressions of(Expression expression) {
