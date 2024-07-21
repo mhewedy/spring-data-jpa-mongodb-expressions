@@ -56,23 +56,31 @@ For quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb
 See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-expressions/) for details about how to get started.
 
 ### Install:
+
+For springboot 3.x:
     
 ```xml
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 
 ```
->Note: Starting from version `0.1.0` the library supports springboot 3, to use the library with springboot 2 use versions `0.0.x` e.g. version `0.0.5`.
+For springboot 2.x:
+
+```xml
+<dependency>
+  <groupId>com.github.mhewedy</groupId>
+  <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
+  <version>0.0.6</version>
+</dependency>
+
+```
 
 #### 🎖 Special Thanks 
 
-Special thanks to [Rashad Saif](https://github.com/rashadsaif) and [Hamada Elnoby](https://github.com/hamadaelnopy) for helping in the design, inspring with ideas, and for doing code review.  
-    
-#### Next Release
-See [List of issues](https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues?q=is%3Aissue+milestone%3A0.0.6) to be shipped in the next release
+Special thanks to [Rashad Saif](https://github.com/rashadsaif) and [Hamada Elnoby](https://github.com/hamadaelnopy) for helping in the design, inspring with ideas, and for doing code review.
     
 #### In the News
 This repo has mentioned in [spring.io](http://spring.io/blog/2021/07/06/this-week-in-spring-july-6th-2021) weekly news.
