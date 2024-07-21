@@ -1,5 +1,6 @@
 package com.github.mhewedy.expressions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mhewedy.expressions.model.*;
 import lombok.SneakyThrows;
@@ -30,6 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static com.github.mhewedy.expressions.Operator.*;
+import static com.github.mhewedy.expressions.Operator.$eq;
 import static com.github.mhewedy.expressions.model.Status.ACTIVE;
 import static com.github.mhewedy.expressions.model.Status.NOT_ACTIVE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -208,8 +211,8 @@ public class ExpressionsRepositoryImplTest {
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
         expressions.and(Expression.or(
-                Expression.of("lastName", Operator.$eq, "ibrahim"),
-                Expression.of("age", Operator.$in, 10, 30)
+                Expression.of("lastName", $eq, "ibrahim"),
+                Expression.of("age", $in, 10, 30)
         ));
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
@@ -227,8 +230,8 @@ public class ExpressionsRepositoryImplTest {
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
         expressions.or(Expression.and(
-                Expression.of("lastName", Operator.$eq, "ibrahim"),
-                Expression.of("age", Operator.$eq, 10)
+                Expression.of("lastName", $eq, "ibrahim"),
+                Expression.of("age", $eq, 10)
         ));
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
@@ -259,8 +262,8 @@ public class ExpressionsRepositoryImplTest {
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
-        expressions.and(Expression.of("birthDate", Operator.$eq, "1980-10-10"));
-        expressions.and(Expression.of("hireDate", Operator.$lte, "2007-12-03T10:15:30.00Z"));
+        expressions.and(Expression.of("birthDate", $eq, "1980-10-10"));
+        expressions.and(Expression.of("hireDate", $lte, "2007-12-03T10:15:30.00Z"));
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList).isNotNull();
@@ -277,7 +280,7 @@ public class ExpressionsRepositoryImplTest {
 
         Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
 
-        expressions.or(Expression.of("lastName", Operator.$ne, (String) null));
+        expressions.or(Expression.of("lastName", $ne, (String) null));
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList).isNotNull();
@@ -352,10 +355,10 @@ public class ExpressionsRepositoryImplTest {
 
     @Test
     public void testTheJavaAPI() {
-        Expressions expressions = Expression.of("lastName", Operator.$eq, "ibrahim")
+        Expressions expressions = Expression.of("lastName", $eq, "ibrahim")
                 .and(Expression.or(
-                        Expression.of("age", Operator.$in, 10, 20),
-                        Expression.of("birthDate", Operator.$lt, LocalDate.of(1980, 1, 1)))
+                        Expression.of("age", $in, 10, 20),
+                        Expression.of("birthDate", $lt, LocalDate.of(1980, 1, 1)))
                 ).build();
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
@@ -546,7 +549,7 @@ public class ExpressionsRepositoryImplTest {
 
     @Test
     public void testBooleanOperatorFromJava() {
-        Expressions expressions = Expression.of("active", Operator.$eq, false).build();
+        Expressions expressions = Expression.of("active", $eq, false).build();
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList.size()).isEqualTo(2);
@@ -580,12 +583,33 @@ public class ExpressionsRepositoryImplTest {
 
     @Test
     public void testHijrahDate_InJava() {
-        Expressions expressions = Expression.of("hBirthDate", Operator.$gte, HijrahDate.of(1390, 9, 29)).build();
+        Expressions expressions = Expression.of("hBirthDate", $gte, HijrahDate.of(1390, 9, 29)).build();
 
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList.size()).isEqualTo(1);
 
         // where e.h_birth_date>=?
+    }
+
+    @Test
+    public void testAndingMultipleOrs_InJava() throws JsonProcessingException {
+
+        Expressions expressions = new Expressions();
+
+        expressions.and(Expression.or(
+                Expression.of("age", $eq, 30),
+                Expression.of("age", $eq, 50)
+        ));
+
+        expressions.and(Expression.or(
+                Expression.of("firstName", $eq, "ali"),
+                Expression.of("firstName", $eq, "wael")
+        ));
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(0);
+
+        // where (employee0_.age=? or employee0_.age=?) and (employee0_.first_name=? or employee0_.first_name=?)
     }
 
     @SneakyThrows
