@@ -36,7 +36,7 @@ jobs:
       #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
       run: cat ~/.m2/settings.xml && mvn -DskipTests deploy -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASSPHRASE }}
       env:
-        OSSRH_USERNAME: ${{ secrets.OSSRH_TOKEN_USERNAME }}
-        OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+        OSSRH_USERNAMEX: ${{ secrets.OSSRH_TOKEN_USERNAME }}
+        OSSRH_PASSWORDX: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
     
