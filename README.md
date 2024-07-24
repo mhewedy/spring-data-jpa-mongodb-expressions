@@ -63,7 +63,7 @@ For springboot 3.x:
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
 </dependency>
 
 ```
@@ -73,7 +73,7 @@ For springboot 2.x:
 <dependency>
   <groupId>com.github.mhewedy</groupId>
   <artifactId>spring-data-jpa-mongodb-expressions</artifactId>
-  <version>0.0.7</version>
+  <version>0.0.8</version>
 </dependency>
 
 ```
