@@ -23,7 +23,15 @@ import java.util.List;
 public class ExpressionsRepositoryImpl<T, ID>
         extends SimpleJpaRepository<T, ID> implements ExpressionsRepository<T, ID> {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static Object OBJECT_MAPPER;
+    private static final boolean OBJECT_MAPPER_PRESENT = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper",
+            ExpressionsRepositoryImpl.class.getClassLoader());
+
+    static {
+        if (OBJECT_MAPPER_PRESENT) {
+            OBJECT_MAPPER = new ObjectMapper();
+        }
+    }
 
     public ExpressionsRepositoryImpl(JpaEntityInformation<T, Long>
                                              entityInformation, EntityManager entityManager) {
@@ -66,12 +74,7 @@ public class ExpressionsRepositoryImpl<T, ID>
             if (!log.isDebugEnabled()) {
                 return;
             }
-            if (ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper",
-                    ExpressionsSpecification.class.getClassLoader())) {
-                log.debug("expressions: {}", OBJECT_MAPPER.writeValueAsString(expressions));
-            } else {
-                log.debug("expressions: {}", expressions.toString());
-            }
+            log.debug("expressions: {}", OBJECT_MAPPER_PRESENT ? ((ObjectMapper) OBJECT_MAPPER).writeValueAsString(expressions) : expressions);
         }
     }
 }
