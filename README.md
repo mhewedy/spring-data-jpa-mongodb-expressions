@@ -16,7 +16,7 @@
     @EnableJpaRepositories(repositoryBaseClass = ExpressionsRepositoryImpl.class)
     public class Application { … }
     ```
-2. Change your repository to extends `ExpressionsRepository`:
+2. Change your repository to extend `ExpressionsRepository`:
     ```java
     @Repository
     public interface EmployeeRepository extends ExpressionsRepository<Employee, Long> {
@@ -49,7 +49,7 @@
 
 ### Learn more
 
-For quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0)
+For a quick start see [this Medium post](https://mohewedy.medium.com/using-mongodb-query-syntax-to-query-relational-database-in-java-57701f0b0f0)
  or [dev.to post](https://dev.to/mhewedy/using-mongodb-query-syntax-to-query-relational-database-in-java-49hf)
  or see [this demo example on Github](https://github.com/springexamples/spring-data-jpa-mongodb-expressions-demo).
 
@@ -57,7 +57,7 @@ See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-ex
 
 ### Install:
 
-For springboot 3.x:
+For spring-boot 3.x:
     
 ```xml
 <dependency>
@@ -67,7 +67,7 @@ For springboot 3.x:
 </dependency>
 
 ```
-For springboot 2.x:
+For spring-boot 2.x:
 
 ```xml
 <dependency>
@@ -83,7 +83,4 @@ For springboot 2.x:
 Special thanks to [Rashad Saif](https://github.com/rashadsaif) and [Hamada Elnoby](https://github.com/hamadaelnopy) for helping in the design, inspring with ideas, and for doing code review.
     
 #### In the News
-This repo has mentioned in [spring.io](http://spring.io/blog/2021/07/06/this-week-in-spring-july-6th-2021) weekly news.
-
-#### Online Validator
-see https://expressions-validator.fly.dev/ to help validate expressions
+This repo has been mentioned in [spring.io](http://spring.io/blog/2021/07/06/this-week-in-spring-july-6th-2021) weekly news.
