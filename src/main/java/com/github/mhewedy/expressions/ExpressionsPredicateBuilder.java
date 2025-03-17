@@ -330,7 +330,7 @@ class ExpressionsPredicateBuilder {
 
     @SuppressWarnings({"rawtypes"})
     private static List<Object> convertValueToAttributeType(List<Object> values, Class javaType) {
-        if (values == null || values.isEmpty()) {
+        if (values == null || values.isEmpty() || values.get(0).getClass().equals(javaType)) {
             return values;
         }
 
