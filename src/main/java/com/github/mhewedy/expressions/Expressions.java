@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.mhewedy.expressions.Expression.*;
+import static com.github.mhewedy.expressions.Operator.$and;
+import static com.github.mhewedy.expressions.Operator.$or;
 
 
 /**
@@ -73,7 +75,7 @@ public class Expressions extends HashMap<String, Object> {
         this.clear();
 
         List<Map<String, Object>> list = new ArrayList<>();
-        this.put(Operator.$or.name(), list);
+        this.put($or.name(), list);
 
         if (!tmp.isEmpty()) list.add(tmp);
 
@@ -124,7 +126,7 @@ public class Expressions extends HashMap<String, Object> {
         this.clear();
 
         List<Map<String, Object>> list = new ArrayList<>();
-        this.put(Operator.$and.name(), list);
+        this.put($and.name(), list);
 
         if (!tmp.isEmpty()) list.add(tmp);
 
@@ -171,7 +173,7 @@ public class Expressions extends HashMap<String, Object> {
             OrExpression oe = (OrExpression) expression;
 
             List<Map<String, Object>> list = new ArrayList<>();
-            map.put(Operator.$or.name(), list);
+            map.put($or.name(), list);
 
             oe.expressions.forEach(it -> {
                 Map<String, Object> m = new HashMap<>();
@@ -182,7 +184,7 @@ public class Expressions extends HashMap<String, Object> {
             AndExpression ae = (AndExpression) expression;
 
             List<Map<String, Object>> list = new ArrayList<>();
-            map.put(Operator.$and.name(), list);
+            map.put($and.name(), list);
 
             ae.expressions.forEach(it -> {
                 Map<String, Object> m = new HashMap<>();
@@ -210,7 +212,7 @@ public class Expressions extends HashMap<String, Object> {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            if (Operator.$or.name().equalsIgnoreCase(key)) {
+            if ($or.name().equalsIgnoreCase(key)) {
                 List<Map<String, Object>> valueList = (List<Map<String, Object>>) value;
 
                 OrExpression orExpression = new OrExpression();
@@ -219,7 +221,7 @@ public class Expressions extends HashMap<String, Object> {
                 for (Map<String, Object> valueMap : valueList) {
                     orExpression.expressions.add(getExpressions(valueMap).get(0));
                 }
-            } else if (Operator.$and.name().equalsIgnoreCase(key)) {
+            } else if ($and.name().equalsIgnoreCase(key)) {
                 List<Map<String, Object>> valueList = (List<Map<String, Object>>) value;
 
                 AndExpression andExpression = new AndExpression();
@@ -255,4 +257,21 @@ public class Expressions extends HashMap<String, Object> {
         return m;
     }
 
+    @SuppressWarnings({"unchecked"})
+    public static List<String> extractFields(Map<String, Object> expressions) {
+        List<String> list = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : expressions.entrySet()) {
+            String key = entry.getKey();
+            if (key.equals($and.name()) || key.equals($or.name())) {
+                List<Object> values = (List<Object>) entry.getValue();
+                for (Object value : values) {
+                    list.addAll(extractFields((Map<String, Object>) value));
+                }
+            } else {
+                list.add(key);
+            }
+        }
+        return list;
+    }
 }
