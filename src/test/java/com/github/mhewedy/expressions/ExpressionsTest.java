@@ -4,21 +4,35 @@ package com.github.mhewedy.expressions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.github.mhewedy.expressions.Expression.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExpressionsTest {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void testObjectWithOrExpression() throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
         Expressions conditions =
-                objectMapper.readValue(
-                        "{ \"status\": \"A\",  \"$or\": [{ \"qty\": { \"$lt\": 30 } }, { \"item\": { \"$in\": [\"A\", \"D\"] } }] }",
+                objectMapper.readValue("""
+                                {
+                                  "status": "A",
+                                  "$or": [
+                                    {
+                                      "qty": { "$lt": 30 }
+                                    },
+                                    {
+                                      "item": {"$in": ["A", "D"] }
+                                    }
+                                  ]
+                                }
+                                """,
                         Expressions.class);
 
         final List<Expression> expression = conditions.getExpressions();
@@ -68,4 +82,72 @@ class ExpressionsTest {
         }
     }
 
+    @Test
+    void testExtractFieldsWithCompoundOperatorsJSON() throws Exception {
+        String json = """
+                {
+                    "firstName": "John",
+                    "$or": [
+                        {
+                            "lastName": "Doe"
+                        },
+                        {
+                            "age": { "$gt": 30 }
+                        }
+                    ]
+                }
+                """;
+        Expressions expressions = objectMapper.readValue(json, Expressions.class);
+        List<String> fields = Expressions.extractFields(expressions);
+
+        assertEquals(Arrays.asList("firstName", "lastName", "age"), fields);
+    }
+
+    @Test
+    void testExtractFieldsWithEmptyJSON() throws Exception {
+        String json = "{}";
+        Expressions expressions = objectMapper.readValue(json, Expressions.class);
+        List<String> fields = Expressions.extractFields(expressions);
+
+        assertTrue(fields.isEmpty());
+    }
+
+    @Test
+    void testExtractFieldsWithNestedAndOperatorJSON() throws Exception {
+        String json = """
+                {
+                    "$and": [
+                        { "country": "USA" },
+                        { "state": "California" }
+                    ]
+                }
+                """;
+        Expressions expressions = objectMapper.readValue(json, Expressions.class);
+        List<String> fields = Expressions.extractFields(expressions);
+
+        assertEquals(Arrays.asList("country", "state"), fields);
+    }
+
+    @Test
+    void testExtractFieldsWithMultipleNestedOperatorsJSON() throws Exception {
+        String json = """
+                {
+                    "$and": [
+                        {
+                            "$or": [
+                                { "city": "New York" },
+                                { "zipcode": "10001" }
+                            ]
+                        },
+                        {
+                            "city.country": "USA"
+                        }
+                    ]
+                }
+                """;
+        Expressions expressions = objectMapper.readValue(json, Expressions.class);
+        List<String> fields = Expressions.extractFields(expressions);
+
+        assertEquals(Arrays.asList("city", "zipcode", "city.country"), fields);
+    }
 }
