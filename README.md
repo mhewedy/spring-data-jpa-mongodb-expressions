@@ -9,7 +9,7 @@
 <image src="https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/blob/master/logo.png?raw=true" style="display: block; margin: auto; width: 350px;">
 
 ### How it works:
-    
+
 1. Customize JPA Repository base class:
     ```java
     @SpringBootApplication
