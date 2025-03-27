@@ -1,0 +1,10 @@
+{
+  "$or": [
+    {
+      "firstName": "farida"
+    },
+    {
+      "department.<city.name": "cairo"
+    }
+  ]
+}

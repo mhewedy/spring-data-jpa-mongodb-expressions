@@ -1,5 +1,6 @@
 package com.github.mhewedy.expressions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mhewedy.expressions.model.*;
 import jakarta.persistence.EntityManager;
@@ -89,7 +90,7 @@ public class ExpressionsRepositoryImplTest {
                         Instant.parse("2009-12-03T10:15:30.00Z"),
                         (short) 1,
                         true,
-                        new Department(null, "sw arch", new City(null, "giaz")),
+                        new Department(null, "sw arch", null),
                         Arrays.asList(new Task(null, "fix sw arch", ACTIVE), new Task(null, "fix sw arch", ACTIVE)),
                         UUID.randomUUID(),
                         Lang.AR,
@@ -731,6 +732,17 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(2);
 
         // where last_name=? and (age in (? , ?) or birth_date<?)
+    }
+
+    @Test
+    public void testLeftJoin() throws JsonProcessingException {
+        String json = loadResourceJsonFile("testLeftJoin");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(3);
+
     }
 
     @SneakyThrows

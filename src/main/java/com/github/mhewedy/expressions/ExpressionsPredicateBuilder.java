@@ -1,12 +1,12 @@
 package com.github.mhewedy.expressions;
 
-import org.springframework.util.Assert;
-
 import jakarta.persistence.criteria.*;
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.ManagedType;
 import jakarta.persistence.metamodel.PluralAttribute;
 import jakarta.persistence.metamodel.SingularAttribute;
+import org.springframework.util.Assert;
+
 import java.time.*;
 import java.time.chrono.HijrahDate;
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.github.mhewedy.expressions.Expression.*;
+import static jakarta.persistence.metamodel.Attribute.PersistentAttributeType;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static jakarta.persistence.metamodel.Attribute.PersistentAttributeType;
 
 class ExpressionsPredicateBuilder {
 
@@ -65,13 +65,13 @@ class ExpressionsPredicateBuilder {
                         query.distinct(true);
                     }
 
-                    final String subField = extractSubField(singularExpression.field);
-                    if (!subField.isEmpty()) {
+                    final SubField subField = extractSubField(singularExpression.field);
+                    if (!subField.name.isEmpty()) {
                         final SingularExpression subExpression =
-                                new SingularExpression(subField, singularExpression.operator, singularExpression.value);
+                                new SingularExpression(subField.name, singularExpression.operator, singularExpression.value);
                         predicates.addAll(
                                 getPredicates(query, cb,
-                                        reuseOrCreateJoin((From<?, ?>) from, attribute, field),
+                                        reuseOrCreateJoin((From<?, ?>) from, attribute, field, subField.joinType),
                                         extractSubFieldType(attribute),
                                         singletonList(subExpression)
                                 )
@@ -83,8 +83,8 @@ class ExpressionsPredicateBuilder {
                 Path exprPath = from.get((SingularAttribute) attribute);
 
                 if (PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
-                    final String subField = extractSubField(singularExpression.field);
-                    attribute = extractSubFieldType(attribute).getAttribute(subField);
+                    final SubField subField = extractSubField(singularExpression.field);
+                    attribute = extractSubFieldType(attribute).getAttribute(subField.name);
                     exprPath = exprPath.get((SingularAttribute) attribute);
                 }
 
@@ -188,13 +188,13 @@ class ExpressionsPredicateBuilder {
                         query.distinct(true);
                     }
 
-                    final String subField = extractSubField(listExpression.field);
-                    if (!subField.isEmpty()) {
+                    final SubField subField = extractSubField(listExpression.field);
+                    if (!subField.name.isEmpty()) {
                         final ListExpression subExpression =
-                                new ListExpression(subField, listExpression.operator, listExpression.values);
+                                new ListExpression(subField.name, listExpression.operator, listExpression.values);
                         predicates.addAll(
                                 getPredicates(query, cb,
-                                        reuseOrCreateJoin((From<?, ?>) from, attribute, field),
+                                        reuseOrCreateJoin((From<?, ?>) from, attribute, field, subField.joinType),
                                         extractSubFieldType(attribute),
                                         singletonList(subExpression)
                                 )
@@ -206,8 +206,8 @@ class ExpressionsPredicateBuilder {
                 Path exprPath = from.get((SingularAttribute) attribute);
 
                 if (PersistentAttributeType.EMBEDDED == attribute.getPersistentAttributeType()) {
-                    final String subField = extractSubField(listExpression.field);
-                    attribute = extractSubFieldType(attribute).getAttribute(subField);
+                    final SubField subField = extractSubField(listExpression.field);
+                    attribute = extractSubFieldType(attribute).getAttribute(subField.name);
                     exprPath = exprPath.get((SingularAttribute) attribute);
                 }
 
@@ -266,11 +266,11 @@ class ExpressionsPredicateBuilder {
         }
     }
 
-    private static Path<?> reuseOrCreateJoin(From<?, ?> from, Attribute<?, ?> attribute, String field) {
+    private static Path<?> reuseOrCreateJoin(From<?, ?> from, Attribute<?, ?> attribute, String field, JoinType joinType) {
         return from.getJoins().stream()
                 .filter(it -> it.getAttribute() == attribute)
                 .findFirst()
-                .orElseGet(() -> from.join(field));
+                .orElseGet(() -> from.join(field, joinType));
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -283,9 +283,23 @@ class ExpressionsPredicateBuilder {
         return field.contains(".") ? field.split("\\.")[0] : field;
     }
 
-    private static String extractSubField(String field) {
+    private static SubField extractSubField(String field) {
         //if field is "abc.efg.xyz", then return "efg.xyz", so to support n-level association
-        return Arrays.stream(field.split("\\.")).skip(1).collect(Collectors.joining("."));
+        String subField = Arrays.stream(field.split("\\.")).skip(1).collect(Collectors.joining("."));
+        JoinType joinType;
+        if (subField.startsWith("<")) { /// .<
+            subField = subField.substring(1);
+            joinType = JoinType.LEFT;
+        } else if (subField.startsWith(">")) {  ///  .>
+            subField = subField.substring(1);
+            joinType = JoinType.RIGHT;
+        } else {
+            joinType = JoinType.INNER;
+        }
+        return new SubField(subField, joinType);
+    }
+
+    private record SubField(String name, JoinType joinType) {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

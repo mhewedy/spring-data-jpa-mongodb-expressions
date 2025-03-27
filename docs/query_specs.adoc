@@ -8,7 +8,7 @@ https://docs.mongodb.com/manual/tutorial/query-documents/[MongoDB Query Language
 and uses a subset of the language and converts it to Spring Data JPA Specifications under the hood.
 
 In this section we will see by example all the supported features started by basic querying to
-comparision operators to joins and other features.
+comparison operators to joins and other features.
 ****
 
 == Overview
@@ -312,6 +312,20 @@ TIP: Sometimes the join capabilities is not enough or the not best way for the u
 in such case you can create a database _view_ and map it to an JPA Entity and then build your search on it.
 
 TIP: The returned properties are the properties of the primary Entity, which means the `projection` is not supported due to limitation in spring-data-jpa addressed in this https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues/4[bug,role=external,window=_blank], until it is fixed and if you need to return properties from other entities involved in the join, you need to follow the database _view_ workaround mentioned in the previous tip.
+
+==== Left and right joins
+1. Left join uses notation `.<` and right join uses `.>`, exmaple on left join:
++
+[source,json]
+----
+include::{jsondir}/testLeftJoin.json[]
+----
+Generated SQL:
++
+[source,sql]
+----
+...  from employee join department on department.id=employee.department_id left join city on city.id=department.city_id where employee.first_name=? or city.name=?
+----
 
 === Embedded
 1. Using embedded fields:
