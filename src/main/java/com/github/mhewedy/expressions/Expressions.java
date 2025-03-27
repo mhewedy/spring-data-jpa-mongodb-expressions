@@ -257,6 +257,33 @@ public class Expressions extends HashMap<String, Object> {
         return m;
     }
 
+    /**
+     * Extracts all the field names (keys) from the current {@code Expressions} object,
+     * including nested fields within `$and` and `$or` compound operators.
+     * <p>
+     * This method traverses the structure of the {@code Expressions} object recursively.
+     * If a compound operator (`$and` or `$or`) is encountered, it extracts fields from
+     * all nested expressions.
+     * </p>
+     * <p>
+     * Example:
+     * Given the following {@code Expressions} structure:
+     * <pre>
+     * {
+     *     "firstName": "John",
+     *     "$or": [
+     *         {"lastName": "Doe"},
+     *         {"age": {"$gt": 30}}
+     *     ]
+     * }
+     * </pre>
+     * The resulting list of fields will be:
+     * <pre>
+     * ["firstName", "lastName", "age"]
+     * </pre>
+     *
+     * @return a list of field names present in the current {@code Expressions} object, including nested fields.
+     */
     @SuppressWarnings({"unchecked"})
     public static List<String> extractFields(Map<String, Object> expressions) {
         List<String> list = new ArrayList<>();
