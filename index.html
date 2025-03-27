@@ -832,7 +832,7 @@ and uses a subset of the language and converts it to Spring Data JPA Specificati
 </div>
 <div class="paragraph">
 <p>In this section we will see by example all the supported features started by basic querying to
-comparision operators to joins and other features.</p>
+comparison operators to joins and other features.</p>
 </div>
 </div>
 </div>
@@ -1433,6 +1433,38 @@ The returned properties are the properties of the primary Entity, which means th
 </table>
 </div>
 </div>
+<div class="sect4">
+<h5 id="_left_and_right_joins"><a class="link" href="#_left_and_right_joins">Left and right joins</a></h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Left join uses notation <code>.&lt;</code> and right join uses <code>.&gt;</code>, exmaple on left join:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "$or": [
+    {
+      "firstName": "farida"
+    },
+    {
+      "department.&lt;city.name": "cairo"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated SQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">...  from employee join department on department.id=employee.department_id left join city on city.id=department.city_id where employee.first_name=? or city.name=?</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_embedded"><a class="link" href="#_embedded">Embedded</a></h4>
@@ -1698,7 +1730,7 @@ console.log(JSON.stringify(q, null, 4));</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.1.5<br>
-Last updated 2025-03-22 21:10:42 UTC
+Last updated 2025-03-27 14:56:12 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
