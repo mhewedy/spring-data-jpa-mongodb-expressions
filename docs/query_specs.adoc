@@ -324,8 +324,12 @@ Generated SQL:
 +
 [source,sql]
 ----
-...  from employee join department on department.id=employee.department_id left join city on city.id=department.city_id where employee.first_name=? or city.name=?
+...from employee e left join department d on d.id=e.department_id join city c on c.id=d.city_id where e.first_name=? or c.name=?
 ----
++
+NOTE: The join notation that define the relation between an object and its association so,
+`department.<city.name` means left join between `employee` (current object) and `department`,
+where `department.city.<name` means left join between `departement` and `city`
 
 === Embedded
 1. Using embedded fields:
