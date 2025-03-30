@@ -119,7 +119,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.greaterThan(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                                               singularExpression);
+                                    singularExpression);
                         }
                         break;
                     case $gte:
@@ -129,7 +129,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.greaterThanOrEqualTo(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                                               singularExpression);
+                                    singularExpression);
                         }
                         break;
                     case $lt:
@@ -139,7 +139,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.lessThan(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                                               singularExpression);
+                                    singularExpression);
                         }
                         break;
                     case $lte:
@@ -149,7 +149,7 @@ class ExpressionsPredicateBuilder {
                             predicate = cb.lessThanOrEqualTo(exprPath, (Comparable) attributeValue);
                         } else {
                             throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                                               singularExpression);
+                                    singularExpression);
                         }
                         break;
                     // like
@@ -258,7 +258,7 @@ class ExpressionsPredicateBuilder {
             throw new IllegalArgumentException(
                     String.format(
                             "Unable to locate attribute with the given name [%s] on this ManagedType [%s]," +
-                            " Are you sure this ManagedType or one of its ancestors contains such attribute?",
+                                    " Are you sure this ManagedType or one of its ancestors contains such attribute?",
                             field,
                             type.getJavaType().getName()
                     )
@@ -280,22 +280,17 @@ class ExpressionsPredicateBuilder {
     }
 
     private static String extractField(String field) {
-        return field.contains(".") ? field.split("\\.")[0] : field;
+        return field.contains(".") ? field.split("\\.")[0].replaceAll("^[<>]+", "") : field;
     }
 
     private static SubField extractSubField(String field) {
-        //if field is "abc.efg.xyz", then return "efg.xyz", so to support n-level association
+        //if field is "abc.efg.xyz", then mainField=>"abc" and subField => "efg.xyz", so to support n-level association
+        String mainField = Arrays.stream(field.split("\\.")).limit(1).collect(Collectors.joining("."));
         String subField = Arrays.stream(field.split("\\.")).skip(1).collect(Collectors.joining("."));
-        JoinType joinType;
-        if (subField.startsWith("<")) { /// .<
-            subField = subField.substring(1);
-            joinType = JoinType.LEFT;
-        } else if (subField.startsWith(">")) {  ///  .>
-            subField = subField.substring(1);
-            joinType = JoinType.RIGHT;
-        } else {
-            joinType = JoinType.INNER;
-        }
+
+        JoinType joinType = mainField.startsWith("<") ? JoinType.LEFT // <abc
+                : mainField.startsWith(">") ? JoinType.RIGHT // >abc
+                : JoinType.INNER;   //// abc
         return new SubField(subField, joinType);
     }
 
