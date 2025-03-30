@@ -1458,8 +1458,22 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">...  from employee join department on department.id=employee.department_id left join city on city.id=department.city_id where employee.first_name=? or city.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">...from employee e left join department d on d.id=e.department_id join city c on c.id=d.city_id where e.first_name=? or c.name=?</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The join notation that define the relation between an object and its association so,
+<code>department.&lt;city.name</code> means left join between <code>employee</code> (current object) and <code>department</code>,
+where <code>department.city.&lt;name</code> means left join between <code>departement</code> and <code>city</code>
+</td>
+</tr>
+</table>
 </div>
 </li>
 </ol>
@@ -1730,7 +1744,7 @@ console.log(JSON.stringify(q, null, 4));</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.1.6<br>
-Last updated 2025-03-27 15:04:46 UTC
+Last updated 2025-03-30 22:56:26 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
