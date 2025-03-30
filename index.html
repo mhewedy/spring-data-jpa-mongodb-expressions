@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Data JPA MongoDB Expressions Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Mohammad Hewedy, The Spring Data JPA MongoDB Expressions Team</span><br>
-<span id="revnumber">version 0.1.6</span>
+<span id="revnumber">version 0.1.7</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -561,7 +561,7 @@ You can create MongoDB queries using simple javascript code see <a href="#_how_t
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.github.mhewedy&lt;/groupId&gt;
   &lt;artifactId&gt;spring-data-jpa-mongodb-expressions&lt;/artifactId&gt;
-  &lt;version&gt;0.1.6&lt;/version&gt;
+  &lt;version&gt;0.1.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -570,7 +570,7 @@ You can create MongoDB queries using simple javascript code see <a href="#_how_t
 <h4 id="_gradle"><a class="link" href="#_gradle">Gradle</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.1.6'</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.1.7'</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -1414,7 +1414,7 @@ The <code>distinct</code> keyword is being used in the queries to eliminate dupl
 <div class="title">Tip</div>
 </td>
 <td class="content">
-Sometimes the join capabilities is not enough or the not best way for the use case you trying to implement,
+Sometimes the join capabilities is not enough or not the best way for the use case you trying to implement,
 in such case you can create a database <em>view</em> and map it to an JPA Entity and then build your search on it.
 </td>
 </tr>
@@ -1438,7 +1438,7 @@ The returned properties are the properties of the primary Entity, which means th
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Left join uses notation <code>.&lt;</code> and right join uses <code>.&gt;</code>, exmaple on left join:</p>
+<p>Left join uses notation <code>.&lt;</code> and right join uses <code>.&gt;</code>, example on left join (department left join city):</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1458,7 +1458,7 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">...from employee e left join department d on d.id=e.department_id join city c on c.id=d.city_id where e.first_name=? or c.name=?</code></pre>
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1469,8 +1469,8 @@ The returned properties are the properties of the primary Entity, which means th
 </td>
 <td class="content">
 The join notation that define the relation between an object and its association so,
-<code>department.&lt;city.name</code> means left join between <code>employee</code> (current object) and <code>department</code>,
-where <code>department.city.&lt;name</code> means left join between <code>departement</code> and <code>city</code>
+<code>"&lt;department.city.name"</code> means left join between <code>employee</code> (current object) and <code>department</code>,
+where <code>"department.&lt;city.name"</code> means left join between <code>departement</code> and <code>city</code>
 </td>
 </tr>
 </table>
@@ -1743,8 +1743,8 @@ console.log(JSON.stringify(q, null, 4));</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1.6<br>
-Last updated 2025-03-30 22:56:26 UTC
+Version 0.1.7<br>
+Last updated 2025-03-30 23:50:59 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
