@@ -313,8 +313,8 @@ in such case you can create a database _view_ and map it to an JPA Entity and th
 
 TIP: The returned properties are the properties of the primary Entity, which means the `projection` is not supported due to limitation in spring-data-jpa addressed in this https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues/4[bug,role=external,window=_blank], until it is fixed and if you need to return properties from other entities involved in the join, you need to follow the database _view_ workaround mentioned in the previous tip.
 
-==== Left and right joins
-1. Left join uses notation `.<` and right join uses `.>`, example on left join (department left join city):
+==== Left and Right joins
+1. Left join uses notation `<` and right join uses `>`, example on left join (department left join city):
 +
 [source,json]
 ----
@@ -327,9 +327,8 @@ Generated SQL:
 ...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?
 ----
 +
-NOTE: The join notation that define the relation between an object and its association so,
-`"<department.city.name"` means left join between `employee` (current object) and `department`,
-where `"department.<city.name"` means left join between `departement` and `city`
+NOTE: `"<department.city.name"` means left join between `employee` (current object) and `department`,
+whereas `"department.<city.name"` means left join between `departement` and `city`.
 
 === Embedded
 1. Using embedded fields:
