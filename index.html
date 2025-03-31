@@ -1434,11 +1434,11 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 </div>
 <div class="sect4">
-<h5 id="_left_and_right_joins"><a class="link" href="#_left_and_right_joins">Left and right joins</a></h5>
+<h5 id="_left_and_right_joins"><a class="link" href="#_left_and_right_joins">Left and Right joins</a></h5>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Left join uses notation <code>.&lt;</code> and right join uses <code>.&gt;</code>, example on left join (department left join city):</p>
+<p>Left join uses notation <code>&lt;</code> and right join uses <code>&gt;</code>, example on left join (department left join city):</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1468,9 +1468,8 @@ The returned properties are the properties of the primary Entity, which means th
 <div class="title">Note</div>
 </td>
 <td class="content">
-The join notation that define the relation between an object and its association so,
 <code>"&lt;department.city.name"</code> means left join between <code>employee</code> (current object) and <code>department</code>,
-where <code>"department.&lt;city.name"</code> means left join between <code>departement</code> and <code>city</code>
+whereas <code>"department.&lt;city.name"</code> means left join between <code>departement</code> and <code>city</code>.
 </td>
 </tr>
 </table>
@@ -1744,7 +1743,7 @@ console.log(JSON.stringify(q, null, 4));</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.1.7<br>
-Last updated 2025-03-30 23:50:59 UTC
+Last updated 2025-03-31 03:07:35 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
