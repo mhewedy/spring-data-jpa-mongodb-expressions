@@ -26,7 +26,7 @@ The second step (green):: The JSON is being deserialized into `com.github.mhewed
 and thus can be passed to your Repository (the one the extends `com.github.mhewedy.expressions.ExpressionsRepository`).
 +
 This intermediate step allows you to add additional conditions easily on the deserialized `Expressions` object as
-it is not uncommon you need to restrict the query passed from the frontend. +
+it is not uncommon you need to restrict the query passed from the frontend.
 
 NOTE: You can see the <<#_public_api,Public API>> for details on how to use the `Expressions` and `Expression` objects.
 
@@ -313,8 +313,9 @@ in such case you can create a database _view_ and map it to an JPA Entity and th
 
 TIP: The returned properties are the properties of the primary Entity, which means the `projection` is not supported due to limitation in spring-data-jpa addressed in this https://github.com/mhewedy/spring-data-jpa-mongodb-expressions/issues/4[bug,role=external,window=_blank], until it is fixed and if you need to return properties from other entities involved in the join, you need to follow the database _view_ workaround mentioned in the previous tip.
 
-==== Left and Right joins
-1. Left join uses notation `<` and right join uses `>`, example on left join (department left join city):
+==== Left and right joins
+1. *Left* join could be represented by *optional chaining operator* (`?.`). +
+Example on left join `deparetement` with `city`:
 +
 [source,json]
 ----
@@ -326,9 +327,27 @@ Generated SQL:
 ----
 ...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?
 ----
+TIP: The `?.` operator in languages like JavaScript or Kotlin enables safe property access, directly mapping to a *left* join in SQL
+by allowing property retrieval if the referenced object exists while returning `null` instead of causing an error when it doesn't.
+2. Alternative notation (more toward SQL world) which support both *_left and right_* joins
+is to prefix entity name by `<` for left join and `>` for right join, example on left join (department left join city):
 +
-NOTE: `"<department.city.name"` means left join between `employee` (current object) and `department`,
+[source,json]
+----
+include::{jsondir}/testLeftJoinAlternateSyntax.json[]
+----
+Generated SQL:
++
+[source,sql]
+----
+...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?
+----
++
+NOTE: `"<department.city.name"` means left join between `employee` (the current object) and `department`,
 whereas `"department.<city.name"` means left join between `departement` and `city`.
++
+NOTE: Using *optional chaining operator* `"<department.city.name"` could be represented as `"department?.city.name"`
+and `"department.<city.name"` could be represented as `"department.city?.name"`.
 
 === Embedded
 1. Using embedded fields:

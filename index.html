@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Data JPA MongoDB Expressions Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Mohammad Hewedy, The Spring Data JPA MongoDB Expressions Team</span><br>
-<span id="revnumber">version 0.1.7</span>
+<span id="revnumber">version 0.1.8</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -561,7 +561,7 @@ You can create MongoDB queries using simple javascript code see <a href="#_how_t
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.github.mhewedy&lt;/groupId&gt;
   &lt;artifactId&gt;spring-data-jpa-mongodb-expressions&lt;/artifactId&gt;
-  &lt;version&gt;0.1.7&lt;/version&gt;
+  &lt;version&gt;0.1.8&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -570,7 +570,7 @@ You can create MongoDB queries using simple javascript code see <a href="#_how_t
 <h4 id="_gradle"><a class="link" href="#_gradle">Gradle</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.1.7'</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.github.mhewedy:spring-data-jpa-mongodb-expressions:0.1.8'</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -861,7 +861,7 @@ according to MongoDB Query language rules and as will be shown in this section.<
 and thus can be passed to your Repository (the one the extends <code>com.github.mhewedy.expressions.ExpressionsRepository</code>).</p>
 <div class="paragraph">
 <p>This intermediate step allows you to add additional conditions easily on the deserialized <code>Expressions</code> object as
-it is not uncommon you need to restrict the query passed from the frontend.<br></p>
+it is not uncommon you need to restrict the query passed from the frontend.</p>
 </div>
 </dd>
 </dl>
@@ -1434,11 +1434,51 @@ The returned properties are the properties of the primary Entity, which means th
 </div>
 </div>
 <div class="sect4">
-<h5 id="_left_and_right_joins"><a class="link" href="#_left_and_right_joins">Left and Right joins</a></h5>
+<h5 id="_left_and_right_joins"><a class="link" href="#_left_and_right_joins">Left and right joins</a></h5>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Left join uses notation <code>&lt;</code> and right join uses <code>&gt;</code>, example on left join (department left join city):</p>
+<p><strong>Left</strong> join could be represented by <strong>optional chaining operator</strong> (<code>?.</code>).<br>
+Example on left join <code>deparetement</code> with <code>city</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "$or": [
+    {
+      "firstName": "farida"
+    },
+    {
+      "department.city?.name": "cairo"
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated SQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+The <code>?.</code> operator in languages like JavaScript or Kotlin enables safe property access, directly mapping to a <strong>left</strong> join in SQL
+by allowing property retrieval if the referenced object exists while returning <code>null</code> instead of causing an error when it doesn&#8217;t.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Alternative notation (more toward SQL world) which support both <strong><em>left and right</em></strong> joins
+is to prefix entity name by <code>&lt;</code> for left join and <code>&gt;</code> for right join, example on left join (department left join city):</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
@@ -1468,8 +1508,21 @@ The returned properties are the properties of the primary Entity, which means th
 <div class="title">Note</div>
 </td>
 <td class="content">
-<code>"&lt;department.city.name"</code> means left join between <code>employee</code> (current object) and <code>department</code>,
+<code>"&lt;department.city.name"</code> means left join between <code>employee</code> (the current object) and <code>department</code>,
 whereas <code>"department.&lt;city.name"</code> means left join between <code>departement</code> and <code>city</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Using <strong>optional chaining operator</strong> <code>"&lt;department.city.name"</code> could be represented as <code>"department?.city.name"</code>
+and <code>"department.&lt;city.name"</code> could be represented as <code>"department.city?.name"</code>.
 </td>
 </tr>
 </table>
@@ -1742,8 +1795,8 @@ console.log(JSON.stringify(q, null, 4));</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1.7<br>
-Last updated 2025-03-31 03:07:35 UTC
+Version 0.1.8<br>
+Last updated 2025-03-31 11:22:58 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
