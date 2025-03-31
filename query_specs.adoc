@@ -315,7 +315,7 @@ TIP: The returned properties are the properties of the primary Entity, which mea
 
 ==== Left and right joins
 1. *Left* join could be represented by *optional chaining operator* (`?.`). +
-Example on left join `deparetement` with `city`:
+Example on left join `department` with `city`:
 +
 [source,json]
 ----
