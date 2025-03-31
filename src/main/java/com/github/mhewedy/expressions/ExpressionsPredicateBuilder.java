@@ -280,7 +280,10 @@ class ExpressionsPredicateBuilder {
     }
 
     private static String extractField(String field) {
-        return field.contains(".") ? field.split("\\.")[0].replaceAll("^[<>]+", "") : field;
+        return field.contains(".") ? field.split("\\.")[0]
+                .replaceAll("^[<>]+", "")   // remove '<' and '>' at start
+                .replaceAll("\\?$", "")     // remove '?' at end
+                : field;
     }
 
     private static SubField extractSubField(String field) {
@@ -288,7 +291,7 @@ class ExpressionsPredicateBuilder {
         String mainField = Arrays.stream(field.split("\\.")).limit(1).collect(Collectors.joining("."));
         String subField = Arrays.stream(field.split("\\.")).skip(1).collect(Collectors.joining("."));
 
-        JoinType joinType = mainField.startsWith("<") ? JoinType.LEFT // <abc
+        JoinType joinType = mainField.startsWith("<") || mainField.endsWith("?") ? JoinType.LEFT // <abc or abc?
                 : mainField.startsWith(">") ? JoinType.RIGHT // >abc
                 : JoinType.INNER;   //// abc
         return new SubField(subField, joinType);

@@ -743,6 +743,19 @@ public class ExpressionsRepositoryImplTest {
         List<Employee> employeeList = employeeRepository.findAll(expressions);
         assertThat(employeeList.size()).isEqualTo(3);
 
+        // ...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?
+    }
+
+    @Test
+    public void testLeftJoinAlternateSyntax() throws JsonProcessingException {
+        String json = loadResourceJsonFile("testLeftJoinAlternateSyntax");
+
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+
+        List<Employee> employeeList = employeeRepository.findAll(expressions);
+        assertThat(employeeList.size()).isEqualTo(3);
+
+        // ...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?
     }
 
     @SneakyThrows

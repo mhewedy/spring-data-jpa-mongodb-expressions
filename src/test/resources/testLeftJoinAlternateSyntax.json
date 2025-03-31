@@ -4,7 +4,7 @@
       "firstName": "farida"
     },
     {
-      "department.city?.name": "cairo"
+      "department.<city.name": "cairo"
     }
   ]
 }
