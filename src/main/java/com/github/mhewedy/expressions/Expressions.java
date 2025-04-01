@@ -199,11 +199,11 @@ public class Expressions extends HashMap<String, Object> {
     }
 
     /**
-     * Returns this object as as list of {@link Expression} to be passed to
+     * Returns this object as list of {@link Expression} to be passed to
      * Spring Data Specification builder {@link ExpressionsPredicateBuilder}
      */
     @SuppressWarnings({"unchecked"})
-    private List<Expression> getExpressions(Map<String, Object> map) {
+    private static List<Expression> getExpressions(Map<String, Object> map) {
 
         List<Expression> expressions = new ArrayList<>();
 
@@ -258,12 +258,13 @@ public class Expressions extends HashMap<String, Object> {
     }
 
     /**
-     * Extracts all the field names (keys) from the current {@code Expressions} object,
-     * including nested fields within `$and` and `$or` compound operators.
+     * Extracts all field names and their corresponding values from the current
+     * {@code Expressions} object, including nested fields within `$and` and `$or`
+     * compound operators.
      * <p>
      * This method traverses the structure of the {@code Expressions} object recursively.
-     * If a compound operator (`$and` or `$or`) is encountered, it extracts fields from
-     * all nested expressions.
+     * If a compound operator (`$and` or `$or`) is encountered, it extracts fields and
+     * values from all nested expressions.
      * </p>
      * <p>
      * Example:
@@ -277,28 +278,34 @@ public class Expressions extends HashMap<String, Object> {
      *     ]
      * }
      * </pre>
-     * The resulting list of fields will be:
+     * The resulting map of fields will be:
      * <pre>
-     * ["firstName", "lastName", "age"]
+     * {
+     *     "firstName": "John",
+     *     "lastName": "Doe",
+     *     "age": 30
+     * }
      * </pre>
      *
-     * @return a list of field names present in the current {@code Expressions} object, including nested fields.
+     * @return a map containing field names as keys and their corresponding values, including nested fields.
      */
-    @SuppressWarnings({"unchecked"})
-    public static List<String> extractFields(Map<String, Object> expressions) {
-        List<String> list = new ArrayList<>();
+    public Map<String, Object> extractFields() {
+        return extractFields(getExpressions(this));
+    }
 
-        for (Map.Entry<String, Object> entry : expressions.entrySet()) {
-            String key = entry.getKey();
-            if (key.equals($and.name()) || key.equals($or.name())) {
-                List<Object> values = (List<Object>) entry.getValue();
-                for (Object value : values) {
-                    list.addAll(extractFields((Map<String, Object>) value));
-                }
-            } else {
-                list.add(key);
+    private static Map<String, Object> extractFields(List<Expression> expressionList) {
+        var map = new HashMap<String, Object>();
+        for (Expression expression : expressionList) {
+            if (expression instanceof SingularExpression singularExpression) {
+                map.put(singularExpression.field, singularExpression.value);
+            } else if (expression instanceof ListExpression listExpression) {
+                map.put(listExpression.field, listExpression.values);
+            } else if (expression instanceof AndExpression andExpression) {
+                map.putAll(extractFields(andExpression.expressions));
+            } else if (expression instanceof OrExpression andExpression) {
+                map.putAll(extractFields(andExpression.expressions));
             }
         }
-        return list;
+        return map;
     }
 }

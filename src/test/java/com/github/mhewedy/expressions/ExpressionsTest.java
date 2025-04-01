@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static com.github.mhewedy.expressions.Expression.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -98,16 +101,16 @@ class ExpressionsTest {
                 }
                 """;
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        List<String> fields = Expressions.extractFields(expressions);
+        Set<String> fields = expressions.extractFields().keySet();
 
-        assertEquals(Arrays.asList("firstName", "lastName", "age"), fields);
+        assertEquals(Set.of("firstName", "lastName", "age"), fields);
     }
 
     @Test
     void testExtractFieldsWithEmptyJSON() throws Exception {
         String json = "{}";
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        List<String> fields = Expressions.extractFields(expressions);
+        Set<String> fields = expressions.extractFields().keySet();
 
         assertTrue(fields.isEmpty());
     }
@@ -123,9 +126,9 @@ class ExpressionsTest {
                 }
                 """;
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        List<String> fields = Expressions.extractFields(expressions);
+        Set<String> fields = expressions.extractFields().keySet();
 
-        assertEquals(Arrays.asList("country", "state"), fields);
+        assertEquals(Set.of("country", "state"), fields);
     }
 
     @Test
@@ -146,8 +149,10 @@ class ExpressionsTest {
                 }
                 """;
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        List<String> fields = Expressions.extractFields(expressions);
+        Set<String> fields = expressions.extractFields().keySet();
+        List<Object> values = expressions.extractFields().values().stream().toList();
 
-        assertEquals(Arrays.asList("city", "zipcode", "city.country"), fields);
+        assertEquals(Set.of("city", "zipcode", "city.country"), fields);
+        assertThatList(values).containsExactlyInAnyOrder("New York", "10001", "USA");
     }
 }
