@@ -45,8 +45,8 @@ public class Expressions extends HashMap<String, Object> {
      * Then we added the following:
      * <pre>
      *  expressions.or(Expression.and(
-     *          Expression.of("lastName", Operator.$eq, "ibrahim"),
-     *          Expression.of("age", Operator.$gte, 10)
+     *          Expression.of("lastName", $eq, "ibrahim"),
+     *          Expression.of("age", $gte, 10)
      *  ));
      * </pre>
      * Then the output could be represented as:
@@ -70,20 +70,7 @@ public class Expressions extends HashMap<String, Object> {
      * </pre>
      */
     public Expressions or(Expression expression) {
-
-        Map<String, Object> tmp = new HashMap<>(this);
-        this.clear();
-
-        List<Map<String, Object>> list = new ArrayList<>();
-        this.put($or.name(), list);
-
-        if (!tmp.isEmpty()) list.add(tmp);
-
-        Map<String, Object> map = new HashMap<>();
-        list.add(map);
-        add(expression, map);
-
-        return this;
+        return append(expression, $or);
     }
 
     /**
@@ -95,10 +82,10 @@ public class Expressions extends HashMap<String, Object> {
      * <p>
      * Then we added the following:
      * <pre>
-     *  expressions.and(Expression.of("birthDate", Operator.$gt, "1980-10-10"));
+     *  expressions.and(Expression.of("birthDate", $gt, "1980-10-10"));
      *  expressions.and(Expression.or(
-     *      Expression.of("lastName", Operator.$eq, "ibrahim"),
-     *      Expression.of("age", Operator.$in, 10, 30)
+     *      Expression.of("lastName", $eq, "ibrahim"),
+     *      Expression.of("age", $in, 10, 30)
      *  ));
      *
      * </pre>
@@ -121,18 +108,21 @@ public class Expressions extends HashMap<String, Object> {
      * </pre>
      */
     public Expressions and(Expression expression) {
+        return append(expression, $and);
+    }
 
+    private Expressions append(Expression expression, Operator operator) {
         Map<String, Object> tmp = new HashMap<>(this);
         this.clear();
 
-        List<Map<String, Object>> list = new ArrayList<>();
-        this.put($and.name(), list);
+        Map<String, Object> map = new HashMap<>();
+        addToMap(expression, map);
 
+        List<Map<String, Object>> list = new ArrayList<>();
+        list.add(map);
         if (!tmp.isEmpty()) list.add(tmp);
 
-        Map<String, Object> map = new HashMap<>();
-        list.add(map);
-        add(expression, map);
+        this.put(operator.name(), list);
 
         return this;
     }
@@ -151,46 +141,35 @@ public class Expressions extends HashMap<String, Object> {
      * The bridge between {@link Expression} and the internal representation of mongodb query lang
      * represented by {@link Expressions} class.
      */
-    private static void add(Expression expression, Map<String, Object> map) {
-
-        if (expression instanceof SingularExpression) {
-            SingularExpression se = (SingularExpression) expression;
-
+    private static void addToMap(Expression expression, Map<String, Object> map) {
+        if (expression instanceof SingularExpression se) {
             if (se.operator == Operator.$eq) {
                 map.put(se.field, se.value);
             } else {
-                map.put(se.field, map(se.operator.name(), se.value));
+                map.put(se.field, mapOf(se.operator.name(), se.value));
             }
-        } else if (expression instanceof ListExpression) {
-            ListExpression le = (ListExpression) expression;
-
+        } else if (expression instanceof ListExpression le) {
             if (le.operator == Operator.$eq) {
                 map.put(le.field, le.values);
             } else {
-                map.put(le.field, map(le.operator.name(), le.values));
+                map.put(le.field, mapOf(le.operator.name(), le.values));
             }
-        } else if (expression instanceof OrExpression) {
-            OrExpression oe = (OrExpression) expression;
-
-            List<Map<String, Object>> list = new ArrayList<>();
-            map.put($or.name(), list);
-
-            oe.expressions.forEach(it -> {
-                Map<String, Object> m = new HashMap<>();
-                list.add(m);
-                add(it, m);
-            });
-        } else if (expression instanceof AndExpression) {
-            AndExpression ae = (AndExpression) expression;
-
-            List<Map<String, Object>> list = new ArrayList<>();
-            map.put($and.name(), list);
-
-            ae.expressions.forEach(it -> {
-                Map<String, Object> m = new HashMap<>();
-                list.add(m);
-                add(it, m);
-            });
+        } else if (expression instanceof OrExpression oe) {
+            map.put($or.name(),
+                    oe.expressions.stream().map(it -> {
+                        Map<String, Object> m = new HashMap<>();
+                        addToMap(it, m);
+                        return m;
+                    }).toList()
+            );
+        } else if (expression instanceof AndExpression ae) {
+            map.put($and.name(),
+                    ae.expressions.stream().map(it -> {
+                        Map<String, Object> m = new HashMap<>();
+                        addToMap(it, m);
+                        return m;
+                    }).toList()
+            );
         }
     }
 
@@ -251,7 +230,7 @@ public class Expressions extends HashMap<String, Object> {
         return expressions;
     }
 
-    private static Map<String, Object> map(String key, Object value) {
+    private static Map<String, Object> mapOf(String key, Object value) {
         Map<String, Object> m = new HashMap<>();
         m.put(key, value);
         return m;

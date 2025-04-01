@@ -23,7 +23,6 @@ import static java.util.stream.Collectors.toList;
 class ExpressionsPredicateBuilder {
 
     static <T> Predicate getPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb, Expressions expressions) {
-
         Assert.notNull(expressions, "expressions must not be null!");
 
         List<Predicate> predicates = getPredicates(query, cb,
@@ -53,9 +52,7 @@ class ExpressionsPredicateBuilder {
 
         for (Expression expression : expressions) {
 
-            if (expression instanceof SingularExpression) {
-
-                SingularExpression singularExpression = (SingularExpression) expression;
+            if (expression instanceof SingularExpression singularExpression) {
 
                 final String field = extractField(singularExpression.field);
                 Attribute<?, ?> attribute = getAttribute(type, field);
@@ -173,9 +170,8 @@ class ExpressionsPredicateBuilder {
 
                 predicates.add(predicate);
 
-            } else if (expression instanceof ListExpression) {
+            } else if (expression instanceof ListExpression listExpression) {
 
-                ListExpression listExpression = (ListExpression) expression;
                 final String field = extractField(listExpression.field);
                 Attribute<?, ?> attribute = getAttribute(type, field);
 
