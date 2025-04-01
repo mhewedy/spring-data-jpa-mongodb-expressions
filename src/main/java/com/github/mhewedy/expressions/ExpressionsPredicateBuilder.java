@@ -118,8 +118,7 @@ class ExpressionsPredicateBuilder {
                         } else if (Comparable.class.isAssignableFrom(attribute.getJavaType())) {
                             predicate = cb.greaterThan(exprPath, (Comparable) attributeValue);
                         } else {
-                            throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                            throw new IllegalArgumentException("field should be Number or Comparable: " + singularExpression);
                         }
                         break;
                     case $gte:
@@ -128,8 +127,7 @@ class ExpressionsPredicateBuilder {
                         } else if (Comparable.class.isAssignableFrom(attribute.getJavaType())) {
                             predicate = cb.greaterThanOrEqualTo(exprPath, (Comparable) attributeValue);
                         } else {
-                            throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                            throw new IllegalArgumentException("field should be Number or Comparable: " + singularExpression);
                         }
                         break;
                     case $lt:
@@ -138,8 +136,7 @@ class ExpressionsPredicateBuilder {
                         } else if (Comparable.class.isAssignableFrom(attribute.getJavaType())) {
                             predicate = cb.lessThan(exprPath, (Comparable) attributeValue);
                         } else {
-                            throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                            throw new IllegalArgumentException("field should be Number or Comparable: " + singularExpression);
                         }
                         break;
                     case $lte:
@@ -148,8 +145,7 @@ class ExpressionsPredicateBuilder {
                         } else if (Comparable.class.isAssignableFrom(attribute.getJavaType())) {
                             predicate = cb.lessThanOrEqualTo(exprPath, (Comparable) attributeValue);
                         } else {
-                            throw new IllegalArgumentException("field should be Number or Comparable: " +
-                                    singularExpression);
+                            throw new IllegalArgumentException("field should be Number or Comparable: " + singularExpression);
                         }
                         break;
                     // like
@@ -214,9 +210,7 @@ class ExpressionsPredicateBuilder {
                 List<Object> attributeValues = convertValueToAttributeType(listExpression.values, attribute.getJavaType());
 
                 Predicate predicate;
-
                 switch (listExpression.operator) {
-
                     // in
                     case $in:
                         CriteriaBuilder.In in = cb.in(exprPath);
@@ -232,7 +226,6 @@ class ExpressionsPredicateBuilder {
                         throw new IllegalStateException("Unexpected value: " + listExpression);
                 }
                 predicates.add(predicate);
-
 
             } else if (expression instanceof OrExpression) {
                 predicates.add(cb.or(
@@ -281,8 +274,8 @@ class ExpressionsPredicateBuilder {
 
     private static String extractField(String field) {
         return field.contains(".") ? field.split("\\.")[0]
-                .replaceAll("^[<>]+", "")   // remove '<' and '>' at start
-                .replaceAll("\\?$", "")     // remove '?' at end
+                .replaceAll("^[<>]+", "")   // remove '<' and '>' at start (left/right join indicators)
+                .replaceAll("\\?$", "")     // remove '?' at end (left join indicators - optional chaining operator)
                 : field;
     }
 
@@ -293,7 +286,7 @@ class ExpressionsPredicateBuilder {
 
         JoinType joinType = mainField.startsWith("<") || mainField.endsWith("?") ? JoinType.LEFT // <abc or abc?
                 : mainField.startsWith(">") ? JoinType.RIGHT // >abc
-                : JoinType.INNER;   //// abc
+                : JoinType.INNER;   // abc
         return new SubField(subField, joinType);
     }
 
