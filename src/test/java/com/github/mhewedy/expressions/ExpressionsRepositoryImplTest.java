@@ -40,7 +40,8 @@ import static com.github.mhewedy.expressions.Operator.*;
 import static com.github.mhewedy.expressions.model.Employee.Lang;
 import static com.github.mhewedy.expressions.model.Status.ACTIVE;
 import static com.github.mhewedy.expressions.model.Status.NOT_ACTIVE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatList;
 import static org.assertj.core.api.AssertionsForClassTypes.fail;
 
 @Slf4j
@@ -756,6 +757,127 @@ public class ExpressionsRepositoryImplTest {
         assertThat(employeeList.size()).isEqualTo(3);
 
         // ...from employee e join department d on d.id = e.department_id left join city c on c.id = d.city_id where e.first_name = ? or c.name = ?
+    }
+
+    @Test
+    public void testSearchWithMultipleNestedJoins() throws Exception {
+        String json = """
+                {
+                    "$and": [
+                        {
+                            "department.city.name": "cairo"
+                        },
+                        {
+                            "tasks.status": "ACTIVE"
+                        }
+                    ]
+                }
+                """;
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+        List<Employee> employees = employeeRepository.findAll(expressions);
+
+        assertThat(employees).isNotNull();
+        assertThatList(employees).hasSize(3); // All employees in Cairo with active tasks
+        assertThatList(employees).allSatisfy(emp -> {
+            assertThat(emp.department).isNotNull();
+            assertThat(emp.department.city).isNotNull();
+            assertThat(emp.department.city.name).isEqualTo("cairo");
+            assertThat(emp.tasks).isNotNull();
+            assertThat(emp.tasks.stream().anyMatch(task -> task.status == ACTIVE)).isTrue();
+        });
+    }
+
+    @Test
+    public void testSearchWithComplexNestedConditions() throws Exception {
+        String json = """
+                {
+                    "$or": [
+                        {
+                            "department.name": "hr",
+                            "tasks.status": "ACTIVE"
+                        },
+                        {
+                            "department.name": "sw dev",
+                            "age": { "$gt": 25 }
+                        }
+                    ]
+                }
+                """;
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+        List<Employee> employees = employeeRepository.findAll(expressions);
+
+        assertThat(employees).isNotNull();
+        assertThatList(employees).hasSize(4); // HR employees with active tasks + SW dev employees over 25
+        assertThatList(employees).allSatisfy(emp -> {
+            if (emp.department != null && emp.department.name.equals("hr")) {
+                assertThat(emp.tasks).isNotNull();
+                assertThat(emp.tasks.stream().anyMatch(task -> task.status == ACTIVE)).isTrue();
+            } else if (emp.department != null && emp.department.name.equals("sw dev")) {
+                assertThat(emp.age).isGreaterThan(25);
+            }
+        });
+    }
+
+    @Test
+    public void testSearchWithMultipleSortOrders() throws Exception {
+        String json = """
+                {
+                    "department.name": "hr"
+                }
+                """;
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+        Sort sort = Sort.by(
+            Sort.Order.asc("firstName"),
+            Sort.Order.desc("age")
+        );
+        List<Employee> employees = employeeRepository.findAll(expressions, sort);
+
+        assertThat(employees).isNotNull();
+        assertThatList(employees).hasSize(3); // All HR employees
+        assertThatList(employees).allSatisfy(emp -> {
+            assertThat(emp.department).isNotNull();
+            assertThat(emp.department.name).isEqualTo("hr");
+        });
+        
+        // Verify sorting
+        for (int i = 1; i < employees.size(); i++) {
+            Employee prev = employees.get(i-1);
+            Employee curr = employees.get(i);
+            assertThat(prev.firstName.compareTo(curr.firstName)).isLessThanOrEqualTo(0);
+            if (prev.firstName.equals(curr.firstName)) {
+                assertThat(prev.age).isGreaterThanOrEqualTo(curr.age);
+            }
+        }
+    }
+
+    @Test
+    public void testSearchWithPaginationAndComplexConditions() throws Exception {
+        String json = """
+                {
+                    "$or": [
+                        {
+                            "department.name": "hr"
+                        },
+                        {
+                            "department.name": "sw dev"
+                        }
+                    ],
+                    "age": { "$gte": 30 }
+                }
+                """;
+        Expressions expressions = new ObjectMapper().readValue(json, Expressions.class);
+        Page<Employee> page = employeeRepository.findAll(expressions, PageRequest.of(0, 2, Sort.by("firstName")));
+
+        assertThat(page).isNotNull();
+        assertThat(page.getTotalElements()).isEqualTo(3); // Total matching employees
+        assertThat(page.getSize()).isEqualTo(2); // Page size
+        assertThat(page.getContent()).isNotNull();
+        assertThatList(page.getContent()).hasSize(2); // Current page content
+        assertThatList(page.getContent()).allSatisfy(emp -> {
+            assertThat(emp.department).isNotNull();
+            assertThat(emp.department.name).isIn("hr", "sw dev");
+            assertThat(emp.age).isGreaterThanOrEqualTo(30);
+        });
     }
 
     @SneakyThrows
