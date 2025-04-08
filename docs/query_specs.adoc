@@ -344,7 +344,7 @@ Generated SQL:
 ----
 +
 NOTE: `"<department.city.name"` means left join between `employee` (the current object) and `department`,
-whereas `"department.<city.name"` means left join between `departement` and `city`.
+whereas `"department.<city.name"` means left join between `department` and `city`.
 +
 NOTE: Using *optional chaining operator* `"<department.city.name"` could be represented as `"department?.city.name"`
 and `"department.<city.name"` could be represented as `"department.city?.name"`.
