@@ -22,7 +22,7 @@ https://docs.mongodb.com/manual/tutorial/query-documents/#specify-and-conditions
 { "status": "A", "qty": { "$lt": 30 } }
 ----
 
-will be translated to.footnote:[This is rought SQL code, as usually values are passed parameterized in the where condition.]:
+will be translated to.footnote:[This is rough SQL code, as usually values are passed parameterized in the where condition.]:
 [source,sql]
 ----
 SELECT * FROM inventory WHERE status = "A" AND qty < 30

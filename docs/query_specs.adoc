@@ -404,6 +404,33 @@ Generated SQL:
 ... where e.serial=?
 ----
 
+== Entity Graph
+As with any query method in Spring Data JPA, expression query methods also support entity graphs, which help control how
+related entities are loaded from the database. There are two types of entity graphs:
+
+
+1. Fetch Graph (`jakarta.persistence.fetchgraph`)
++
+This graph explicitly defines which attributes should be fetched eagerly. Any attributes not listed in the graph will be
+fetched lazily—even if they are marked as EAGER in the entity definition.footnote:[Hibernate overrides this behaviour and load all EAGER attributes.]
++
+[source,java]
+----
+@EntityGraph(attributePaths = {"name", "age"}, type = EntityGraphType.FETCH)
+List<Employee> findAll(Expressions expressions);
+----
+2. Load Graph (`jakarta.persistence.loadgraph`)
++
+
+This graph defines attributes that should be eagerly fetched in addition to those already marked as EAGER.
+Attributes not listed in the graph still follow their default fetch type.
++
+[source,java]
+----
+@EntityGraph(attributePaths = {"department", "tasks"}, type = EntityGraphType.LOAD)
+List<Employee> findAll(Expressions expressions);
+----
+
 == Operators
 
 The following is the list of supported operators:
