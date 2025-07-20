@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.github.mhewedy.expressions.Expression.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -101,7 +102,7 @@ class ExpressionsTest {
                 }
                 """;
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        Set<String> fields = expressions.extractFields().keySet();
+        Set<String> fields = expressions.extractFields().stream().map(Expressions.Field::name).collect(Collectors.toSet());
 
         assertEquals(Set.of("firstName", "lastName", "age"), fields);
     }
@@ -110,7 +111,7 @@ class ExpressionsTest {
     void testExtractFieldsWithEmptyJSON() throws Exception {
         String json = "{}";
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        Set<String> fields = expressions.extractFields().keySet();
+        Set<String> fields = expressions.extractFields().stream().map(Expressions.Field::name).collect(Collectors.toSet());
 
         assertTrue(fields.isEmpty());
     }
@@ -126,7 +127,7 @@ class ExpressionsTest {
                 }
                 """;
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        Set<String> fields = expressions.extractFields().keySet();
+        Set<String> fields = expressions.extractFields().stream().map(Expressions.Field::name).collect(Collectors.toSet());
 
         assertEquals(Set.of("country", "state"), fields);
     }
@@ -149,8 +150,8 @@ class ExpressionsTest {
                 }
                 """;
         Expressions expressions = objectMapper.readValue(json, Expressions.class);
-        Set<String> fields = expressions.extractFields().keySet();
-        List<Object> values = expressions.extractFields().values().stream().toList();
+        Set<String> fields = expressions.extractFields().stream().map(Expressions.Field::name).collect(Collectors.toSet());
+        List<Object> values = expressions.extractFields().stream().map(Expressions.Field::value).toList();
 
         assertEquals(Set.of("city", "zipcode", "city.country"), fields);
         assertThatList(values).containsExactlyInAnyOrder("New York", "10001", "USA");

@@ -237,7 +237,7 @@ public class Expressions extends HashMap<String, Object> {
     }
 
     /**
-     * Extracts all field names and their corresponding values from the current
+     * Extracts all field names and their corresponding values and operators from the current
      * {@code Expressions} object, including nested fields within `$and` and `$or`
      * compound operators.
      * <p>
@@ -266,25 +266,27 @@ public class Expressions extends HashMap<String, Object> {
      * }
      * </pre>
      *
-     * @return a map containing field names as keys and their corresponding values, including nested fields.
+     * @return a list of Fields containing field names, values and operators.
      */
-    public Map<String, Object> extractFields() {
+    public List<Field> extractFields() {
         return extractFields(getExpressions(this));
     }
 
-    private static Map<String, Object> extractFields(List<Expression> expressionList) {
-        var map = new HashMap<String, Object>();
+    private static List<Field> extractFields(List<Expression> expressionList) {
+        var list = new ArrayList<Field>();
         for (Expression expression : expressionList) {
             if (expression instanceof SingularExpression singularExpression) {
-                map.put(singularExpression.field, singularExpression.value);
+                list.add(new Field(singularExpression.field, singularExpression.value, singularExpression.operator));
             } else if (expression instanceof ListExpression listExpression) {
-                map.put(listExpression.field, listExpression.values);
+                list.add(new Field(listExpression.field, listExpression.values, listExpression.operator));
             } else if (expression instanceof AndExpression andExpression) {
-                map.putAll(extractFields(andExpression.expressions));
+                list.addAll(extractFields(andExpression.expressions));
             } else if (expression instanceof OrExpression andExpression) {
-                map.putAll(extractFields(andExpression.expressions));
+                list.addAll(extractFields(andExpression.expressions));
             }
         }
-        return map;
+        return list;
     }
+
+    public record Field(String name, Object value, Operator operator) {}
 }
