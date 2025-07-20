@@ -99,7 +99,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- for deploy to maven central-->
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
