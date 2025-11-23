@@ -57,7 +57,7 @@ See [documentation website](https://mhewedy.github.io/spring-data-jpa-mongodb-ex
 
 ### Install:
 
-For spring-boot 3.x:
+For spring-boot 3.x +:
     
 ```xml
 <dependency>
