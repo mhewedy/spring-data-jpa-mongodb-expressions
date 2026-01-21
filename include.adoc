@@ -1,5 +1,5 @@
 :author: Mohammad Hewedy, The Spring Data JPA MongoDB Expressions Team
-:revnumber: 0.1.10
+:revnumber: 0.1.11
 :jsondir: ../src/test/resources
 :sectlinks: true
 :source-highlighter: highlight.js
